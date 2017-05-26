@@ -15,10 +15,24 @@ module.exports = function (grunt) {
                 src: ['Service/*.js','Service/*.js.map'],
                 dest:'build/'
             }
+        },
+        watch: {
+            scripts: {
+                files: ['Service/*.ts',"!node_modules/**/*.ts"],
+                tasks: ["ts:dev","move"],
+            }
+        },
+        nodemon: {
+            dev: {
+                script:"build/webCrawler.js",
+            }
         }
     });
 
     grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks("grunt-move")
-    grunt.registerTask("default", ["ts:dev","move"]);
+    grunt.loadNpmTasks("grunt-move");
+    grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-nodemon");
+
+    grunt.registerTask("default", ["watch"]);
 };

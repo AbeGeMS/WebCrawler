@@ -3,3 +3,6 @@ build
 
 #package
 node_modules
+
+#devenv
+.vs

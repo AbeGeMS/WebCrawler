@@ -9,7 +9,7 @@ module Abe.Service {
 
     export class WebCrawler {
         public downloadPage() {
-            http.get("http://www.baidu.com/", (res) => { this.getConent(res); });
+            http.get("http://forms.office.com/", (res) => { this.getConent(res); });
         }
 
         private getConent(response: http.IncomingMessage) {
