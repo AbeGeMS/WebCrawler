@@ -1,4 +1,4 @@
-/// <reference path="./../node_modules/@types/node/index.d.ts"/>
+﻿/// <reference path="./../node_modules/@types/node/index.d.ts"/>
 /// <reference path="./../node_modules/@types/cheerio/index.d.ts"/>
 /// <reference path="./../node_modules/@types/bluebird/index.d.ts"/>
 
@@ -14,6 +14,7 @@ module Abe.Service {
             let defer = b.defer();
             http.get(url,
                 (res) => {
+                    res.setEncoding("utf-8");
                     return this.getConent(res)
                         .then(message => defer.resolve(message));
                 });
@@ -23,7 +24,7 @@ module Abe.Service {
         private getConent(response: http.IncomingMessage) {
             let defer = b.defer();
             let message = "";
-
+            response.setEncoding("utf-8");
             response.on("data", (chunk) => {
                 message += chunk;
             });

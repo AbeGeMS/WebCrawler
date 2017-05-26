@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
             dev: {
-                src: ["Service/*.ts","!node_modules/**/*.ts"],
+                src: ["Service/*.ts","Web/**/*.ts","Web/*.ts","!node_modules/**/*.ts"],
                 options: {
                     fast:'never',
                 },
@@ -12,19 +12,19 @@ module.exports = function (grunt) {
         },
         move: {
             move_compile_jsfile: {
-                src: ['Service/*.js','Service/*.js.map'],
+                src: ['Service/*.js','Service/*.js.map',"Web/**/*.js","Web/*.js","Web/**/*.js.map","Web/*.js"],
                 dest:'build/'
             }
         },
         watch: {
             scripts: {
-                files: ['Service/*.ts',"!node_modules/**/*.ts"],
+                files: ['Service/*.ts',"Web/*","!node_modules/**/*.ts"],
                 tasks: ["ts:dev","move"],
             }
         },
         nodemon: {
             dev: {
-                script:"build/webCrawler.js",
+                script:"build/app.js",
             }
         }
     });
