@@ -7,8 +7,7 @@ import * as http from "http";
 import * as cheerio from "cheerio";
 import * as b from "bluebird";
 
-module Abe.Service {
-
+export module Abe.Service {
     export class WebCrawler {
         public downloadPage(url: string) {
             let defer = b.defer();
@@ -24,12 +23,10 @@ module Abe.Service {
         private getConent(response: http.IncomingMessage) {
             let defer = b.defer();
             let message = "";
-            response.setEncoding("utf-8");
             response.on("data", (chunk) => {
                 message += chunk;
             });
             response.on("end", () => {
-                nConsole.log(message);
                 defer.resolve(this.parseHTML(message));
             });
             return defer.promise;
@@ -37,12 +34,8 @@ module Abe.Service {
 
         private parseHTML(content: string) {
             var _$ = cheerio.load(content);
-            let contentList = _$("h1").toArray();
-            return contentList.map(value => _$(value).text()).join("\r\n");
+            let contentList = _$("#content").toArray();
+            return contentList.map(value => _$(value).html()).join("\r\n");
         }
     }
 }
-
-var run = new Abe.Service.WebCrawler();
-run.downloadPage("http://www.test.com")
-    .then(content => nConsole.log(content));

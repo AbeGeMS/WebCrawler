@@ -12,19 +12,27 @@ module.exports = function (grunt) {
         },
         move: {
             move_compile_jsfile: {
-                src: ['Service/*.js','Service/*.js.map',"Web/**/*.js","Web/*.js","Web/**/*.js.map","Web/*.js"],
-                dest:'build/'
+                files: [
+                    {
+                        src: ['Service/*.js', 'Service/*.js.map'],
+                        dest: 'build/Service/'
+                    },
+                    {
+                        src: ["Web/*.js", "Web/*.js.map"],
+                        dest: "build/Web/"
+                    }
+                ]
             }
         },
         watch: {
             scripts: {
-                files: ['Service/*.ts',"Web/*","!node_modules/**/*.ts"],
-                tasks: ["ts:dev","move"],
+                files: ['Service/*.ts', "Web/*", "!node_modules/**/*.ts"],
+                tasks: ["ts:dev", "move"],
             }
         },
         nodemon: {
             dev: {
-                script:"build/app.js",
+                script: "build/web/app.js",
             }
         }
     });
