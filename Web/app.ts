@@ -8,11 +8,13 @@ module Abe.Web {
     export class WebSite {
         public static start() {
             let app = express();
-            let router = express.Router();
-            //router.use("/", require("./Controller"));
-            app.get("/book", router);
-            app.get("/", (req, res) => {
+            app.use(express.static("web/public"));
+            app.get("/book", (req, res) => {
                 WebSite.crawlerBook(res);
+            });
+            app.post("/tableOfContent", (req, res) => {
+                console.log(JSON.stringify(req.body));
+                res.json(200, { data: "good" });
             });
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
@@ -21,7 +23,7 @@ module Abe.Web {
 
         private static crawlerBook(res: any) {
             let webCrawler = new __.Abe.Service.WebCrawler();
-            return webCrawler.downloadPage("http://www.websiteyouwanttoget.com")
+            return webCrawler.downloadPage("")
                 .then(content => {
                     res.writeHead(200, { 'content-type': 'text/html;charset=utf-8' });
                     res.write("<p>" + content + "</p>");
