@@ -3,8 +3,20 @@
 module Abe.Client {
     export class dataProvider {
         public getbookTableOfContent(): JQueryPromise<any>{
-            return $.post("localhost:3000/tableOfContent", { url: "http://www.xxbiquge.com" },
-                (data, state) => { return { "data": data, "state": state } });
+            return $.ajax(
+                {
+                    type: "POST",
+                    data: JSON.stringify({ "name": "Abe Ge"}),
+                    contentType: "application/json",
+                    url: "tableOfContent",
+                    success: data => {
+                        alert(JSON.stringify(data));
+                    },
+                }
+            );
         }
     }
 }
+
+var test = new Abe.Client.dataProvider();
+test.getbookTableOfContent();
