@@ -4,9 +4,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
             dev: {
-                src: ["Service/*.ts", "Web/**/*.ts", "Web/*.ts", "Web/public/*.ts", "!node_modules/**/*.ts"],
+                src: ["Service/*.ts", "Web/**/*.ts", "Web/*.ts", "Web/public/*.ts","web/public/*.tsx", "!node_modules/**/*.ts"],
                 options: {
                     fast:'never',
+                    jsx: "react",
                 },
             }
         },
