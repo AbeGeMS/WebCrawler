@@ -17,7 +17,7 @@ module Abe.Web {
             });
             app.post("/tableOfContent", (req, res) => {
                 console.log(JSON.stringify(req.body));
-                res.json(200, { data: req.body });
+                res.json(200, req.body);
             });
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);

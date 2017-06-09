@@ -1,11 +1,46 @@
 /// <reference path=".././../node_modules/@types/react/index.d.ts"/>
 /// <reference path=".././../node_modules/@types/react-dom/index.d.ts"/>
+/// <reference path="dataProvider.ts"/>
 
 module Abe.Client {
-    export class searchPage extends React.Component<any, any>{
+    interface searchPageState {
+        searchValue: string;
+        content: string;
+    }
+
+    export class searchPage extends React.Component<any, searchPageState>{
+        public componentDidMount() {
+        }
+        public state = {
+            searchValue: "",
+            content:"",
+        };
         public render() {
+            let inputProp: React.HTMLProps<HTMLElement> = {
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ searchValue: e.target.value }),
+            };
+            let btnProp: React.HTMLProps<HTMLElement> = {
+
+                onClick: () => {
+                    let provider = new Abe.Client.dataProvider();
+                    provider.getbookTableOfContent(this.state.searchValue)
+                        .then(c => this.setState({ content: c }));
+                },
+            }
             return (
-                <div>Hey, This is Search Page by react</div>
+                <div>
+                    <span>
+                        <input {...inputProp} />
+                        </span>
+                    <span>
+                        <button {...btnProp} >Search</button>
+                    </span>
+                    <div>
+                        {JSON.stringify(this.state.content)}
+                    </div>
+                </div>
+                
+
             );
         }
     }

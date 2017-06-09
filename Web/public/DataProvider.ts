@@ -2,21 +2,18 @@
 
 module Abe.Client {
     export class dataProvider {
-        public getbookTableOfContent(): JQueryPromise<any>{
+        public getbookTableOfContent(bookUrl:string): JQueryPromise<any>{
             return $.ajax(
                 {
                     type: "POST",
-                    data: JSON.stringify({ "name": "Abe Ge"}),
+                    data: JSON.stringify({ "url": bookUrl }),
                     contentType: "application/json",
                     url: "tableOfContent",
                     success: data => {
-                        alert(JSON.stringify(data));
+                        return data;
                     },
                 }
             );
         }
     }
 }
-
-var test = new Abe.Client.dataProvider();
-test.getbookTableOfContent();
