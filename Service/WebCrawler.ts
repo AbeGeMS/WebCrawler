@@ -10,7 +10,7 @@ import * as b from "bluebird";
 export module Abe.Service {
     export class WebCrawler {
         public downloadPage(url: string) {
-            let defer = b.defer();
+            let defer = b.defer<string>();
             http.get(url,
                 (res) => {
                     res.setEncoding("utf-8");
@@ -21,21 +21,30 @@ export module Abe.Service {
         }
 
         private getConent(response: http.IncomingMessage) {
-            let defer = b.defer();
+            let defer = b.defer<string>();
             let message = "";
             response.on("data", (chunk) => {
                 message += chunk;
             });
             response.on("end", () => {
-                defer.resolve(this.parseHTML(message));
+                defer.resolve(message);
             });
             return defer.promise;
         }
 
-        private parseHTML(content: string) {
-            var _$ = cheerio.load(content);
+        public parseContent(html: string) {
+            let _$ = cheerio.load(html);
             let contentList = _$("#content").toArray();
             return contentList.map(value => _$(value).html()).join("\r\n");
+        }
+
+        public parsTable(html: string) {
+            let _$ = cheerio.load(html);
+            let tableList = _$("#list dd").toArray();
+            return tableList.map(caption => {
+                let aElem = _$(caption).children().first();
+                return { href: aElem.attr("href"), title: aElem.text() };
+            });
         }
     }
 }

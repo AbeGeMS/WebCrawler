@@ -13,25 +13,28 @@ module Abe.Web {
             app.use(express.static("public"));
             app.use(bodyParser());
             app.get("/book", (req, res) => {
-                WebSite.crawlerBook(res);
+                //WebSite.crawlerBook(res);
             });
             app.post("/tableOfContent", (req, res) => {
-                console.log(JSON.stringify(req.body));
-                res.json(200, req.body);
+                console.log(req.body.url);
+                WebSite.crawlerTableOfContent(req.body.url)
+                    .then(tableOfContentArray => {
+                        res.json(200, tableOfContentArray);
+                    });
             });
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
             });
         }
 
-        private static crawlerBook(res: any) {
+        private static crawlerTableOfContent(bookUrl: string) {
             let webCrawler = new __.Abe.Service.WebCrawler();
-            return webCrawler.downloadPage("")
-                .then(content => {
-                    res.writeHead(200, { 'content-type': 'text/html;charset=utf-8' });
-                    res.write("<p>" + content + "</p>");
-                    res.end();
-                })
+            return webCrawler.downloadPage(bookUrl)
+                .then(html => webCrawler.parsTable(html));
+                //    res.writeHead(200, { 'content-type': 'text/html;charset=utf-8' });
+                //    res.write("<p>" + content + "</p>");
+                //    res.end();
+                //})
         }
     }
 }
