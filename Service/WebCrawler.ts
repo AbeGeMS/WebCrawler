@@ -34,8 +34,12 @@ export module Abe.Service {
 
         public parseContent(html: string) {
             let _$ = cheerio.load(html);
-            let contentList = _$("#content").toArray();
-            return contentList.map(value => _$(value).html()).join("\r\n");
+            let contentList = _$("#content");
+            return contentList.contents().toArray()
+                .filter((elem)=>!_$(elem).is('br'))
+                .map((element) => {
+                    return { p: _$(element).text().trim() };
+            });
         }
 
         public parsTable(html: string) {

@@ -15,5 +15,19 @@ module Abe.Client {
                 }
             );
         }
+
+        public getbookContent(bookUrl:string): JQueryPromise<any>{
+            return $.ajax(
+                {
+                    type: "POST",
+                    data: JSON.stringify({ "url": bookUrl }),
+                    contentType: "application/json",
+                    url: "book",
+                    success: data => {
+                        return data;
+                    },
+                }
+            );
+        }
     }
 }

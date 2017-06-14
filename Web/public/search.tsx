@@ -5,7 +5,8 @@
 module Abe.Client {
     interface searchPageState {
         searchValue: string;
-        content: any[];
+        tableOfContent: any[];
+        bookContent: any[];
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
@@ -13,7 +14,8 @@ module Abe.Client {
         }
         public state = {
             searchValue: "",
-            content: [],
+            tableOfContent: [],
+            bookContent: [],
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
@@ -23,7 +25,7 @@ module Abe.Client {
                 onClick: () => {
                     let provider = new Abe.Client.dataProvider();
                     provider.getbookTableOfContent(this.state.searchValue)
-                        .then(c => this.setState({ content: c }));
+                        .then(c => this.setState({ tableOfContent: c }));
                 },
             }
             return (
@@ -35,7 +37,10 @@ module Abe.Client {
                         <button {...btnProp} >Search</button>
                     </span>
                     <div>
-                        {this.tableOfContent(this.state.content)}
+                        {this.tableOfContent(this.state.tableOfContent)}
+                    </div>
+                    <div>
+                        {this.bookContent(this.state.bookContent)}
                     </div>
                 </div>
                 
@@ -46,7 +51,11 @@ module Abe.Client {
         private tableOfContent(list: { href: string, title: string }[]) {
             let content = list.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
-                    onClick: () => { alert(value.href);}
+                    onClick: () => {
+                        let provider = new Abe.Client.dataProvider();
+                        provider.getbookContent(value.href)
+                            .then(c => this.setState({ bookContent: c }));
+                    }
                 };
                 return <li><button {...btnProp}>{value.title}</button></li>;
             });
@@ -55,6 +64,12 @@ module Abe.Client {
                     {content}
                 </div>
             );
+        }
+
+        private bookContent(list: { p: string }[]) {
+            return list.map(value => {
+                return <p>{value.p}</p>;
+            });
         }
     }
 }

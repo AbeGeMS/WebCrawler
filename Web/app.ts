@@ -12,7 +12,7 @@ module Abe.Web {
             let app = express();
             app.use(express.static("public"));
             app.use(bodyParser());
-            app.get("/book", (req, res) => {
+            app.post("/book", (req, res) => {
                 WebSite.crawlerContent(req.body.url)
                     .then(bookContent => {
                         res.json(200, bookContent);
@@ -32,11 +32,9 @@ module Abe.Web {
         private static crawlerTableOfContent(bookUrl: string) {
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.downloadPage(bookUrl)
-                .then(html => webCrawler.parsTable(html));
-                //    res.writeHead(200, { 'content-type': 'text/html;charset=utf-8' });
-                //    res.write("<p>" + content + "</p>");
-                //    res.end();
-                //})
+                .then(html => {
+                    return webCrawler.parsTable(html);
+                });
         }
 
         private static crawlerContent(bookurl: string) {
