@@ -7,6 +7,7 @@ module Abe.Client {
         searchValue: string;
         tableOfContent: any[];
         bookContent: any[];
+        isTable: boolean;
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
@@ -16,6 +17,7 @@ module Abe.Client {
             searchValue: "",
             tableOfContent: [],
             bookContent: [],
+            isTable: true,
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
@@ -28,24 +30,35 @@ module Abe.Client {
                         .then(c => this.setState({ tableOfContent: c }));
                 },
             }
-            return (
+            let tableContent = (
                 <div>
                     <span>
                         <input {...inputProp} />
-                        </span>
+                    </span>
                     <span>
                         <button {...btnProp} >Search</button>
                     </span>
                     <div>
                         {this.tableOfContent(this.state.tableOfContent)}
                     </div>
+                </div>);
+            let backTableBtnProp: React.HTMLProps<HTMLElement> = {
+                onClick: () => {
+                    this.setState({ isTable: !this.state.isTable });
+                }
+            };
+
+            let bookContent = (
+                <div>
+                    <div>
+                        <button {...backTableBtnProp} > Table Of Content</button>
+                    </div>
                     <div>
                         {this.bookContent(this.state.bookContent)}
                     </div>
                 </div>
-                
-
             );
+            return this.state.isTable ? tableContent : bookContent;
         }
 
         private tableOfContent(list: { href: string, title: string }[]) {
@@ -53,8 +66,8 @@ module Abe.Client {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
                         let provider = new Abe.Client.dataProvider();
-                        provider.getbookContent(value.href)
-                            .then(c => this.setState({ bookContent: c }));
+                        provider.getbookContent(this.getHostname() + value.href)
+                            .then(c => this.setState({ bookContent: c, isTable: false }));
                     }
                 };
                 return <li><button {...btnProp}>{value.title}</button></li>;
@@ -70,6 +83,12 @@ module Abe.Client {
             return list.map(value => {
                 return <p>{value.p}</p>;
             });
+        }
+
+        private getHostname() {
+            let a = document.createElement("a");
+            a.href = this.state.searchValue;
+            return a.protocol+"//" + a.hostname;
         }
     }
 }
