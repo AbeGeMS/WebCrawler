@@ -21,6 +21,7 @@ module Abe.Client {
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
+                style: {width:"80%"},
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ searchValue: e.target.value }),
             };
             let btnProp: React.HTMLProps<HTMLElement> = {
@@ -65,12 +66,11 @@ module Abe.Client {
             let content = list.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
-                        let provider = new Abe.Client.dataProvider();
-                        provider.getbookContent(this.getHostname() + value.href)
-                            .then(c => this.setState({ bookContent: c, isTable: false }));
+                        let content = [];
+                        this.getBookContent(content, value.href);
                     }
                 };
-                return <li><button {...btnProp}>{value.title}</button></li>;
+                return <span><button {...btnProp}>{value.title}</button></span>;
             });
             return (
                 <div>
@@ -89,6 +89,32 @@ module Abe.Client {
             let a = document.createElement("a");
             a.href = this.state.searchValue;
             return a.protocol+"//" + a.hostname;
+        }
+        private bookBuffer = 0;
+
+        private getBookContent(content: any[], url: string) {
+            let provider = new Abe.Client.dataProvider();
+            provider.getbookContent(this.getHostname() + url)
+                .then(c => {
+                    debugger;
+                    if (!content) {
+                        content = [];
+                    }
+                    content = content.concat(c);
+                    let index = 0;
+                    this.state.tableOfContent.forEach((v, i) => {
+                        if (v.href === url) {
+                            index = i;
+                        }
+                    });
+                    if (++index < this.state.tableOfContent.length
+                        && this.bookBuffer++ < 6) {
+                        this.getBookContent(content, this.state.tableOfContent[index].href);
+                    } else {
+                        this.bookBuffer = 0;
+                        this.setState({ bookContent: content, isTable: false });
+                    }
+                });
         }
     }
 }
