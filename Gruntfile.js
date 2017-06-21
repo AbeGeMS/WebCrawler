@@ -33,7 +33,7 @@ module.exports = function (grunt) {
             copy_static_file: {
                 files: [
                     {
-                        src: ["web/public/*.html"],
+                        src: ["web/public/*.html", "web/public/*.css"],
                         dest: "build/"
                     }
                 ]

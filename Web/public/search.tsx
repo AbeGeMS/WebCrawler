@@ -8,6 +8,7 @@ module Abe.Client {
         tableOfContent: any[];
         bookContent: any[];
         isTable: boolean;
+        chapterIndex: number;
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
@@ -18,11 +19,13 @@ module Abe.Client {
             tableOfContent: [],
             bookContent: [],
             isTable: true,
+            chapterIndex:0,
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
-                style: {width:"80%"},
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ searchValue: e.target.value }),
+                style: { width: "60%" },
+
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ searchValue: e.target.value.replace(/ /g,'') }),
             };
             let btnProp: React.HTMLProps<HTMLElement> = {
                 onClick: () => {
@@ -48,11 +51,19 @@ module Abe.Client {
                     this.setState({ isTable: !this.state.isTable });
                 }
             };
+            let nextChapter: React.HTMLProps<HTMLElement> = {
+                disabled: this.state.chapterIndex >= this.state.tableOfContent.length,
+                onClick: () => {
+                    let content = [];
+                    this.getBookContent(content, this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                }
+            };
 
             let bookContent = (
                 <div>
                     <div>
-                        <button {...backTableBtnProp} > Table Of Content</button>
+                        <button {...backTableBtnProp} >Table Of Content</button>
+                        <button {...nextChapter}>Next Chapter</button>
                     </div>
                     <div>
                         {this.bookContent(this.state.bookContent)}
@@ -112,7 +123,8 @@ module Abe.Client {
                         this.getBookContent(content, this.state.tableOfContent[index].href);
                     } else {
                         this.bookBuffer = 0;
-                        this.setState({ bookContent: content, isTable: false });
+                        content.push({ p: this.state.tableOfContent[index - 1].title })
+                        this.setState({ bookContent: content, isTable: false, chapterIndex: index - 1 });
                     }
                 });
         }
