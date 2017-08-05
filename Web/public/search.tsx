@@ -1,4 +1,4 @@
-/// <reference path=".././../node_modules/@types/react/index.d.ts"/>
+﻿/// <reference path=".././../node_modules/@types/react/index.d.ts"/>
 /// <reference path=".././../node_modules/@types/react-dom/index.d.ts"/>
 /// <reference path="dataProvider.ts"/>
 
@@ -12,8 +12,13 @@ module Abe.Client {
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
+        private currentContent: any[] = [];
+        private currentChapter: number = 0;
+        private getContentDeferred: JQueryDeferred<void>;
+
         public componentDidMount() {
         }
+
         public state = {
             searchValue: "",
             tableOfContent: [],
@@ -54,8 +59,21 @@ module Abe.Client {
             let nextChapter: React.HTMLProps<HTMLElement> = {
                 disabled: this.state.chapterIndex >= this.state.tableOfContent.length,
                 onClick: () => {
-                    let content = [];
-                    this.getBookContent(content, this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                    if (this.currentContent === null)
+                    {
+                        this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                            .then(() => {
+                                this.setState(
+                                    { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
+                                    () => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                                );
+                            });
+                    } else {
+                        this.setState(
+                            { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
+                            () => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                        );
+                    }
                 }
             };
 
@@ -77,8 +95,17 @@ module Abe.Client {
             let content = list.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
-                        let content = [];
-                        this.getBookContent(content, value.href);
+                        this.getBookContent([], value.href)
+                            .then(() => {
+                                this.setState(
+                                    { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
+                                    () =>
+                                    {
+                                        $("body").scrollTop(0);
+                                        this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                                    }
+                                );
+                            });
                     }
                 };
                 return <span><button {...btnProp}>{value.title}</button></span>;
@@ -103,11 +130,14 @@ module Abe.Client {
         }
         private bookBuffer = 0;
 
-        private getBookContent(content: any[], url: string) {
+        private getBookContent(content: any[], url: string): JQueryPromise<void> {
+            if (!this.getContentDeferred || !content || content.length === 0) {
+                this.getContentDeferred = $.Deferred<void>(); 
+            }
+
             let provider = new Abe.Client.dataProvider();
             provider.getbookContent(this.getHostname() + url)
                 .then(c => {
-                    debugger;
                     if (!content) {
                         content = [];
                     }
@@ -123,10 +153,61 @@ module Abe.Client {
                         this.getBookContent(content, this.state.tableOfContent[index].href);
                     } else {
                         this.bookBuffer = 0;
-                        content.push({ p: this.state.tableOfContent[index - 1].title })
-                        this.setState({ bookContent: content, isTable: false, chapterIndex: index - 1 });
+                        content.forEach(v => this.replaceGroup().forEach(r => {
+                            v.p = v.p.replace(new RegExp(r.s, "gm"), r.t);
+                        }));
+                        content.push({ p: this.state.tableOfContent[index - 1].title + "完"});
+                        this.currentContent = content;
+                        this.currentChapter = index - 1;
+                        this.getContentDeferred.resolve();
                     }
+                }, () => {
+                    this.currentContent = null;
+                    this.getContentDeferred.reject();
                 });
+            return this.getContentDeferred.promise();
+        }
+
+        private replaceGroup() {
+            return [
+                { s: "sè", t: "色" },
+                { s: "rì", t: "日" },
+                { s: "jīng", t: "精" },
+                { s: "xìng", t: "兴" },
+                { s: "()", t: "" },
+                { s: "cháo", t: "糙" },
+                { s: "jǐng", t: "景" },
+                { s: "yīn", t: "音" },
+                { s: "sāo", t: "瘙" },
+                { s: "yù", t: "域" },
+                { s: "レwww.siluke.com♠思♥路♣客レ", t: "" },
+                { s: "jiǔ", t: "酒" },
+                { s: "zì ", t: "字" },
+                { s: "yóu", t: "油" },
+                { s: "zhèng", t: "正" },
+                { s: "fǔ", t: "府" },
+                { s: "nǎi", t: "乃" },
+                { s: "jiān", t: "间" },
+                { s: "chūn", t: "春" },
+                { s: "shè", t: "社" },
+                { s: "cāo", t: "糙" },
+                { s: "dú", t: "队" },
+                { s: "lì", t: "丽" },
+                { s: "jǐng", t: "警" },
+                { s: "jǐng", t: "警" },
+                { s: "chéng", t: "城" },
+                { s: "rén", t: "人" },
+                { s: "zhèng ", t:"正"},
+                { s: "fǔ", t: "腹" },
+                { s: "nǎi", t: "奶" },
+                { s: "è", t: "色" },
+                { s: "jī", t: "基" },
+                { s: "méng", t: "萌" },
+                { s: "lù", t: "陆" },
+                { s: "mí", t: "弥" },
+                { s: "hún", t: "魂" },
+                { s: "dàng", t: "荡" },
+            ];
         }
     }
 }
