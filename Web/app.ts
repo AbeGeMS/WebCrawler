@@ -13,7 +13,7 @@ module Abe.Web {
             app.use(express.static("public"));
             app.use(bodyParser());
             app.post("/book", (req, res) => {
-                WebSite.crawlerContent(req.body.url)
+                WebSite.crawlerContent(req.body.url, req.body.bookId, req.body.chapterId)
                     .then(bookContent => {
                         res.json(200, bookContent);
                     });
@@ -24,6 +24,11 @@ module Abe.Web {
                         res.json(200, tableOfContentArray);
                     });
             });
+            app.get("/latestChapter", (req, res) => {
+                let latestChapter = WebSite.getCrawlerLateastChapter(req.query.id);
+                res.send(200, latestChapter);
+            });
+
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
             });
@@ -37,10 +42,19 @@ module Abe.Web {
                 });
         }
 
-        private static crawlerContent(bookurl: string) {
+        private static crawlerContent(bookurl: string, bookId: string, chapter: number) {
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.downloadPage(bookurl)
-                .then(html => webCrawler.parseContent(html));
+                .then(html => {
+                    webCrawler.putLatestChapterNumber(bookId, chapter);
+                    let result = webCrawler.parseContent(html);
+                    return result;
+                });
+        }
+
+        private static getCrawlerLateastChapter(bookId: string) {
+            let webCrawler = new __.Abe.Service.WebCrawler();
+            return webCrawler.getLatestChapterNumber(bookId);
         }
     }
 }

@@ -4,11 +4,12 @@
 
 module Abe.Client {
     interface searchPageState {
-        searchValue: string;
-        tableOfContent: any[];
+        bookHost: string;
+        bookId: string;
         bookContent: any[];
-        isTable: boolean;
         chapterIndex: number;
+        isTable: boolean;
+        tableOfContent: any[];
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
@@ -20,25 +21,39 @@ module Abe.Client {
         }
 
         public state = {
-            searchValue: "",
-            tableOfContent: [],
+            bookHost: "",
+            bookId: "",
             bookContent: [],
+            chapterIndex: 0,
             isTable: true,
-            chapterIndex:0,
+            tableOfContent: [],
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
                 style: { width: "60%" },
 
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ searchValue: e.target.value.replace(/ /g,'') }),
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                    let parseResult = this.parseUrl(e.target.value.replace(/ /g, ''));
+                    this.setState({ bookHost: parseResult.hostname, bookId: parseResult.bookId });
+                },
             };
             let btnProp: React.HTMLProps<HTMLElement> = {
                 onClick: () => {
                     let provider = new Abe.Client.dataProvider();
-                    provider.getbookTableOfContent(this.state.searchValue)
-                        .then(c => this.setState({ tableOfContent: c }));
+                    provider.getbookTableOfContent(this.state.bookHost + "/" + this.state.bookId + "/")
+                        .then(c => this.setState({ tableOfContent: c },
+                            () => {
+                                this.getLatestChapter();
+                            }
+                        ));
                 },
-            }
+            };
+            let latestChapterProp: React.HTMLProps<HTMLElement> = {
+                onClick: () => {
+                    this.getContentFromTable(this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                },
+            };
+
             let tableContent = (
                 <div>
                     <span>
@@ -46,6 +61,14 @@ module Abe.Client {
                     </span>
                     <span>
                         <button {...btnProp} >Search</button>
+                    </span>
+                    <span>
+                        <button {...latestChapterProp} >
+                            {!!this.state.tableOfContent[this.state.chapterIndex + 1]
+                                ? this.state.tableOfContent[this.state.chapterIndex + 1].title
+                                : ""
+                            }
+                        </button>
                     </span>
                     <div>
                         {this.tableOfContent(this.state.tableOfContent)}
@@ -59,8 +82,7 @@ module Abe.Client {
             let nextChapter: React.HTMLProps<HTMLElement> = {
                 disabled: this.state.chapterIndex >= this.state.tableOfContent.length,
                 onClick: () => {
-                    if (this.currentContent === null)
-                    {
+                    if (this.currentContent === null) {
                         this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
                             .then(() => {
                                 this.setState(
@@ -95,17 +117,7 @@ module Abe.Client {
             let content = list.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
-                        this.getBookContent([], value.href)
-                            .then(() => {
-                                this.setState(
-                                    { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
-                                    () =>
-                                    {
-                                        $("body").scrollTop(0);
-                                        this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href);
-                                    }
-                                );
-                            });
+                        this.getContentFromTable(value.href);
                     }
                 };
                 return <span><button {...btnProp}>{value.title}</button></span>;
@@ -117,26 +129,46 @@ module Abe.Client {
             );
         }
 
+        private getContentFromTable(url: string) {
+            this.getBookContent([], url)
+                .then(() => {
+                    this.setState(
+                        { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
+                        () => {
+                            $("body").scrollTop(0);
+                            this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                        }
+                    );
+                });
+        }
+
+        private getLatestChapter() {
+            let provider = new Abe.Client.dataProvider();
+            provider.getLatestChapertNumber(this.state.bookId)
+                .then(v => this.setState({ chapterIndex: v }));
+           
+        }
+
         private bookContent(list: { p: string }[]) {
             return list.map(value => {
                 return <p>{value.p}</p>;
             });
         }
 
-        private getHostname() {
-            let a = document.createElement("a");
-            a.href = this.state.searchValue;
-            return a.protocol+"//" + a.hostname;
+        private parseUrl(url: string): { hostname: string, bookId: string } {
+            let result = url.match(/(.*)\/(.*)\//);
+            return { hostname: result[1], bookId: result[2] };
         }
+
         private bookBuffer = 0;
 
         private getBookContent(content: any[], url: string): JQueryPromise<void> {
             if (!this.getContentDeferred || !content || content.length === 0) {
-                this.getContentDeferred = $.Deferred<void>(); 
+                this.getContentDeferred = $.Deferred<void>();
             }
 
             let provider = new Abe.Client.dataProvider();
-            provider.getbookContent(this.getHostname() + url)
+            provider.getbookContent(this.state.bookHost + url, this.state.bookId, this.state.chapterIndex)
                 .then(c => {
                     if (!content) {
                         content = [];
@@ -156,7 +188,7 @@ module Abe.Client {
                         content.forEach(v => this.replaceGroup().forEach(r => {
                             v.p = v.p.replace(new RegExp(r.s, "gm"), r.t);
                         }));
-                        content.push({ p: this.state.tableOfContent[index - 1].title + "完"});
+                        content.push({ p: this.state.tableOfContent[index - 1].title + "完" });
                         this.currentContent = content;
                         this.currentChapter = index - 1;
                         this.getContentDeferred.resolve();
@@ -197,7 +229,7 @@ module Abe.Client {
                 { s: "jǐng", t: "警" },
                 { s: "chéng", t: "城" },
                 { s: "rén", t: "人" },
-                { s: "zhèng ", t:"正"},
+                { s: "zhèng ", t: "正" },
                 { s: "fǔ", t: "腹" },
                 { s: "nǎi", t: "奶" },
                 { s: "è", t: "色" },
@@ -207,6 +239,28 @@ module Abe.Client {
                 { s: "mí", t: "弥" },
                 { s: "hún", t: "魂" },
                 { s: "dàng", t: "荡" },
+                { s: "bō", t: "波" },
+                { s: "shì", t: "市" },
+                { s: "nv", t: "女" },
+                { s: "『", t: "" },
+                { s: "』", t: "" },
+                { s: "mén", t: "门" },
+                { s: "máo", t: "毛" },
+                { s: "hòu", t: "后" },
+                { s: "huā", t: "花" },
+                { s: "jiāo", t: "交" },
+                { s: "ji", t: "基" },
+                { s: "dòng", t: "动" },
+                { s: "luàn", t: "换" },
+                { s: "fù", t: "付" },
+                { s: "xìn", t: "信" },
+                { s: "xiōng", t: "兄" },
+                { s: "yòu", t: "又" },
+                { s: "luǒ", t: "裸" },
+                { s: "sī", t: "私" },
+                { s: "", t: "" },
+                { s: "", t: "" },
+                { s: "readx", t: "" },
             ];
         }
     }

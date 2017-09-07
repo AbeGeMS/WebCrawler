@@ -16,16 +16,26 @@ module Abe.Client {
             );
         }
 
-        public getbookContent(bookUrl:string): JQueryPromise<any>{
+        public getbookContent(bookUrl: string, bookId: string, chapterId: number): JQueryPromise<any>{
             return $.ajax(
                 {
                     type: "POST",
-                    data: JSON.stringify({ "url": bookUrl }),
+                    data: JSON.stringify({ "url": bookUrl, "bookId": bookId, "chapterId": chapterId }),
                     contentType: "application/json",
                     url: "book",
                     success: data => {
                         return data;
                     },
+                }
+            );
+        }
+
+        public getLatestChapertNumber(bookId: string): JQueryPromise<number>{
+            return $.ajax(
+                {
+                    type: "GET",
+                    url: "latestChapter?id=" + bookId,
+                    success: chapterNumber => chapterNumber,
                 }
             );
         }
