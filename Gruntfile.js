@@ -3,15 +3,9 @@ module.exports = function (grunt) {
     var shipDir = "build/ship";
     var debugDir = "build/debug";
     var moveResouce = function(rootDir){
-        var serviceFiles = rootDir == debugDir
-                        ?['Service/*.js', 'Service/*.js.map']
-                        :['Service/*.js'];
-        var webFiles = rootDir == debugDir
-                    ? ["Web/*.js", "Web/*.js.map"]
-                    : ["Web/*.js"];
-        var clientFiles = rootDir == debugDir
-                        ? ["Web/public/*.js", "Web/public/*.js.map"]
-                        : ["Web/public/*.js"];
+        var serviceFiles = ['Service/*.js', 'Service/*.js.map'];
+        var webFiles = ["Web/*.js", "Web/*.js.map"];
+        var clientFiles = ["Web/public/*.js", "Web/public/*.js.map"];
         return {
             move_compile_jsfile: {
                 files: [
@@ -43,7 +37,17 @@ module.exports = function (grunt) {
                             dest: rootDir +"/"
                         }
                     ]
-                }
+                },
+                copy_static_file_ship:{
+                    files: [
+                        {
+                            expand: true,
+                            cwd: debugDir + "/",
+                            src:['**/*.js','**/*.html','**/*.css'],
+                            dest:shipDir
+                        },
+                    ]
+                },
             };
         
     };
@@ -65,7 +69,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: ['Service/*.ts', "Web/*", "Web/public/*","!node_modules/**/*.ts"],
-                tasks: ["ts:dev", "move","copy"],
+                tasks: ["ts:dev", "move", "copy:copy_static_file","copy:copy_static_file_ship"],
             }
         },
         nodemon: {
