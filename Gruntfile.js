@@ -1,5 +1,54 @@
 module.exports = function (grunt) {
     "use strict";
+    var shipDir = "build/ship";
+    var debugDir = "build/debug";
+    var moveResouce = function(rootDir){
+        var serviceFiles = rootDir == debugDir
+                        ?['Service/*.js', 'Service/*.js.map']
+                        :['Service/*.js'];
+        var webFiles = rootDir == debugDir
+                    ? ["Web/*.js", "Web/*.js.map"]
+                    : ["Web/*.js"];
+        var clientFiles = rootDir == debugDir
+                        ? ["Web/public/*.js", "Web/public/*.js.map"]
+                        : ["Web/public/*.js"];
+        return {
+            move_compile_jsfile: {
+                files: [
+                    {
+                        src: serviceFiles,
+                        dest: rootDir + '/Service/'
+                    },
+                    {
+                        src: webFiles,
+                        dest: rootDir + "/Web/"
+                    },
+                    {
+                        src: clientFiles,
+                        dest:rootDir + "/Web/public/"
+                    }
+                ]
+            }
+        };
+    };
+    var copyResource = function(rootDir){
+        var clientFiles = rootDir == debugDir 
+                    ? ["web/public/*.html", "web/public/*.css","web/public/*.ts","web/public/*.tsx"]
+                    : ["web/public/*.html", "web/public/*.css"];
+            return {
+                copy_static_file: {
+                       files: [
+                        {
+                            src:clientFiles, 
+                            dest: rootDir +"/"
+                        }
+                    ]
+                }
+            };
+        
+    };
+    var moveAll = moveResouce(debugDir);
+    var copyAll = copyResource(debugDir); 
 
     grunt.initConfig({
         ts: {
@@ -11,34 +60,8 @@ module.exports = function (grunt) {
                 },
             }
         },
-        move: {
-            move_compile_jsfile: {
-                files: [
-                    {
-                        src: ['Service/*.js', 'Service/*.js.map'],
-                        dest: 'build/Service/'
-                    },
-                    {
-                        src: ["Web/*.js", "Web/*.js.map"],
-                        dest: "build/Web/"
-                    },
-                    {
-                        src: ["Web/public/*.js", "Web/public/*.js.map"],
-                        dest:"build/Web/public/"
-                    }
-                ]
-            }
-        },
-        copy: {
-            copy_static_file: {
-                files: [
-                    {
-                        src: ["web/public/*.html", "web/public/*.css"],
-                        dest: "build/"
-                    }
-                ]
-            }
-        },
+        move: moveAll,
+        copy: copyAll,
         watch: {
             scripts: {
                 files: ['Service/*.ts', "Web/*", "Web/public/*","!node_modules/**/*.ts"],
@@ -47,7 +70,7 @@ module.exports = function (grunt) {
         },
         nodemon: {
             dev: {
-                script: "build/web/app.js",
+                script: debugDir + "/web/app.js",
             }
         }
     });

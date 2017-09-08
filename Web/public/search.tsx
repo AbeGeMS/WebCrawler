@@ -48,11 +48,6 @@ module Abe.Client {
                         ));
                 },
             };
-            let latestChapterProp: React.HTMLProps<HTMLElement> = {
-                onClick: () => {
-                    this.getContentFromTable(this.state.tableOfContent[this.state.chapterIndex + 1].href);
-                },
-            };
 
             let tableContent = (
                 <div>
@@ -62,14 +57,7 @@ module Abe.Client {
                     <span>
                         <button {...btnProp} >Search</button>
                     </span>
-                    <span>
-                        <button {...latestChapterProp} >
-                            {!!this.state.tableOfContent[this.state.chapterIndex + 1]
-                                ? this.state.tableOfContent[this.state.chapterIndex + 1].title
-                                : ""
-                            }
-                        </button>
-                    </span>
+                    <span>{this.latestChapter()}</span>
                     <div>
                         {this.tableOfContent(this.state.tableOfContent)}
                     </div>
@@ -99,7 +87,7 @@ module Abe.Client {
                 }
             };
 
-            let bookContent = (
+            let bookContent: JSX.Element = (
                 <div>
                     <div>
                         <button {...backTableBtnProp} >Table Of Content</button>
@@ -111,6 +99,12 @@ module Abe.Client {
                 </div>
             );
             return this.state.isTable ? tableContent : bookContent;
+        }
+
+        private bookContent(list: { p: string }[]) {
+            return list.map(value => {
+                return <p>{value.p}</p>;
+            });
         }
 
         private tableOfContent(list: { href: string, title: string }[]) {
@@ -128,6 +122,26 @@ module Abe.Client {
                 </div>
             );
         }
+
+        private latestChapter() {
+
+            let latestChapterProp: React.HTMLProps<HTMLElement> = {
+                onClick: () => {
+                    this.getContentFromTable(this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                },
+            };
+
+            if (!!this.state.tableOfContent[this.state.chapterIndex + 1]){
+                return (
+                        <button {...latestChapterProp} >
+                             { this.state.tableOfContent[this.state.chapterIndex + 1].title }
+                        </button>
+                );
+            } else {
+                return null;
+            }
+        }
+        private bookBuffer = 0;
 
         private getContentFromTable(url: string) {
             this.getBookContent([], url)
@@ -149,18 +163,6 @@ module Abe.Client {
            
         }
 
-        private bookContent(list: { p: string }[]) {
-            return list.map(value => {
-                return <p>{value.p}</p>;
-            });
-        }
-
-        private parseUrl(url: string): { hostname: string, bookId: string } {
-            let result = url.match(/(.*)\/(.*)\//);
-            return { hostname: result[1], bookId: result[2] };
-        }
-
-        private bookBuffer = 0;
 
         private getBookContent(content: any[], url: string): JQueryPromise<void> {
             if (!this.getContentDeferred || !content || content.length === 0) {
@@ -198,6 +200,11 @@ module Abe.Client {
                     this.getContentDeferred.reject();
                 });
             return this.getContentDeferred.promise();
+        }
+
+        private parseUrl(url: string): { hostname: string, bookId: string } {
+            let result = url.match(/(.*)\/(.*)\//);
+            return { hostname: result[1], bookId: result[2] };
         }
 
         private replaceGroup() {

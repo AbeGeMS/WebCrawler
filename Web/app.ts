@@ -5,12 +5,13 @@
 import * as express from "express";
 import * as __ from "./../Service/WebCrawler";
 import * as bodyParser from "body-parser";
+import * as path from "path";
 
 module Abe.Web {
     export class WebSite {
         public static start() {
             let app = express();
-            app.use(express.static("public"));
+            app.use(express.static(path.join(__dirname, "public")));
             app.use(bodyParser());
             app.post("/book", (req, res) => {
                 WebSite.crawlerContent(req.body.url, req.body.bookId, req.body.chapterId)
