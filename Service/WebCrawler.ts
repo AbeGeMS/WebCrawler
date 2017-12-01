@@ -5,6 +5,7 @@
 
 import * as nConsole from "console";
 import * as http from "http";
+import * as https from "https";
 import * as cheerio from "cheerio";
 import * as b from "bluebird";
 import * as cache from "memory-cache";
@@ -13,7 +14,7 @@ export module Abe.Service {
     export class WebCrawler {
         public downloadPage(url: string) {
             let defer = b.defer<string>();
-            http.get(url,
+            https.get(url,
                 (res) => {
                     res.setEncoding("utf-8");
                     return this.getConent(res)
@@ -31,6 +32,7 @@ export module Abe.Service {
             response.on("end", () => {
                 defer.resolve(message);
             });
+            response.on("errr", err => { console.log(err) });
             return defer.promise;
         }
 
