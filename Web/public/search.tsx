@@ -268,6 +268,8 @@ module Abe.Client {
                 { s: "", t: "" },
                 { s: "", t: "" },
                 { s: "readx", t: "" },
+                { s: "&nbsp;", t: "" },
+                { s: "nbsp;", t: "" },
             ];
         }
     }
