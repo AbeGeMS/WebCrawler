@@ -31,6 +31,12 @@ module Abe.Web {
                     res.send(latestChapter);
                 });
             });
+            app.get("/putChapter",(req,res)=>{
+                WebSite.putCrawlerLateastChapter(req.query.id,req.query.chapter)
+                .then(value=>{
+                    res.send(value);
+                });
+            })
 
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
@@ -58,6 +64,10 @@ module Abe.Web {
         private static getCrawlerLateastChapter(bookId: string) {
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.getLatestChapterNumber(bookId);
+        }
+        private static putCrawlerLateastChapter(bookId:string, chapterNum:string){
+            let webCrawler = new __.Abe.Service.WebCrawler();
+            return webCrawler.putLatestChapterNumber(bookId,chapterNum);
         }
     }
 }

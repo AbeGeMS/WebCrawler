@@ -49,7 +49,7 @@ export module Abe.Service {
             {
                 console.log("[err] latestChapter.latestChapter parameter incorrect");
             }
-
+            
             this.redisClient.get(bookId, (err, value) => {
                 if (!value) {
                     this.redisClient.set(bookId, "0",(err,value)=>{
@@ -65,14 +65,19 @@ export module Abe.Service {
         }
 
         public putLatestChapterNumber(bookId: string, chapter: string) {
+            let defer = b.defer<string>();
             console.log("[log] put book Id");
             this.redisClient.get(bookId,(err,value)=>{
                 if (parseInt(chapter) > parseInt(value)) {
                     this.redisClient.set(bookId, chapter.toString(),(err,value)=>{
+                        defer.resolve(value);
                         console.log("[log] set chapter success");
                     });
+                } else {
+                    defer.reject("small chapter");
                 }
             });
+            return defer.promise;
         }
 
         public parseContent(html: string) {
