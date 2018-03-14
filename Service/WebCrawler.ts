@@ -57,7 +57,7 @@ export module Abe.Service {
                     });
                     defer.resolve("0");
                 } else {
-                    console.log("[log] bokId " + bookId + " last charpter " + value);
+                    console.log("[log] bookId " + bookId + " last charpter " + value);
                     defer.resolve(value);
                 }
             });
@@ -66,7 +66,6 @@ export module Abe.Service {
 
         public putLatestChapterNumber(bookId: string, chapter: string) {
             let defer = b.defer<string>();
-            console.log("[log] put book Id");
             this.redisClient.get(bookId,(err,value)=>{
                 if (parseInt(chapter) > parseInt(value)) {
                     this.redisClient.set(bookId, chapter.toString(),(err,value)=>{
@@ -74,9 +73,15 @@ export module Abe.Service {
                         console.log("[log] set chapter success");
                     });
                 } else {
-                    defer.reject("small chapter");
+                    defer.reject("small chapter,input "+ chapter + "latest " + value);
                 }
             });
+            return defer.promise;
+        }
+
+        public deleteCache(key:string){
+            let defer = b.defer<string>();
+            this.redisClient.DEL(key,(err,value)=>defer.resolve(value.toString()));
             return defer.promise;
         }
 

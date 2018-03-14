@@ -159,7 +159,9 @@ module Abe.Client {
         private getLatestChapter() {
             let provider = new Abe.Client.dataProvider();
             provider.getLatestChapertNumber(this.state.bookId)
-                .then(v => this.setState({ chapterIndex: v }));
+                .then(v => this.setState({ 
+                    chapterIndex:  parseInt(v.toString())
+                }));
            
         }
 
@@ -266,10 +268,11 @@ module Abe.Client {
                 { s: "luǒ", t: "裸" },
                 { s: "sī", t: "私" },
                 { s: "", t: "" },
-                { s: "", t: "" },
                 { s: "readx", t: "" },
                 { s: "&nbsp;", t: "" },
                 { s: "nbsp;", t: "" },
+                { s: "[a-z]", t: "" },
+                { s: "[A-Z]", t: "" },
             ];
         }
     }

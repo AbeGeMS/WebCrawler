@@ -28,6 +28,7 @@ module Abe.Web {
             app.get("/latestChapter", (req, res) => {
                 WebSite.getCrawlerLateastChapter(req.query.id)
                 .then(latestChapter=>{
+                    console.log('[log] latestChapter is ' + parseInt(latestChapter));
                     res.send(latestChapter);
                 });
             });
@@ -37,6 +38,10 @@ module Abe.Web {
                     res.send(value);
                 });
             })
+            app.get("/delCache",(req,res)=>{
+                WebSite.delCache(req.query.id)
+                .then(value=>res.send(value));
+            });
 
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
@@ -65,9 +70,15 @@ module Abe.Web {
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.getLatestChapterNumber(bookId);
         }
+
         private static putCrawlerLateastChapter(bookId:string, chapterNum:string){
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.putLatestChapterNumber(bookId,chapterNum);
+        }
+
+        private static delCache(key:string){
+            let webCrawler = new __.Abe.Service.WebCrawler();
+            return webCrawler.deleteCache(key);
         }
     }
 }
