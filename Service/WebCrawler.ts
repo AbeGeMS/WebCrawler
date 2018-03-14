@@ -1,18 +1,18 @@
 ﻿/// <reference path="./../node_modules/@types/node/index.d.ts"/>
 /// <reference path="./../node_modules/@types/cheerio/index.d.ts"/>
 /// <reference path="./../node_modules/@types/bluebird/index.d.ts"/>
-/// <reference path="./lib/memory-cache.d.ts"/>
+/// <reference path="./../node_modules/@types/redis/index.d.ts"/>
 
 import * as nConsole from "console";
 import * as http from "http";
 import * as https from "https";
 import * as cheerio from "cheerio";
 import * as b from "bluebird";
-import * as cache from "memory-cache";
+import * as redis from "redis";
 
 export module Abe.Service {
     export class WebCrawler {
-        public downloadPage(url: string) {
+        public downloadPage(url: any) {
             let defer = b.defer<string>();
             https.get(url,
                 (res) => {
@@ -36,21 +36,43 @@ export module Abe.Service {
             return defer.promise;
         }
 
-        public getLatestChapterNumber(bookId: string): string|number{
-            if (!!cache.get(bookId)) {
-                return cache.get(bookId);
+        private redisClient:redis.RedisClient = redis.createClient(6380,'myBookmark.redis.cache.windows.net',{
+            auth_pass:'',
+            tls:{
+                servername:'myBookmark.redis.cache.windows.net'
+            },
+        });
+
+        public getLatestChapterNumber(bookId: string){
+            let defer = b.defer<string>();
+            if(bookId==null)
+            {
+                console.log("[err] latestChapter.latestChapter parameter incorrect");
             }
-            else {
-                cache.put(bookId,0);
-                return bookId;
-            }
+
+            this.redisClient.get(bookId, (err, value) => {
+                if (!value) {
+                    this.redisClient.set(bookId, "0",(err,value)=>{
+                        console.log('[info] set initial chapter 0, status is' + value);
+                    });
+                    defer.resolve("0");
+                } else {
+                    console.log("[log] bokId " + bookId + " last charpter " + value);
+                    defer.resolve(value);
+                }
+            });
+            return defer.promise;
         }
 
-        public putLatestChapterNumber(bookId: string, chapter: number) {
-            let currentChapter = cache.get(bookId) || 0;
-            if (chapter > currentChapter) {
-                cache.put(bookId, chapter);
-            }
+        public putLatestChapterNumber(bookId: string, chapter: string) {
+            console.log("[log] put book Id");
+            this.redisClient.get(bookId,(err,value)=>{
+                if (parseInt(chapter) > parseInt(value)) {
+                    this.redisClient.set(bookId, chapter.toString(),(err,value)=>{
+                        console.log("[log] set chapter success");
+                    });
+                }
+            });
         }
 
         public parseContent(html: string) {

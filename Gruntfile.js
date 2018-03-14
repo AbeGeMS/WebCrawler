@@ -61,6 +61,7 @@ module.exports = function (grunt) {
                 options: {
                     fast:'never',
                     jsx: "react",
+                    lib: ["es5","es6","dom"],
                 },
             }
         },
