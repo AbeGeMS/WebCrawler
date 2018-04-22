@@ -42,6 +42,11 @@ module Abe.Web {
                 WebSite.delCache(req.query.id)
                 .then(value=>res.send(value));
             });
+            app.get("/books",(req,res)=>{
+                console.log(req.query.id);
+                WebSite.getBookList(req.query.id)
+                .then(v=>res.send(v));
+            });
 
             let server = app.listen(3000, () => {
                 console.log("server is listen port: %s", server.address().port);
@@ -79,6 +84,11 @@ module Abe.Web {
         private static delCache(key:string){
             let webCrawler = new __.Abe.Service.WebCrawler();
             return webCrawler.deleteCache(key);
+        }
+
+        private static getBookList(rootUrl:string){
+            let webCrawler = new __.Abe.Service.WebCrawler();
+            return webCrawler.getBookList(rootUrl);
         }
     }
 }

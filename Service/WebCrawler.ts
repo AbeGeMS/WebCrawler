@@ -9,6 +9,7 @@ import * as https from "https";
 import * as cheerio from "cheerio";
 import * as b from "bluebird";
 import * as redis from "redis";
+import { json } from "express";
 
 export module Abe.Service {
     export class WebCrawler {
@@ -37,7 +38,7 @@ export module Abe.Service {
         }
 
         private redisClient:redis.RedisClient = redis.createClient(6380,'myBookmark.redis.cache.windows.net',{
-            auth_pass:'',
+            auth_pass:'fake Auth key',
             tls:{
                 servername:'myBookmark.redis.cache.windows.net'
             },
@@ -85,6 +86,33 @@ export module Abe.Service {
             return defer.promise;
         }
 
+        public getBookList(rootUrl:string){
+            let a = {id:"hell", b:"what"};
+            let defer = b.defer<{id:string,name:string}[]>();
+            this.redisClient.scan('0','COUNT','20',(err, reply)=>{
+                if(!!err){
+                    defer.reject("scan resdis failed");
+                    console.log("WebCrawler.getBookList: scan redis Error is " + err);
+                }
+                if(reply.length==2){
+                    let queue=[];
+                    let bookIds = reply[1];
+                    bookIds.forEach(v => 
+                        queue.push(
+                            this.downloadPage(rootUrl + "/" + v + "/")
+                            .then(html=> {
+                                console.log("get id "+ v);
+                                return {id:v,name:this.parsTile(html)};
+                            })
+                        )
+                    );
+                    b.all(queue).then(values=>{
+                        defer.resolve(values);});
+                }
+            });
+            return defer.promise;
+        }
+
         public parseContent(html: string) {
             let _$ = cheerio.load(html);
             let contentList = _$("#content");
@@ -103,6 +131,11 @@ export module Abe.Service {
                 let aElem = _$(caption).children().first();
                 return { href: aElem.attr("href"), title: aElem.text() };
             });
+        }
+
+        public parsTile(html:string){
+            let _$ = cheerio.load(html);
+            return _$("#info h1").text();
         }
     }
 }

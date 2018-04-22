@@ -10,6 +10,7 @@ module Abe.Client {
         chapterIndex: number;
         isTable: boolean;
         tableOfContent: any[];
+        bookMark: { id: string, name: string }[];
     }
 
     export class searchPage extends React.Component<any, searchPageState>{
@@ -27,6 +28,7 @@ module Abe.Client {
             chapterIndex: 0,
             isTable: true,
             tableOfContent: [],
+            bookMark:[],
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
@@ -39,13 +41,15 @@ module Abe.Client {
             };
             let btnProp: React.HTMLProps<HTMLElement> = {
                 onClick: () => {
+                    this.getChapterList(this.state.bookHost + "/" + this.state.bookId + "/");
+                },
+            };
+
+            let bookMarkProp: React.HTMLProps<HTMLElement> = {
+                onClick: () => {
                     let provider = new Abe.Client.dataProvider();
-                    provider.getbookTableOfContent(this.state.bookHost + "/" + this.state.bookId + "/")
-                        .then(c => this.setState({ tableOfContent: c },
-                            () => {
-                                this.getLatestChapter();
-                            }
-                        ));
+                    provider.getBookMark(this.state.bookHost)
+                        .then(books => this.setState({ bookMark: books, tableOfContent:[] }));
                 },
             };
 
@@ -57,11 +61,15 @@ module Abe.Client {
                     <span>
                         <button {...btnProp} >Search</button>
                     </span>
+                    <span><button {...bookMarkProp}>I'm feeling Lucky</button></span>
                     <span>{this.latestChapter()}</span>
+                    <div>{this.bookMark(this.state.bookMark)}</div>
                     <div>
                         {this.tableOfContent(this.state.tableOfContent)}
                     </div>
-                </div>);
+                </div>
+            );
+
             let backTableBtnProp: React.HTMLProps<HTMLElement> = {
                 onClick: () => {
                     this.setState({ isTable: !this.state.isTable });
@@ -145,7 +153,37 @@ module Abe.Client {
                 </button>
             );
         }
+
+        private bookMark(bookMark: { id: string, name: string }[]) {
+            let content = bookMark.map(value => {
+                let btnProp: React.HTMLProps<HTMLElement> = {
+                    onClick: () => {
+                        this.getChapterList(this.state.bookHost + "/" + value.id + "/")
+                            .then(() => this.setState({ bookMark: [] }));
+                    }
+                };
+                return <span><button {...btnProp}>{value.name}</button></span>;
+            });
+            return (
+                <div>
+                    {content}
+                </div>
+            );
+        }
+
+
         private bookBuffer = 0;
+
+        private getChapterList(bookUrl:string):JQueryPromise<void>
+        {
+            let provider = new Abe.Client.dataProvider();
+            return provider.getbookTableOfContent(bookUrl)
+                .then(c => this.setState({ tableOfContent: c },
+                    () => {
+                        this.getLatestChapter();
+                    }
+                ));
+        }
 
         private getContentFromTable(url: string) {
             this.getBookContent([], url, true)

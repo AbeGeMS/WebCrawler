@@ -46,5 +46,12 @@ module Abe.Client {
                 url: "putChapter?id=" + bookId + "&chapter=" + chapterId,
             });
         }
+
+        public getBookMark(rootUrl:string):JQueryPromise<{id:string,name:string}[]>{
+            return $.ajax({
+                type:"GET",
+                url: "books?id=" + encodeURIComponent(rootUrl),
+            })
+        }
     }
 }
