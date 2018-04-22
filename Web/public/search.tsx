@@ -71,22 +71,25 @@ module Abe.Client {
                 disabled: this.state.chapterIndex >= this.state.tableOfContent.length,
                 onClick: () => {
                     if (this.currentContent === null) {
-                        this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                        this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false)
                             .then(() => {
+                                let chapterMark = this.currentChapter;
                                 this.setState(
                                     { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
-                                    () => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                                    () => this.putChapterMark(chapterMark)
+                                        .then(() => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false))
                                 );
                             });
                     } else {
+                        let chapterMark =this.currentChapter; 
                         this.setState(
                             { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
-                            () => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href)
+                            () =>this.putChapterMark(chapterMark) 
+                            .then(()=>this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false))
                         );
                     }
                 }
             };
-
             let bookContent: JSX.Element = (
                 <div>
                     <div>
@@ -124,33 +127,36 @@ module Abe.Client {
         }
 
         private latestChapter() {
+            let chaptermark = this.state.chapterIndex == this.state.tableOfContent.length - 1
+                ? this.state.chapterIndex
+                : this.state.chapterIndex + 1;
+            if (chaptermark == 1 || chaptermark > this.state.tableOfContent.length) {
+                return;
+            }
 
             let latestChapterProp: React.HTMLProps<HTMLElement> = {
                 onClick: () => {
-                    this.getContentFromTable(this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                    this.getContentFromTable(this.state.tableOfContent[chaptermark].href);
                 },
             };
-
-            if (!!this.state.tableOfContent[this.state.chapterIndex + 1]){
-                return (
-                        <button {...latestChapterProp} >
-                             { this.state.tableOfContent[this.state.chapterIndex + 1].title }
-                        </button>
-                );
-            } else {
-                return null;
-            }
+            return (
+                <button {...latestChapterProp} >
+                    {this.state.tableOfContent[chaptermark].title}
+                </button>
+            );
         }
         private bookBuffer = 0;
 
         private getContentFromTable(url: string) {
-            this.getBookContent([], url)
+            this.getBookContent([], url, true)
                 .then(() => {
                     this.setState(
                         { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
                         () => {
                             $("body").scrollTop(0);
-                            this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href);
+                            if (!!this.state.tableOfContent[this.state.chapterIndex + 1]) {
+                                this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false);
+                            }
                         }
                     );
                 });
@@ -159,34 +165,29 @@ module Abe.Client {
         private getLatestChapter() {
             let provider = new Abe.Client.dataProvider();
             provider.getLatestChapertNumber(this.state.bookId)
-                .then(v => this.setState({ 
-                    chapterIndex:  parseInt(v.toString())
+                .then(v => this.setState({
+                    chapterIndex: parseInt(v.toString())
                 }));
-           
+
         }
 
-
-        private getBookContent(content: any[], url: string): JQueryPromise<void> {
+        private getBookContent(content: any[], url: string, setToCache: boolean): JQueryPromise<void> {
             if (!this.getContentDeferred || !content || content.length === 0) {
                 this.getContentDeferred = $.Deferred<void>();
             }
 
             let provider = new Abe.Client.dataProvider();
-            provider.getbookContent(this.state.bookHost + url, this.state.bookId, this.state.chapterIndex)
+            let chapterIndex = this.state.tableOfContent.findIndex(v => v.href === url);
+            provider.getbookContent(this.state.bookHost + url, this.state.bookId, setToCache ? chapterIndex : -1)
                 .then(c => {
                     if (!content) {
                         content = [];
                     }
                     content = content.concat(c);
-                    let index = 0;
-                    this.state.tableOfContent.forEach((v, i) => {
-                        if (v.href === url) {
-                            index = i;
-                        }
-                    });
+                    let index = this.state.tableOfContent.findIndex(v => v.href === url);
                     if (++index < this.state.tableOfContent.length
                         && this.bookBuffer++ < 6) {
-                        this.getBookContent(content, this.state.tableOfContent[index].href);
+                        this.getBookContent(content, this.state.tableOfContent[index].href,setToCache);
                     } else {
                         this.bookBuffer = 0;
                         content.forEach(v => this.replaceGroup().forEach(r => {
@@ -195,6 +196,7 @@ module Abe.Client {
                         content.push({ p: this.state.tableOfContent[index - 1].title + "完" });
                         this.currentContent = content;
                         this.currentChapter = index - 1;
+                        console.log("current chapter is " + this.currentChapter);
                         this.getContentDeferred.resolve();
                     }
                 }, () => {
@@ -202,6 +204,11 @@ module Abe.Client {
                     this.getContentDeferred.reject();
                 });
             return this.getContentDeferred.promise();
+        }
+
+        private putChapterMark(chapter:number):JQueryPromise<void>{
+            let provider = new Abe.Client.dataProvider();
+            return provider.putLastestChapterNumber(this.state.bookId, chapter);
         }
 
         private parseUrl(url: string): { hostname: string, bookId: string } {
@@ -267,7 +274,6 @@ module Abe.Client {
                 { s: "yòu", t: "又" },
                 { s: "luǒ", t: "裸" },
                 { s: "sī", t: "私" },
-                { s: "", t: "" },
                 { s: "readx", t: "" },
                 { s: "&nbsp;", t: "" },
                 { s: "nbsp;", t: "" },

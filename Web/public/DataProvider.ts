@@ -39,5 +39,12 @@ module Abe.Client {
                 }
             );
         }
+
+        public putLastestChapterNumber(bookId:string,chapterId:number):JQueryPromise<void>{
+            return $.ajax({
+                type:"GET",
+                url: "putChapter?id=" + bookId + "&chapter=" + chapterId,
+            });
+        }
     }
 }
