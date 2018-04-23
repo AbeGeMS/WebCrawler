@@ -1,6 +1,6 @@
 /// <reference path=".././../node_modules/@types/jquery/index.d.ts"/>
 
-module Abe.Client {
+namespace Abe.Client {
     export class dataProvider {
         public getbookTableOfContent(bookUrl:string): JQueryPromise<any>{
             return $.ajax(

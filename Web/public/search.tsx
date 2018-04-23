@@ -2,7 +2,7 @@
 /// <reference path=".././../node_modules/@types/react-dom/index.d.ts"/>
 /// <reference path="dataProvider.ts"/>
 
-module Abe.Client {
+namespace Abe.Client {
     interface searchPageState {
         bookHost: string;
         bookId: string;
@@ -49,7 +49,7 @@ module Abe.Client {
                 onClick: () => {
                     let provider = new Abe.Client.dataProvider();
                     provider.getBookMark(this.state.bookHost)
-                        .then(books => this.setState({ bookMark: books, tableOfContent:[] }));
+                        .then(books => this.setState({ bookMark: books, bookId:"", tableOfContent:[] }));
                 },
             };
 
@@ -158,8 +158,10 @@ module Abe.Client {
             let content = bookMark.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
+                        this.setState({bookId:value.id},()=>{
                         this.getChapterList(this.state.bookHost + "/" + value.id + "/")
                             .then(() => this.setState({ bookMark: [] }));
+                        });
                     }
                 };
                 return <span><button {...btnProp}>{value.name}</button></span>;
