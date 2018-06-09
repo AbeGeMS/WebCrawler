@@ -3,13 +3,11 @@
 /// <reference path="./../node_modules/@types/bluebird/index.d.ts"/>
 /// <reference path="./../node_modules/@types/redis/index.d.ts"/>
 
-import * as nConsole from "console";
 import * as http from "http";
 import * as https from "https";
 import * as cheerio from "cheerio";
 import * as b from "bluebird";
 import * as redis from "redis";
-import { json } from "express";
 
 export module Abe.Service {
     export class WebCrawler {
@@ -38,7 +36,7 @@ export module Abe.Service {
         }
 
         private redisClient:redis.RedisClient = redis.createClient(6380,'myBookmark.redis.cache.windows.net',{
-            auth_pass:'fake Auth key',
+            auth_pass:'fake redis auth key',
             tls:{
                 servername:'myBookmark.redis.cache.windows.net'
             },
@@ -87,7 +85,6 @@ export module Abe.Service {
         }
 
         public getBookList(rootUrl:string){
-            let a = {id:"hell", b:"what"};
             let defer = b.defer<{id:string,name:string}[]>();
             this.redisClient.scan('0','COUNT','20',(err, reply)=>{
                 if(!!err){
@@ -101,13 +98,14 @@ export module Abe.Service {
                         queue.push(
                             this.downloadPage(rootUrl + "/" + v + "/")
                             .then(html=> {
-                                console.log("get id "+ v);
-                                return {id:v,name:this.parsTile(html)};
+                                let title = this.parsTile(html);
+                                console.log(`get id ${v}, name ${title}`);
+                                return {id:v,name:title};
                             })
                         )
                     );
                     b.all(queue).then(values=>{
-                        defer.resolve(values);});
+                        defer.resolve(values.filter(v=>v.name!=""));});
                 }
             });
             return defer.promise;
