@@ -2,11 +2,12 @@ import * as cheerio from "cheerio";
 import * as Promise from "bluebird";
 import { HttpAgent } from "./httpUtility";
 
-export interface ContantElement {
-    P: string;
+export interface ContantData {
+    Title: string;
+    Content: string[];
 }
 
-export interface TitleElement {
+export interface TitleData {
     Href: string;
     Title: string;
 }
@@ -21,17 +22,11 @@ export class BookService {
     private readonly bookDomain: string;
 
     public getContent(bookId: string, chapterId: string)
-        : Promise<string> {
+        : Promise<ContantData> {
         try {
             let url = `${this.bookDomain}/${bookId}/${chapterId}`;
-            return this._http.get(url).then(html=>{
-                return this.parseContent(html)
-                .map(v=>v.P)
-                .reduce(
-                    (previous,current)=>`${previous}<p>${current}</p>`,
-                    ""
-                );
-            });
+            return this._http.get(url).then(
+                html => this.parseContent(html));
         } catch (ex) {
             return new Promise((resolve, reject) => {
                 reject(JSON.stringify(ex));
@@ -39,18 +34,20 @@ export class BookService {
         }
     }
 
-    private parseContent(html: string): ContantElement[] {
+    private parseContent(html: string): ContantData {
         let _$ = cheerio.load(html);
         let contentList = _$("#content");
-        let result = contentList.contents().toArray()
-            .filter((elem) => !_$(elem).is('br'))
+        let title = this.parsTile(html);
+        let content = contentList.contents().toArray()
+            .filter((elem) => !_$(elem).is('br') && _$(elem).text().trim() !== "")
             .map((element) => {
-                return { P: _$(element).text().trim() };
+                return _$(element).text().trim();
             });
-        return result;
+
+        return { Title: title, Content: content };
     }
 
-    private parsTable(html: string): TitleElement[] {
+    private parsTable(html: string): TitleData[] {
         let _$ = cheerio.load(html);
         let tableList = _$("#list dd").toArray();
         return tableList.map(caption => {
@@ -61,6 +58,6 @@ export class BookService {
 
     private parsTile(html: string): string {
         let _$ = cheerio.load(html);
-        return _$("#info h1").text();
+        return _$("#info h1").text().trim().replace(/\n/g,'');
     }
 }
