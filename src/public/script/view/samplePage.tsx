@@ -1,5 +1,9 @@
-import * as React from "react"
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Button } from "amazeui-dingtalk";
 import { SampleModel } from "../model/sampleModel";
+
+
 
 interface SamplePageState {
     content: string
@@ -16,7 +20,7 @@ export class SamplePage extends React.Component<any, SamplePageState>{
     private model: SampleModel;
 
     public render() {
-        return <div className="basis-color">{this.state.content}</div>;
+        return <div className="basis-color"><Button>Hello world</Button></div>;
     }
 
     private UpdateContent() {
