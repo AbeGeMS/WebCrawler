@@ -1,16 +1,7 @@
 import * as cheerio from "cheerio";
 import * as Promise from "bluebird";
 import { HttpAgent } from "./httpUtility";
-
-export interface ContantData {
-    Title: string;
-    Content: string[];
-}
-
-export interface TitleData {
-    Href: string;
-    Title: string;
-}
+import { ContantData, TitleData } from "../lib/dataModel";
 
 export class BookService {
     constructor(bookDomain: string, agent: HttpAgent) {
@@ -24,7 +15,7 @@ export class BookService {
     public getContent(bookId: string, chapterId: string)
         : Promise<ContantData> {
         try {
-            let url = `${this.bookDomain}/${bookId}/${chapterId}`;
+            let url = `${this.bookDomain}/${bookId}/${chapterId}/`;
 
             return this._http.get(url).then(
                 html => this.parseContent(html));
@@ -63,6 +54,7 @@ export class BookService {
             .map((element) => {
                 return _$(element).text().trim();
             });
+        console.log(`title:${title} content:${content.length}`);
 
         return { Title: title, Content: content };
     }

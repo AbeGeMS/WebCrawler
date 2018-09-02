@@ -1,6 +1,7 @@
 import * as promise from "bluebird";
-import { BookService, ContantData, TitleData } from '../../Service/bookService';
+import { BookService } from '../../Service/bookService';
 import { HttpAgent } from '../../Service/httpUtility';
+import { ContantData,TitleData} from "../../lib/dataModel";
 
 const fakeHtml =
     `<div class="tableOfContent">
