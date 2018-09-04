@@ -27,6 +27,7 @@ var debugConfig = {
   externals: {
     "react": "React",
     "react-dom": "ReactDOM",
+    "amazeui-dingtalk": "AMUIDingTalk",
   }
 };
 
@@ -57,6 +58,7 @@ var testConfig = {
   externals: {
     "react": "React",
     "react-dom": "ReactDOM",
+    "amazeui-dingtalk": "AMUIDingTalk",
   }
 }
 module.exports = [debugConfig, testConfig];

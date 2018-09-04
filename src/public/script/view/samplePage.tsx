@@ -20,7 +20,7 @@ export class SamplePage extends React.Component<any, SamplePageState>{
     private model: SampleModel;
 
     public render() {
-        return <div className="basis-color"><Button>Hello world</Button></div>;
+        return <div className="basis-color"><Button amStyle="primary" radius amSize="xl">Hello world</Button></div>;
     }
 
     private UpdateContent() {
