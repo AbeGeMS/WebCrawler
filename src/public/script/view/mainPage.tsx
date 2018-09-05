@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { SamplePage } from "./samplePage";
+import { HomePage } from "./homePage";
 
 interface IMainPageState {
     test: any
@@ -10,7 +10,7 @@ export class MainPage extends React.Component<any, IMainPageState> {
     public componentWillMount() {
     }
     public render() {
-        return <SamplePage /> 
+        return <HomePage/> 
     }
 }
 
