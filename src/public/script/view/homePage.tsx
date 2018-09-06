@@ -6,7 +6,7 @@ import { SampleModel } from "../model/sampleModel";
 
 
 interface HomePageState {
-    content: string
+    selected:string;
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
@@ -14,7 +14,7 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.UpdateContent();
     }
     public state = {
-        content: "nothing to show...",
+        selected: "gear",
     }
 
     private model: SampleModel;
@@ -30,20 +30,40 @@ export class HomePage extends React.Component<any, HomePageState>{
         }
         let navBarProp = {
             title: "Home Page",
-            leftNav: [{ ...itemLeft, icon: "lef-nav" }],
+            leftNav: [{ ...itemLeft, icon: "left-nav" }],
             rightNav: [{ ...itemRight, icon: "right-nav" }],
         };
-        
-        let tabBarProp= {
-            
+
+        let tabBarProp = {
+
         }
 
         return (
-            <div>
+            <div className="home-page-container">
                 <NavBar {...navBarProp} amStyle="primary" />
-                <TabBar amStyle="primary">
-                    <TabBar.Item/>
-                </TabBar>
+                <div className="home-page-content">
+                    Hello World!
+                </div>
+                <div className="home-page-footer">
+                    <TabBar amStyle="primary">
+                        <TabBar.Item
+                            eventKey="home"
+                            selected={this.state.selected === "home"}
+                            icon="home"
+                            title="home" />
+                        <TabBar.Item
+                            eventKey="gear"
+                            selected={this.state.selected === "gear"}
+                            icon="gear"
+                            title="Settings" />
+                        <TabBar.Item
+                            eventKey="info"
+                            selected={this.state.selected === "info"}
+                            icon="info"
+                            badge={5}
+                            title="information" />
+                    </TabBar>
+                </div>
             </div>
         );
     }
@@ -52,7 +72,6 @@ export class HomePage extends React.Component<any, HomePageState>{
         let model = new SampleModel();
         model.getBookContent()
             .then(msg => this.setState({
-                content: msg.Title,
             }));
     }
 }
