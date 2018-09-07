@@ -2,11 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Button, NavBar, TabBar } from "amazeui-dingtalk";
 import { SampleModel } from "../model/sampleModel";
-
-
+import { TabBarControl } from "./tabBarControl";
 
 interface HomePageState {
-    selected:string;
+    selected: string;
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
@@ -34,10 +33,6 @@ export class HomePage extends React.Component<any, HomePageState>{
             rightNav: [{ ...itemRight, icon: "right-nav" }],
         };
 
-        let tabBarProp = {
-
-        }
-
         return (
             <div className="home-page-container">
                 <NavBar {...navBarProp} amStyle="primary" />
@@ -45,24 +40,7 @@ export class HomePage extends React.Component<any, HomePageState>{
                     Hello World!
                 </div>
                 <div className="home-page-footer">
-                    <TabBar amStyle="primary">
-                        <TabBar.Item
-                            eventKey="home"
-                            selected={this.state.selected === "home"}
-                            icon="home"
-                            title="home" />
-                        <TabBar.Item
-                            eventKey="gear"
-                            selected={this.state.selected === "gear"}
-                            icon="gear"
-                            title="Settings" />
-                        <TabBar.Item
-                            eventKey="info"
-                            selected={this.state.selected === "info"}
-                            icon="info"
-                            badge={5}
-                            title="information" />
-                    </TabBar>
+                    <TabBarControl />
                 </div>
             </div>
         );
