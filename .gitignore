@@ -1,6 +1,7 @@
 #build
 debug
 dist
+build
 
 #package
 node_modules
