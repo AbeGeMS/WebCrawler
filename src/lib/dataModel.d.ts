@@ -9,6 +9,6 @@ export interface TitleData {
 }
 
 export interface BookMarkData {
-    Id: string;
+    BookId: string;
     Name: string;
 }
