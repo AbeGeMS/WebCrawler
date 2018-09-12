@@ -1,4 +1,4 @@
-import { ContantData, TitleData } from "../../../lib/dataModel";
+import { ContantData, TitleData, BookMarkData } from "../../../lib/dataModel";
 
 export class DataProvider{
     public getSayHi(name: string): JQueryPromise<string> {
@@ -55,10 +55,10 @@ export class DataProvider{
         });
     }
 
-    public getBookMark(rootUrl:string):JQueryPromise<{id:string,name:string}[]>{
+    public getBookMark(rootUrl:string):JQueryPromise<BookMarkData[]>{
         return $.ajax({
             type:"GET",
-            url: "books?id=" + encodeURIComponent(rootUrl),
+            url: "bookMark?id=" + encodeURIComponent(rootUrl),
         })
     }
 }
