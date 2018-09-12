@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { TabBar } from "amazeui-dingtalk";
-import { SampleModel } from "../model/sampleModel";
+import { BookModel } from "../model/bookModel";
 
 interface TabBarControlState {
     selected:string;
@@ -15,7 +15,7 @@ export class TabBarControl extends React.Component<any, TabBarControlState>{
         selected: "home",
     }
 
-    private model: SampleModel;
+    private model: BookModel;
 
     private onClick = (key) => this.setState({ selected: key });
 

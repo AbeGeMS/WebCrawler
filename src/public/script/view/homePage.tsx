@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Button, NavBar, TabBar } from "amazeui-dingtalk";
-import { SampleModel } from "../model/sampleModel";
+import { BookModel } from "../model/bookModel";
 import { TabBarControl } from "./tabBarControl";
 
 interface HomePageState {
@@ -16,7 +16,7 @@ export class HomePage extends React.Component<any, HomePageState>{
         selected: "gear",
     }
 
-    private model: SampleModel;
+    private model: BookModel;
 
     public render() {
         let itemLeft = {
@@ -47,8 +47,8 @@ export class HomePage extends React.Component<any, HomePageState>{
     }
 
     private UpdateContent() {
-        let model = new SampleModel();
-        model.getBookContent()
+        let model = new BookModel();
+        model.getBookContent("", "", 0)
             .then(msg => this.setState({
             }));
     }
