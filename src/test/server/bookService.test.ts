@@ -53,7 +53,7 @@ describe('book service test suite', () => {
         ));
     }, 10000);
 
-    it(`getContent should return ${expectedContent}`, () => {
+    it(`getContent_Test`, () => {
         let actualResult = bookService.getContent("123_456", "20");
         actualResult.then(
             value => {
@@ -63,7 +63,7 @@ describe('book service test suite', () => {
             });
     });
 
-    it(`getTableOfContent should return ${expectedTableOfContent}`, () => {
+    it(`getTableOfContent_Test`, () => {
         let actualResult = bookService.getTableOfContent("123_456");
         actualResult.then(
             value => {

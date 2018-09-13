@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node_modules/.bin/gulp",
     "watch": "node_modules/.bin/gulp watch",
-    "test": "node_modules/.bin/jasmine --config=debug/test/jasmine.json",
+    "test": "node_modules/.bin/jasmine --config=debug/test/jasmine.json --reporter=jasmine-console-reporter",
     "karma": "node_modules/.bin/karma start karma.config.js",
     "nodemon": "node_modules/.bin/nodemon.cmd debug/app.js",
     "forever": "node_modules/.bin/forever start -a -l forever.log -o out.log -e err.log -w --watchDirectory ./debug debug/app.js"
