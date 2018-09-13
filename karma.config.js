@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Sat Aug 18 2018 16:07:59 GMT+0800 (China Standard Time)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -36,7 +36,23 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress','html'],
+    reporters: ['mocha'],
+
+    // reporter options
+    mochaReporter: {
+      colors: {
+        success: 'green',
+        info: 'bgBlue',
+        warning: 'cyan',
+        error: 'bgRed'
+      },
+      symbols: {
+        success: '+',
+        info: '#',
+        warning: '!',
+        error: 'x'
+      }
+    },
 
     // the default configuration
     htmlReporter: {
@@ -44,11 +60,11 @@ module.exports = function(config) {
       templatePath: null, // set if you moved jasmine_template.html
       focusOnFailures: true, // reports show failures on start
       namedFiles: false, // name files instead of creating sub-directories
-      pageTitle:'Client side UT', // page title for reports; browser info by default
+      pageTitle: 'Client side UT', // page title for reports; browser info by default
       urlFriendlyName: false, // simply replaces spaces with _ for files/dirs
       reportName: 'report-summary-filename', // report summary filename; browser info by default
-      
-      
+
+
       // experimental
       preserveDescribeNesting: false, // folded suites stay folded 
       foldAll: false, // reports start folded (only with preserveDescribeNesting)
