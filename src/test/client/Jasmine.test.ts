@@ -4,7 +4,7 @@ describe("Pure jasmine test suit", () => {
         expect(actualResult).toBe(true, "should run into here");
     });
     it("failure test002 shouldn't be true", () => {
-        let actualResult =true;
+        let actualResult =false;
         expect(actualResult).toBe(true, "what's the actual result?");
     });
 });
