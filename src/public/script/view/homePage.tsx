@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button, NavBar, TabBar } from "amazeui-dingtalk";
+import { Button, NavBar } from "amazeui-dingtalk";
 import { BookModel } from "../model/bookModel";
+import { BookMark } from "../model/bookMarkModel";
 import { TabBarControl } from "./tabBarControl";
 
 interface HomePageState {
@@ -37,13 +38,18 @@ export class HomePage extends React.Component<any, HomePageState>{
             <div className="home-page-container">
                 <NavBar {...navBarProp} amStyle="primary" />
                 <div className="home-page-content">
-                    Hello World!
+                    <Button amStyle="primary" onClick={this.onTestButtonClick}>Delete Book</Button>
                 </div>
                 <div className="home-page-footer">
                     <TabBarControl />
                 </div>
             </div>
         );
+    }
+
+    private onTestButtonClick() {
+        let bookMark = new BookMark();
+        bookMark.deleteBook("2_fakeBook");
     }
 
     private UpdateContent() {

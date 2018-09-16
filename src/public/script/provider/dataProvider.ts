@@ -59,6 +59,13 @@ export class DataProvider{
         return $.ajax({
             type:"GET",
             url: "bookMark?id=" + encodeURIComponent(rootUrl),
-        })
+        });
+    }
+
+    public deleteBookMark(bookId:string):JQueryPromise<boolean>{
+        return $.ajax({
+            type:"DELETE",
+            url:`bookMark\\${bookId}`,
+        });
     }
 }

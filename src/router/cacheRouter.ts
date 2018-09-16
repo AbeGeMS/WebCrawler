@@ -20,4 +20,9 @@ router.get("/bookMark", (req, res) => {
     res.json(result);
 });
 
+router.delete("/bookMark/:id",(req,res)=>{
+    let bookId = req.params.id;
+    console.log(`Delete book ${bookId}`);
+});
+
 export = router
