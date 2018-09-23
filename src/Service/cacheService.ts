@@ -2,6 +2,7 @@ import * as  Promise from "bluebird";
 import { BookService } from "../Service/bookService";
 import { BookMarkData } from "../lib/dataModel";
 import { RedisAgent } from "./redisUtility";
+import { reject } from "bluebird";
 
 
 export class CacheService {
@@ -14,19 +15,17 @@ export class CacheService {
     }
 
     public getBookList(): Promise<BookMarkData[]> {
-        return new Promise((resolve, reject) => {
-            try {
-                this._redisAgent.SCAN(0, 20).then(values => {
-                    let booksPromise = values.map<Promise<BookMarkData>>(
-                        v=>this._bookService.getTitle(v).then(title=>{
-                          return {BookId:v,Name:title};  
-                        })
-                    );
-                    resolve(Promise.filter(booksPromise, item => item.Name.trim() != null));
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+        try {
+            return this._redisAgent.SCAN(0, 20).then(values => {
+                let booksPromise = values.map<Promise<BookMarkData>>(
+                    v => this._bookService.getTitle(v).then(title => {
+                        return { BookId: v, Name: title };
+                    })
+                );
+                return Promise.filter(booksPromise, item => item.Name.trim() != null);
+            });
+        } catch (error) {
+            return reject(`Failed by ${error}`);
+        }
     }
 }
