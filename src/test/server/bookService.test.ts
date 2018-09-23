@@ -1,77 +1,51 @@
-import * as promise from "bluebird";
-import { BookService } from '../../Service/bookService';
-import { HttpAgent } from '../../Service/httpUtility';
-import { ContantData,TitleData} from "../../lib/dataModel";
-
-const fakeHtml =
-    `<div class="tableOfContent">
-        <div id="list">
-            <dd>
-                <a href="www.fake.com/001">chapter 001</a>
-            </dd>
-            <dd>
-                <a href="www.fake.com/002">chapter 002</a>
-            </dd>
-        </div>
-    </div>
-    <div id="info">
-        <h1>
-        001 FakeBook
-        </h1>
-    </div>
-    <div>
-        <div id="content">Title<br>Subtitle
-            <div>first</div>
-            <div>second</div>
-        </div>
-    </div>`;
+import {
+    mockHttpAgent, fakeHtml,
+    mockBookService, expectedContent,
+    expectedTableOfContent, mockHttpSpyon,
+    mockbookTitle
+} from "./mockProvider";
 
 describe('book service test suite', () => {
 
-    let expectedContent: ContantData = {
-        Title: "001 FakeBook",
-        Content: ["Title", "Subtitle", "first", "second"],
-    };
+    beforeAll(() => mockHttpSpyon(), 10000);
 
-    let expectedTableOfContent: TitleData[] = [{
-        Href: "www.fake.com/001",
-        Title: "chapter 001",
-    }, {
-        Href: "www.fake.com/002",
-        Title: "chapter 002",
-    }];
-
-    let mockHttpAgent = new HttpAgent();
-
-    let bookService = new BookService("http://www.fake.com", mockHttpAgent);
-
-    beforeAll(() => {
-        spyOn(mockHttpAgent, "get").and.returnValue(new promise(
-            (resolve, reject) => {
-                resolve(fakeHtml);
-            }
-        ));
-    }, 10000);
-
-    it(`getContent_Test`, () => {
-        let actualResult = bookService.getContent("123_456", "20");
+    it(`getContent_Test`, (done) => {
+        let actualResult = mockBookService.getContent("123_456", "20");
         actualResult.then(
             value => {
                 expect(value).toEqual(expectedContent);
+                done();
             }, error => {
                 expect(error).toBe(`Failed by ${error}`);
+                done();
             });
     });
 
-    it(`getTableOfContent_Test`, () => {
-        let actualResult = bookService.getTableOfContent("123_456");
+    it(`getTableOfContent_Test`, (done) => {
+        let actualResult = mockBookService.getTableOfContent("123_456");
         actualResult.then(
             value => {
                 expect(value).toEqual(expectedTableOfContent);
+                done();
             },
             error => {
                 expect(error).toBe(`Failed by ${error}`);
+                done();
             }
+        );
+    });
+
+    it("getTitle_Test", (done) => {
+        let actualResult = mockBookService.getTitle("123_456");
+        actualResult.then(
+            title => {
+                expect(title).toBe(mockbookTitle, `the title should be ${mockbookTitle}`);
+                done();
+        },
+        error=>{
+            expect(error).toBe(`Failed by ${error}`);
+            done();
+        }
         );
     });
 });

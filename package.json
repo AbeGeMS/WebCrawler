@@ -19,7 +19,8 @@
     "cheerio": "^1.0.0-rc.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
-    "forever": "^0.15.3"
+    "forever": "^0.15.3",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.4",
@@ -30,6 +31,7 @@
     "@types/node": "^7.0.53",
     "@types/react": "^15.0.25",
     "@types/react-dom": "^15.5.0",
+    "@types/redis": "^2.8.6",
     "awesome-typescript-loader": "^5.0.0",
     "glob": "^7.1.2",
     "gulp": "^3.9.1",

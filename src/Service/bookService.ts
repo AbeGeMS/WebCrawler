@@ -45,6 +45,17 @@ export class BookService {
 
     }
 
+    public getTitle(bookId:string):Promise<string>{
+        try{
+            let url = `${this.bookDomain}/${bookId}`;
+            return this._http.get(url).then(html=>{
+                return  this.parsTile(html);
+            });
+        } catch (ex) {
+            return new Promise((resolve, reject) => reject(JSON.stringify(ex)));
+        }
+    }
+
     private parseContent(html: string): ContantData {
         let _$ = cheerio.load(html);
         let contentList = _$("#content");
