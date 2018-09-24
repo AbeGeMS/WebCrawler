@@ -48,4 +48,12 @@ export class BookModel {
                 value => value
             );
     }
+
+    public setBookDomain(domain:string):JQueryPromise<string>{
+        this.bookDomain = domain;
+        return this.provider.putBookDomain(domain).then(
+            value=>`document.cookie.BaseDomain is ${JSON.stringify(document.cookie)}`,
+            error=>`set ${domain} Failed`,
+        );
+    }
 }

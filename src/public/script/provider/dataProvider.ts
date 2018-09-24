@@ -55,6 +55,15 @@ export class DataProvider{
         });
     }
 
+    public putBookDomain(bookDomain: string): JQueryPromise<boolean> {
+        return $.ajax({
+            type: "PUT",
+            url: "BookDomain/" + encodeURIComponent(bookDomain).replace(/'/g,"%27").replace(/"/g,"%22"),
+            success: () => true,
+            error: err => false,
+        });
+    }
+
     public getBookMark(rootUrl:string):JQueryPromise<BookMarkData[]>{
         return $.ajax({
             type:"GET",
