@@ -7,7 +7,6 @@ import ReactDOM = require("react-dom");
 import { BookMark } from "../model/bookMarkModel";
 
 interface HomePageState {
-    keyword:string;
     bookDomain: string;
     selected: string;
     notificationMessage: string;
@@ -16,9 +15,6 @@ interface HomePageState {
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
-    public getInitialState(){
-        return{keyword:""};
-    }
     public constructor(prop){
         super(prop);
         this.setBookDomain = this.setBookDomain.bind(this);
@@ -29,7 +25,6 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.UpdateContent();
     }
     public state = {
-        keyword:"",
         bookDomain:"",
         selected: "gear",
         notificationMessage: "",
