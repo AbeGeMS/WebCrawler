@@ -7,7 +7,7 @@
         "target": "es5",
         "typeRoots": [
             "./node_modules/@types",
-            "./src/lib"
+            "./src/lib/*"
         ],
         "lib": [
             "es5","es6","dom"

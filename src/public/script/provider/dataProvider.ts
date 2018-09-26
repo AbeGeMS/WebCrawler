@@ -1,4 +1,4 @@
-import { ContantData, TitleData, BookMarkData } from "../../../lib/dataModel";
+import { ContantData, TitleData, BookMarkData } from "../../../lib/typings/dataModel";
 
 export class DataProvider{
     public getSayHi(name: string): JQueryPromise<string> {

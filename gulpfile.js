@@ -26,7 +26,7 @@ gulp.task("build-staticResource", ["clean"], function () {
 });
 
 gulp.task("webpack", ["clean"], function () {
-    exec("webpack --colors --progress --verbose --config webpack.config.js", function (err, stdout, stderr) {
+    exec("webpack --colors --progress --config webpack.config.js", function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });

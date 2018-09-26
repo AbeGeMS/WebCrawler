@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as path from "path";
 import * as cookie from "cookie-parser";
-import { BookMarkData, TitleData } from "../lib/dataModel";
+import { BookMarkData, TitleData } from "../lib/typings/dataModel";
 import { CacheService } from "../Service/cacheService";
 import { BookService } from "../Service/bookService";
 import { HttpAgent } from "../Service/httpUtility";

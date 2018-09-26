@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import * as Promise from "bluebird";
 import { HttpAgent } from "./httpUtility";
-import { ContantData, TitleData } from "../lib/dataModel";
+import { ContantData, TitleData } from "../lib/typings/dataModel";
 
 export class BookService {
     constructor(bookDomain: string, agent: HttpAgent) {

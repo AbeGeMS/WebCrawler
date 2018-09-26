@@ -1,6 +1,6 @@
 import * as  Promise from "bluebird";
 import { BookService } from "../Service/bookService";
-import { BookMarkData } from "../lib/dataModel";
+import { BookMarkData } from "../lib/typings/dataModel";
 import { RedisAgent } from "./redisUtility";
 import { reject } from "bluebird";
 

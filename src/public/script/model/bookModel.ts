@@ -1,5 +1,5 @@
 import { DataProvider } from "../provider/dataProvider";
-import { ContantData } from "../../../lib/dataModel";
+import { ContantData } from "../../../lib/typings/dataModel";
 
 export class BookModel {
     constructor() {

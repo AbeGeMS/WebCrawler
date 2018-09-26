@@ -1,5 +1,5 @@
 import * as promise from "bluebird";
-import { TitleData, ContantData } from "../../lib/dataModel";
+import { TitleData, ContantData } from "../../lib/typings/dataModel";
 import { HttpAgent } from "../../Service/httpUtility";
 import { BookService } from "../../Service/bookService";
 import { RedisAgent } from "../../Service/redisUtility";
