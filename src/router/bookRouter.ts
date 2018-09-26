@@ -3,6 +3,7 @@ import { BookService } from "../Service/bookService";
 import { HttpAgent } from "../Service/httpUtility";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
+import { decodingStr } from "../lib/utility";
 
 const routerName = "bookRouter";
 let router = express.Router();
@@ -32,14 +33,14 @@ router.post('/tableOfContent', (req, res) => {
     get list of book ${bookId}.`);
 });
 
-router.put("/BookDomain/:id",(req,res)=>{
-    let bookid = decodeURIComponent(req.param("id").replace(/\+/g, " "));
-    if(bookid){
-        res.cookie("BaseDomain",bookid,{
-            maxAge:86400*1000,
+router.put("/BookDomain/:id", (req, res) => {
+    let bookid = decodingStr(req.params["id"]);
+    if (bookid) {
+        res.cookie("BaseDomain", bookid, {
+            maxAge: 86400 * 1000,
         });
         res.send(bookid);
-    } else{
+    } else {
         res.status(500);
     }
 });

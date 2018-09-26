@@ -1,16 +1,17 @@
 import { ContantData, TitleData, BookMarkData } from "../../../lib/typings/dataModel";
+import { encodingStr } from "../../../lib/utility";
 
-export class DataProvider{
+export class DataProvider {
     public getSayHi(name: string): JQueryPromise<string> {
         return $.ajax({
-            "method":"GET",
-            "url":`hi?id=${name}`,
-            success:msg=> msg as string,
-            error:e=>`Service error ${JSON.stringify(e)}`,
+            "method": "GET",
+            "url": `hi?id=${name}`,
+            success: msg => msg as string,
+            error: e => `Service error ${JSON.stringify(e)}`,
         });
     }
 
-    public getbookTableOfContent(bookUrl:string): JQueryPromise<TitleData[]>{
+    public getbookTableOfContent(bookUrl: string): JQueryPromise<TitleData[]> {
         return $.ajax(
             {
                 type: "POST",
@@ -24,7 +25,7 @@ export class DataProvider{
         );
     }
 
-    public getbookContent(bookUrl: string, bookId: string, chapterId: number): JQueryPromise<ContantData>{
+    public getbookContent(bookUrl: string, bookId: string, chapterId: number): JQueryPromise<ContantData> {
         return $.ajax(
             {
                 type: "POST",
@@ -38,7 +39,7 @@ export class DataProvider{
         );
     }
 
-    public getLatestChapertNumber(bookId: string): JQueryPromise<number>{
+    public getLatestChapertNumber(bookId: string): JQueryPromise<number> {
         return $.ajax(
             {
                 type: "GET",
@@ -48,9 +49,9 @@ export class DataProvider{
         );
     }
 
-    public putLastestChapterNumber(bookId:string,chapterId:number):JQueryPromise<void>{
+    public putLastestChapterNumber(bookId: string, chapterId: number): JQueryPromise<void> {
         return $.ajax({
-            type:"GET",
+            type: "GET",
             url: "putChapter?id=" + bookId + "&chapter=" + chapterId,
         });
     }
@@ -58,23 +59,23 @@ export class DataProvider{
     public putBookDomain(bookDomain: string): JQueryPromise<boolean> {
         return $.ajax({
             type: "PUT",
-            url: "BookDomain/" + encodeURIComponent(bookDomain).replace(/'/g,"%27").replace(/"/g,"%22"),
+            url: "BookDomain/" + encodingStr(bookDomain),
             success: () => true,
             error: err => false,
         });
     }
 
-    public getBookMark(rootUrl:string):JQueryPromise<BookMarkData[]>{
+    public getBookMark(rootUrl: string): JQueryPromise<BookMarkData[]> {
         return $.ajax({
-            type:"GET",
-            url: "bookMark?id=" + encodeURIComponent(rootUrl),
+            type: "GET",
+            url: "bookMark?id=" + encodingStr(rootUrl),
         });
     }
 
-    public deleteBookMark(bookId:string):JQueryPromise<boolean>{
+    public deleteBookMark(bookId: string): JQueryPromise<boolean> {
         return $.ajax({
-            type:"DELETE",
-            url:`bookMark\\${bookId}`,
+            type: "DELETE",
+            url: `bookMark\\${bookId}`,
         });
     }
 }
