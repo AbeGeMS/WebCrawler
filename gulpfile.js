@@ -25,15 +25,8 @@ gulp.task("build-staticResource", ["clean"], function () {
     gulp.src('src/public/!(less|script)/*').pipe(gulp.dest("debug/public"));
 });
 
-gulp.task("build-client", ["clean"], function () {
-    console.log("build client react");
-    return gulp.src("src/public/script/**/*.{ts,tsx}")
-        .pipe(ts.createProject("tsconfig.json")())
-        .js.pipe(gulp.dest("debug/public/script"));
-});
-
 gulp.task("webpack", ["clean"], function () {
-    exec("webpack --color --config webpack.config.js", function (err, stdout, stderr) {
+    exec("webpack --colors --progress --verbose --config webpack.config.js", function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
