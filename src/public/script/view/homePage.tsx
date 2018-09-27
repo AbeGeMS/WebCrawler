@@ -3,7 +3,10 @@ import { Button, NavBar, Field, Icon, Notification } from "amazeui-dingtalk";
 import { BookModel } from "../model/bookModel";
 import { TabBarControl } from "./tabBarControl";
 import { DingamStyle } from "../model/common";
-import { BookMark } from "../model/bookMarkModel";
+import * as CONST from "../model/constants";
+import { BookMarkData } from "../../../lib/typings/dataModel";
+import * as ReduxStore from "../model/dataContainer";
+import { Store } from "redux";
 
 interface HomePageState {
     bookDomain: string;
@@ -11,6 +14,7 @@ interface HomePageState {
     notificationMessage: string;
     notificationStyle: DingamStyle | string;
     notifcationVisible: boolean;
+    bookList: BookMarkData[];
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
@@ -19,16 +23,29 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.setBookDomain = this.setBookDomain.bind(this);
         this.submitBookDomain = this.submitBookDomain.bind(this);
         this.closeNotification = this.closeNotification.bind(this);
+        this.getBooks = this.getBooks.bind(this);
+        this.onBookListChange = this.onBookListChange.bind(this);
     }
+
+    private store: Store;
+
     public componentWillMount() {
-        this.UpdateContent();
+        this.store = ReduxStore.default();
+    }
+
+    public componentDidMount() {
+        this.store.subscribe(this.onBookListChange);
+    }
+
+    public componentWillUnmount() {
     }
     public state = {
         bookDomain: "",
         selected: "gear",
         notificationMessage: "",
         notificationStyle: DingamStyle.Success,
-        notifcationVisible: false
+        notifcationVisible: false,
+        bookList: [],
     }
 
     private model: BookModel;
@@ -60,13 +77,14 @@ export class HomePage extends React.Component<any, HomePageState>{
                 />
                 <NavBar {...navBarProp} amStyle="primary" />
                 <div className="home-page-content">
-                    <Button amStyle="primary" onClick={this.submitBookDomain}>Delete Book</Button>
+                    <Button amStyle="primary" onClick={this.getBooks}>Get Books</Button>
                     <Field
                         placeholder="https://www.book.com"
                         labelBefore={<Icon name="search" />}
                         btnAfter={myButton}
                         onChange={this.setBookDomain}
                     />
+                    {this.createBookList()}
                 </div>
                 <div className="home-page-footer">
                     <TabBarControl />
@@ -75,8 +93,17 @@ export class HomePage extends React.Component<any, HomePageState>{
         );
     }
 
+    private createBookList() {
+        let booksElements = this.state.bookList.map(book => {
+            return (<div>
+                <span>{book.BookId}</span>
+                <span>{book.Name}</span>
+            </div>);
+        });
+        return (<div>{booksElements}</div>);
+    }
     private closeNotification() {
-        this.setState({ notificationStyle: DingamStyle.Warning, notificationMessage: "why", notifcationVisible: false });
+        this.setState({ notifcationVisible: false });
     }
     private submitBookDomain() {
         let bookModel = new BookModel();
@@ -95,15 +122,16 @@ export class HomePage extends React.Component<any, HomePageState>{
         });
     }
 
-    private onTestButtonClick() {
-        let bookMark = new BookMark();
-        bookMark.deleteBook("2_fakeBook");
+    private getBooks() {
+        let action: ReduxStore.GetBooksAction = {
+            type: CONST.getBooks,
+            bookDomain: this.state.bookDomain,
+        };
+
+        this.store.dispatch(action);
     }
 
-    private UpdateContent() {
-        let model = new BookModel();
-        model.getBookContent("", "", 0)
-            .then(msg => this.setState({
-            }));
+    private onBookListChange() {
+        this.setState({ bookList: this.store.getState().books });
     }
 }

@@ -4,6 +4,7 @@ var externalRef = {
   "react": "React",
   "react-dom": "ReactDOM",
   "amazeui-dingtalk": "AMUIDingTalk",
+  "redux":"Redux",
   'react-addons-css-transition-group': {
     root: ['React', 'addons', 'CSSTransitionGroup'],
     commonjs2: 'react-addons-css-transition-group',
