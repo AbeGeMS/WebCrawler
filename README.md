@@ -70,3 +70,30 @@ This is a book website. It can fetch books table of contents and render content.
 - **GET** ~/delCache?id=bookId
     > **return** 
     > **type**
+
+## DataFlow
+* Main flow
+
+    ```sequence
+    client ->> server:index.html
+    client ->> client: check cookie BaseDomain
+    client --> client: render input bookDomain
+    client ->> server: getBooks
+    server ->> client: BookMarkData[]
+    client --> client: render book list
+    client ->> server: get book table
+    server ->> client: TitleData[]
+    client ->> server: get latest charpter(bookId)
+    server ->> client: xyz
+    ```
+* Add book
+    ```sequence
+    client -->> client: Render add book
+    client ->> server: search book
+    server ->> client: TitleData[]
+    ```
+* Get book conent
+    ```sequence
+    client ->> server: getContent(bookId)
+    server ->> client: ContentData[]
+    ```

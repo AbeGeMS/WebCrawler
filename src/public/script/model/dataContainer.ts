@@ -1,5 +1,5 @@
 import { createStore, Store } from "redux";
-import { BookMarkData } from "../../../lib/typings/dataModel";
+import { BookMarkData, TitleData, ContantData } from "../../../lib/typings/dataModel";
 import * as Constants from "./constants";
 
 export default () => {
@@ -8,11 +8,22 @@ export default () => {
     return store;
 }
 
-export interface IStoreState {
-    books: BookMarkData[]
+// Store State
+export interface IBookMarkState{
+    books: BookMarkData[],
+    bookDomain: string,
 }
 
-let defaultState: IStoreState = { books: [] };
+export interface IBookState{
+    latestCharpter: number,
+    table:TitleData[],
+    content:ContantData[],
+}
+
+export interface IStoreState extends IBookMarkState, IBookState {
+}
+
+let defaultState: IStoreState = null;
 
 // Action
 export interface BaseAction {
