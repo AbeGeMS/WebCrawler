@@ -51,19 +51,6 @@ export class HomePage extends React.Component<any, HomePageState>{
     private model: BookModel;
 
     public render() {
-        let itemLeft = {
-            href: "#",
-            title: "Left",
-        }
-        let itemRight = {
-            href: "#",
-            title: "right",
-        }
-        let navBarProp = {
-            title: "Home Page",
-            leftNav: [{ ...itemLeft, icon: "left-nav" }],
-            rightNav: [{ ...itemRight, icon: "right-nav" }],
-        };
         let myButton = <Button amStyle="primary" onClick={this.submitBookDomain}>Submit</Button>
 
         return (
@@ -75,7 +62,6 @@ export class HomePage extends React.Component<any, HomePageState>{
                     animated={this.state.notifcationVisible}
                     onDismiss={this.closeNotification}
                 />
-                <NavBar {...navBarProp} amStyle="primary" />
                 <div className="home-page-content">
                     <Button amStyle="primary" onClick={this.getBooks}>Get Books</Button>
                     <Field

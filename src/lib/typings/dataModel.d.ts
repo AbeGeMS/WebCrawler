@@ -12,3 +12,8 @@ export interface BookMarkData {
     BookId: string;
     Name: string;
 }
+
+export interface FilterData {
+    pattern:string,
+    value: string,
+}

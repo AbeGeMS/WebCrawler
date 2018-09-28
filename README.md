@@ -97,3 +97,4 @@ This is a book website. It can fetch books table of contents and render content.
     client ->> server: getContent(bookId)
     server ->> client: ContentData[]
     ```
+* filter

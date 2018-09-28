@@ -1,5 +1,5 @@
 import { createStore, Store } from "redux";
-import { BookMarkData, TitleData, ContantData } from "../../../lib/typings/dataModel";
+import { BookMarkData, TitleData, ContantData, FilterData } from "../../../lib/typings/dataModel";
 import * as Constants from "./constants";
 
 export default () => {
@@ -9,21 +9,32 @@ export default () => {
 }
 
 // Store State
-export interface IBookMarkState{
-    books: BookMarkData[],
-    bookDomain: string,
+export interface IBookMarkState {
+    books?: BookMarkData[],
+    bookDomain?: string,
 }
 
-export interface IBookState{
-    latestCharpter: number,
-    table:TitleData[],
-    content:ContantData[],
+export interface IBookState {
+    latestCharpter?: number,
+    table?: TitleData[],
+    content?: ContantData[],
 }
 
-export interface IStoreState extends IBookMarkState, IBookState {
+export interface IFilter {
+    filters?: FilterData[],
 }
 
-let defaultState: IStoreState = null;
+export interface IStoreState extends IBookMarkState, IBookState, IFilter {
+}
+
+let defaultState: IStoreState = {
+    bookDomain: "",
+    books: [],
+    table: [],
+    content: [],
+    latestCharpter: null,
+    filters: Constants.FilterList
+};
 
 // Action
 export interface BaseAction {
@@ -33,6 +44,7 @@ export interface BaseAction {
 export interface GetBooksAction extends BaseAction {
     bookDomain: string;
 }
+
 // Reduce
 export let getBooksReducer: (state: IStoreState, action: GetBooksAction) => IStoreState = (state, action) => {
     if (action.type == Constants.getBooks) {
