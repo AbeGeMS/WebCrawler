@@ -28,10 +28,10 @@ export interface IStoreState {
 }
 
 let defaultState: IStoreState = {
-    bookMark: { books: [], bookDomain: "" },
+    bookMark: { books: [] },
     book: { table: [], content: [] },
-    notification: { NotifyMessage: null, NotifyStyle: DingamStyle.Primary },
-    setting: { corrections: Constants.CorrectionList },
+    notification: { NotifyMessage: null, NotifyStyle: DingamStyle.Primary, IsVissible: false },
+    setting: { bookDomain: "", corrections: Constants.CorrectionList },
 };
 
 

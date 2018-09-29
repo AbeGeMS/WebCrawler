@@ -52,8 +52,9 @@ export class NotificationControl extends React.Component<INotificationProp, INot
 
     private onMessageChange() {
         let { notification } = ReduxStore().getState();
-        let { NotifyMessage, NotifyStyle } = notification; 
-
-        this.setState({ Message: NotifyMessage || "", Style: NotifyStyle, Visible: !!NotifyMessage })
+        let { NotifyMessage, NotifyStyle, IsVissible } = notification;
+        if (IsVissible) {
+            this.setState({ Message: NotifyMessage || "", Style: NotifyStyle, Visible: !!NotifyMessage && IsVissible })
+        }
     }
 }

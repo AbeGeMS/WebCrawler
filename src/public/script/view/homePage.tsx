@@ -6,7 +6,7 @@ import { SearchBar } from "amazeui-dingtalk";
 import { TabBarControl } from "./tabBarControl";
 import { Store } from "redux";
 import { BaseAction } from "../model/baseReducer";
-import { SetBookDomainAction } from "../model/bookMarkReducer";
+import { SetBookDomainAction_Request } from "../model/settingsReducer";
 import ReduxStore, { IStoreState } from "../model/dataContainer";
 
 interface HomePageState {
@@ -77,8 +77,8 @@ export class HomePage extends React.Component<any, HomePageState>{
 
 
     private onSearchSubmit() {
-        let action: SetBookDomainAction = {
-            type: CONST.setBookDomain,
+        let action: SetBookDomainAction_Request= {
+            type: CONST.SetBookDomain_Request,
             bookDomain: this.state.SearchValue,
         };
 
@@ -87,6 +87,9 @@ export class HomePage extends React.Component<any, HomePageState>{
 
     private onReduxBookListChange() {
         let { bookMark } = this.store.getState();
-        this.setState({ bookList: bookMark && bookMark.books || [] });
+        let books = bookMark && bookMark.books || [];
+
+        if (this.state.bookList !== books)
+            this.setState({ bookList: books });
     }
 }

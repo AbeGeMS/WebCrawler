@@ -14,18 +14,6 @@ export class BookModel {
         this.provider = provider
     };
 
-    private bookDomain: string | null = null;
-
-    public get BookDomain(): string | null {
-        return this.bookDomain;
-    };
-
-    public set BookDomain(bookDomain: string) {
-        this.bookDomain = bookDomain.trim().endsWith("/") ?
-            bookDomain.trim() :
-            `${bookDomain.trim()}/`;
-    }
-
     private bookId: string | null = null;
 
     public get BookId(): string | null {
@@ -36,24 +24,11 @@ export class BookModel {
         this.bookId = bookId;
     }
 
-    public getServerMessage(): JQueryPromise<string> {
-        return this.provider.getSayHi("Sample man")
-            .then(msg => `server said:
-            ${msg}`);
-    }
-
     public getBookContent(domain: string, bookId: string, latestBook: number): JQueryPromise<ContantData> {
-        return this.provider.getbookContent(this.bookDomain, this.bookId, latestBook)
+        return this.provider.getbookContent(this.bookId, latestBook)
             .then(
                 value => value
             );
     }
 
-    public setBookDomain(domain:string):JQueryPromise<string>{
-        this.bookDomain = domain;
-        return this.provider.putBookDomain(domain).then(
-            value=>`document.cookie.BaseDomain is ${JSON.stringify(document.cookie)}`,
-            error=>`set ${domain} Failed`,
-        );
     }
-}

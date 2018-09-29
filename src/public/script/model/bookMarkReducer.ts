@@ -1,63 +1,62 @@
 import { BookMarkData } from "../../../lib/typings/dataModel";
+import { BookMark } from "./bookMarkModel";
 import { BaseAction, reducerTemplate, HandlerMap } from "./baseReducer";
 import { Reducer } from "redux";
-import { DingamStyle } from "./common";
-import { NotifyAction } from "./notificationReducer";
 import Constants = require("./constants");
 import reduxStore from "./dataContainer";
+import { DingamStyle } from "./common";
+import { Notify } from "./notificationReducer";
 
 // State
 export interface IBookMarkState {
     books?: BookMarkData[];
-    bookDomain?: string;
 }
 
 // Reducer
-export let bookMarkReducer: Reducer<IBookMarkState, BaseAction> = (state = { bookDomain: null, books: [] }, action) => {
+export let bookMarkReducer: Reducer<IBookMarkState, BaseAction> = (state = { books: [] }, action) => {
     return reducerTemplate<IBookMarkState>(state, action, BookMark_HandlerMap);
 };
 
 // Action
-export interface GetBooksAction extends BaseAction {
+export interface requestGetBooksAction extends BaseAction {
     bookDomain: string;
 }
 
-export interface SetBookDomainAction extends BaseAction {
-    bookDomain: string;
+export interface responseGetBooksAction extends BaseAction{
+    books:BookMarkData[];
 }
 
-function getBooks(state: IBookMarkState, action: GetBooksAction): IBookMarkState {
-    if (action.type == Constants.getBooks) {
-        state.books = action.bookDomain !== "fake domain" ? [] : [{
-            BookId: "fake_001",
-            Name: "Fake Book A",
-        }, {
-            BookId: "fake_002",
-            Name: "Fake Book B"
-        }
-        ];
+function requestGetBooks(state: IBookMarkState, action: requestGetBooksAction): IBookMarkState {
+    if (action.type !== Constants.GetBooks_Request) {
+        return state;
     }
+
+    let bookMark = new BookMark();
+    bookMark.getBooks().then(books => {
+        reduxStore().dispatch({
+            type:Constants.GetBooks_Response,
+            books:books,
+        });
+    }, error => {
+        Notify(`Failed to get books ${error.message}`, DingamStyle.Alert, true);
+    });
+
+    setTimeout(() => {
+        Notify(`Start to get books`, DingamStyle.Success, true);
+    }, 0);
 
     return state;
 }
 
-function setBookDomain(state: IBookMarkState, action: SetBookDomainAction): IBookMarkState {
-    if (action.type == Constants.setBookDomain) {
-        let notifySubmitting: NotifyAction = {
-            type: Constants.changeNotification,
-            message: `Load ${action.bookDomain} starting...`,
-            sytle: DingamStyle.Secondary,
-        }
-        setTimeout(() => {
-            reduxStore().dispatch(notifySubmitting);
-        }, 0);
+function responseGetBooks(state: IBookMarkState, action: responseGetBooksAction): IBookMarkState {
+    if (action.type !== Constants.GetBooks_Response) {
+        return { ...state, books: action.books };
     }
-
     return state;
 }
 
 let BookMark_HandlerMap: HandlerMap<IBookMarkState> = {
-    [Constants.getBooks]: getBooks,
-    [Constants.setBookDomain]: setBookDomain,
+    [Constants.GetBooks_Request]: requestGetBooks,
+    [Constants.GetBooks_Request]: responseGetBooks,
 };
 

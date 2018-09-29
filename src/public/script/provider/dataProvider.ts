@@ -25,11 +25,11 @@ export class DataProvider {
         );
     }
 
-    public getbookContent(bookUrl: string, bookId: string, chapterId: number): JQueryPromise<ContantData> {
+    public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContantData> {
         return $.ajax(
             {
                 type: "POST",
-                data: JSON.stringify({ "url": bookUrl, "bookId": bookId, "chapterId": chapterId }),
+                data: JSON.stringify({ "bookId": bookId, "chapterId": chapterId }),
                 contentType: "application/json",
                 url: "book",
                 success: data => {
@@ -65,10 +65,10 @@ export class DataProvider {
         });
     }
 
-    public getBookMark(rootUrl: string): JQueryPromise<BookMarkData[]> {
+    public getBookMarks(): JQueryPromise<BookMarkData[]> {
         return $.ajax({
             type: "GET",
-            url: "bookMark?id=" + encodingStr(rootUrl),
+            url: "bookMarks",
         });
     }
 

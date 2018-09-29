@@ -1,4 +1,5 @@
 import { DataProvider } from "../provider/dataProvider";
+import { BookMarkData } from "../../../lib/typings/dataModel";
 
 export class BookMark {
 
@@ -23,5 +24,9 @@ export class BookMark {
             }, err => {
                 return `failed to delete ${JSON.stringify(err)}`;
             });
+    }
+
+    public getBooks():JQueryPromise<BookMarkData[]>{
+        return this.provider.getBookMarks();
     }
 }

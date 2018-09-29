@@ -1,13 +1,20 @@
 import { ICorrection } from "../../../lib/typings/dataModel";
 
-export let getBooks = "getBooks";
-export type getBooks = typeof getBooks;
+export let GetBooks_Request = "GetBooks_Request";
+export type GetBooks_Request = typeof GetBooks_Request;
 
-export let setBookDomain = "setBookDomain";
-export type setBookDomain = typeof setBookDomain;
+export let GetBooks_Response = "GetBooks_Response";
+export type GetBooks_Response = typeof GetBooks_Response; 
 
-export let changeNotification = "changeNotification";
-export type changeNotification = typeof changeNotification;
+export let SetBookDomain_Request = "SetBookDomain_Request";
+export type SetBookDomain_Request = typeof SetBookDomain_Request;
+
+export let SetBookDomain_Response = "SetBookDomain_Response";
+export type SetBookDomain_Response = typeof SetBookDomain_Response;
+
+export let ChangeNotification = "ChangeNotification";
+export type changeNotification = typeof ChangeNotification;
+
 
 export let CorrectionList:ICorrection[] = [
     { pattern: "sè", value: "色" },
