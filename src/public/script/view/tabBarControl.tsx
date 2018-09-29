@@ -35,7 +35,7 @@ export class TabBarControl extends React.Component<any, TabBarControlState>{
                 <TabBar.Item
                     eventKey="info"
                     selected={this.state.selected === "info"}
-                    icon="right-nav"
+                    icon="pages"
                     title="Next" />
             </TabBar>
         );

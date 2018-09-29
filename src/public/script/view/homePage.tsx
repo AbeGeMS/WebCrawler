@@ -1,75 +1,55 @@
-import * as React from "react";
-import { Button, NavBar, Field, Icon, Notification } from "amazeui-dingtalk";
-import { BookModel } from "../model/bookModel";
-import { TabBarControl } from "./tabBarControl";
-import { DingamStyle } from "../model/common";
 import * as CONST from "../model/constants";
+import * as React from "react";
 import { BookMarkData } from "../../../lib/typings/dataModel";
-import * as ReduxStore from "../model/dataContainer";
+import { NotificationControl } from "./notificationControl";
+import { SearchBar } from "amazeui-dingtalk";
+import { TabBarControl } from "./tabBarControl";
 import { Store } from "redux";
+import ReduxStore, { SetBookDomainAction, IStoreState, BaseAction } from "../model/dataContainer";
 
 interface HomePageState {
-    bookDomain: string;
-    selected: string;
-    notificationMessage: string;
-    notificationStyle: DingamStyle | string;
-    notifcationVisible: boolean;
+    SearchValue: string;
     bookList: BookMarkData[];
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
     public constructor(prop) {
         super(prop);
-        this.setBookDomain = this.setBookDomain.bind(this);
-        this.submitBookDomain = this.submitBookDomain.bind(this);
-        this.closeNotification = this.closeNotification.bind(this);
-        this.getBooks = this.getBooks.bind(this);
-        this.onBookListChange = this.onBookListChange.bind(this);
+
+        this.state = {
+            SearchValue: "",
+            bookList: [],
+        };
+
+        this.onSearchValueChange = this.onSearchValueChange.bind(this);
+        this.onSearchSubmit = this.onSearchSubmit.bind(this);
+        this.onReduxBookListChange = this.onReduxBookListChange.bind(this);
     }
 
-    private store: Store;
+    private store: Store<IStoreState,BaseAction>;
 
     public componentWillMount() {
-        this.store = ReduxStore.default();
+        this.store = ReduxStore();
     }
 
     public componentDidMount() {
-        this.store.subscribe(this.onBookListChange);
+        this.store.subscribe(this.onReduxBookListChange);
     }
 
     public componentWillUnmount() {
     }
-    public state = {
-        bookDomain: "",
-        selected: "gear",
-        notificationMessage: "",
-        notificationStyle: DingamStyle.Success,
-        notifcationVisible: false,
-        bookList: [],
-    }
-
-    private model: BookModel;
 
     public render() {
-        let myButton = <Button amStyle="primary" onClick={this.submitBookDomain}>Submit</Button>
 
         return (
             <div className="home-page-container">
-                <Notification
-                    title={this.state.notificationMessage}
-                    amStyle={this.state.notificationStyle}
-                    visible={this.state.notifcationVisible}
-                    animated={this.state.notifcationVisible}
-                    onDismiss={this.closeNotification}
-                />
+                <NotificationControl />
                 <div className="home-page-content">
-                    <Button amStyle="primary" onClick={this.getBooks}>Get Books</Button>
-                    <Field
+                    <SearchBar
                         placeholder="https://www.book.com"
-                        labelBefore={<Icon name="search" />}
-                        btnAfter={myButton}
-                        onChange={this.setBookDomain}
-                    />
+                        cancelText="Search"
+                        onChange={this.onSearchValueChange}
+                        onReset={this.onSearchSubmit} />
                     {this.createBookList()}
                 </div>
                 <div className="home-page-footer">
@@ -88,36 +68,23 @@ export class HomePage extends React.Component<any, HomePageState>{
         });
         return (<div>{booksElements}</div>);
     }
-    private closeNotification() {
-        this.setState({ notifcationVisible: false });
-    }
-    private submitBookDomain() {
-        let bookModel = new BookModel();
-        bookModel.setBookDomain(this.state.bookDomain).then(
-            v => this.setState({ notificationMessage: v, notifcationVisible: true, notificationStyle: DingamStyle.Success }),
-            err => this.setState({ notificationMessage: err, notifcationVisible: true, notificationStyle: DingamStyle.Alert })
-        );
+
+    private onSearchValueChange(e: any) {
+        this.setState({ SearchValue: e.target.value.trim() });
     }
 
-    private setBookDomain(e) {
-        this.setState({
-            bookDomain: e.target.value.trim(),
-            notificationMessage: e.target.value.trim(),
-            notifcationVisible: true,
-            notificationStyle: DingamStyle.Secondary,
-        });
-    }
 
-    private getBooks() {
-        let action: ReduxStore.GetBooksAction = {
-            type: CONST.getBooks,
-            bookDomain: this.state.bookDomain,
+    private onSearchSubmit() {
+        let action: SetBookDomainAction = {
+            type: CONST.setBookDomain,
+            bookDomain: this.state.SearchValue,
         };
 
-        this.store.dispatch(action);
+        ReduxStore().dispatch(action);
     }
 
-    private onBookListChange() {
-        this.setState({ bookList: this.store.getState().books });
+    private onReduxBookListChange() {
+        let {bookMark} = this.store.getState();
+        this.setState({ bookList: bookMark && bookMark.books || [] });
     }
 }

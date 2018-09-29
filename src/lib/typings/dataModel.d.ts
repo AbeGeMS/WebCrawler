@@ -13,7 +13,7 @@ export interface BookMarkData {
     Name: string;
 }
 
-export interface FilterData {
+export interface ICorrection{
     pattern:string,
     value: string,
 }

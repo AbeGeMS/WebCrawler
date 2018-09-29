@@ -1,9 +1,15 @@
-import { FilterData } from "../../../lib/typings/dataModel";
+import { ICorrection } from "../../../lib/typings/dataModel";
 
 export let getBooks = "getBooks";
 export type getBooks = typeof getBooks;
 
-export let FilterList: FilterData[] = [
+export let setBookDomain = "setBookDomain";
+export type setBookDomain = typeof setBookDomain;
+
+export let changeNotification = "changeNotification";
+export type changeNotification = typeof changeNotification;
+
+export let CorrectionList:ICorrection[] = [
     { pattern: "sè", value: "色" },
     { pattern: "rì", value: "日" },
     { pattern: "jīng", value: "精" },
