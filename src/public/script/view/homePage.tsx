@@ -5,7 +5,9 @@ import { NotificationControl } from "./notificationControl";
 import { SearchBar } from "amazeui-dingtalk";
 import { TabBarControl } from "./tabBarControl";
 import { Store } from "redux";
-import ReduxStore, { SetBookDomainAction, IStoreState, BaseAction } from "../model/dataContainer";
+import { BaseAction } from "../model/baseReducer";
+import { SetBookDomainAction } from "../model/bookMarkReducer";
+import ReduxStore, { IStoreState } from "../model/dataContainer";
 
 interface HomePageState {
     SearchValue: string;
@@ -26,7 +28,7 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.onReduxBookListChange = this.onReduxBookListChange.bind(this);
     }
 
-    private store: Store<IStoreState,BaseAction>;
+    private store: Store<IStoreState, BaseAction>;
 
     public componentWillMount() {
         this.store = ReduxStore();
@@ -84,7 +86,7 @@ export class HomePage extends React.Component<any, HomePageState>{
     }
 
     private onReduxBookListChange() {
-        let {bookMark} = this.store.getState();
+        let { bookMark } = this.store.getState();
         this.setState({ bookList: bookMark && bookMark.books || [] });
     }
 }
