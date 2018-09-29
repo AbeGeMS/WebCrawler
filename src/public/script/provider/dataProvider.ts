@@ -68,7 +68,7 @@ export class DataProvider {
     public getBookMarks(): JQueryPromise<BookMarkData[]> {
         return $.ajax({
             type: "GET",
-            url: "bookMarks",
+            url: "books",
         });
     }
 

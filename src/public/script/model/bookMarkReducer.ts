@@ -19,7 +19,6 @@ export let bookMarkReducer: Reducer<IBookMarkState, BaseAction> = (state = { boo
 
 // Action
 export interface requestGetBooksAction extends BaseAction {
-    bookDomain: string;
 }
 
 export interface responseGetBooksAction extends BaseAction{
@@ -42,21 +41,23 @@ function requestGetBooks(state: IBookMarkState, action: requestGetBooksAction): 
     });
 
     setTimeout(() => {
-        Notify(`Start to get books`, DingamStyle.Success, true);
+        Notify(`Start to get books`, DingamStyle.Secondary, true);
     }, 0);
 
     return state;
 }
 
 function responseGetBooks(state: IBookMarkState, action: responseGetBooksAction): IBookMarkState {
-    if (action.type !== Constants.GetBooks_Response) {
-        return { ...state, books: action.books };
+    if (action.type === Constants.GetBooks_Response) {
+        let newState = { ...state, books: action.books };
+        return  newState;
+        
     }
     return state;
 }
 
 let BookMark_HandlerMap: HandlerMap<IBookMarkState> = {
     [Constants.GetBooks_Request]: requestGetBooks,
-    [Constants.GetBooks_Request]: responseGetBooks,
+    [Constants.GetBooks_Response]: responseGetBooks,
 };
 

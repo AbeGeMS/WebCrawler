@@ -1,12 +1,13 @@
 import * as  Promise from "bluebird";
-import { RedisClient, createClient } from "redis";
+import { createClient } from "redis";
 
 const redisPort: number = 6380;
 const redisAddress: string = "myBookmark.redis.cache.windows.net";
+const redisPassword =""; 
 
 export class RedisAgent {
     private _client = createClient(redisPort, redisAddress, {
-        auth_pass: "",
+        auth_pass: redisPassword,
         tls: {
             servername: redisAddress,
         },

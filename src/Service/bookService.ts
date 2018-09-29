@@ -15,7 +15,7 @@ export class BookService {
     public getContent(bookId: string, chapterId: string)
         : Promise<ContantData> {
         try {
-            let url = `${this.bookDomain}/${bookId}/${chapterId}/`;
+            let url = `${this.bookDomain}${bookId}/${chapterId}/`;
 
             return this._http.get(url).then(
                 html => this.parseContent(html));
@@ -28,7 +28,7 @@ export class BookService {
 
     public getTableOfContent(bookId: string): Promise<TitleData[]> {
         try {
-            let url = `${this.bookDomain}/${bookId}`;
+            let url = `${this.bookDomain}${bookId}/`;
 
             return this._http.get(url)
                 .then(html => {
@@ -45,12 +45,12 @@ export class BookService {
 
     }
 
-    public getTitle(bookId:string):Promise<string>{
-        try{
-            let url = `${this.bookDomain}/${bookId}`;
-            return this._http.get(url).then(html=>{
-                return  this.parsTile(html);
-            });
+    public getTitle(bookId: string): Promise<string> {
+        try {
+            let url = `${this.bookDomain}${bookId}/`;
+            return this._http.get(url).then(html => {
+                return this.parsTile(html);
+            }, err => { return JSON.stringify(err) });
         } catch (ex) {
             return new Promise((resolve, reject) => reject(JSON.stringify(ex)));
         }

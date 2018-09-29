@@ -19,9 +19,9 @@ router.get('/tableOfContent', (req, res) => {
 });
 
 router.get("/books", (req, res) => {
-    let result: BookMarkData[];
-    if (req.cookies.BaseDomain) {
-        let cacheService = new CacheService(new BookService(req.cookies.BaseDomain, new HttpAgent()), new RedisAgent());
+    let baseurl = decodingStr(req.cookies && req.cookies.BaseDomain);
+    if (baseurl) {
+        let cacheService = new CacheService(new BookService(baseurl, new HttpAgent()), new RedisAgent());
         cacheService.getBookList().then(books => res.json(books), error => res.json(error));
     } else {
         res.json("Couldn't found book Domain in cookie.");

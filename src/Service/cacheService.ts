@@ -20,6 +20,8 @@ export class CacheService {
                 let booksPromise = values.map<Promise<BookMarkData>>(
                     v => this._bookService.getTitle(v).then(title => {
                         return { BookId: v, Name: title };
+                    },err=>{
+                        return { BookId: v, Name: err };
                     })
                 );
                 return Promise.filter(booksPromise, item => item.Name.trim() != null);

@@ -4,10 +4,10 @@ import { BookMarkData } from "../../../lib/typings/dataModel";
 import { NotificationControl } from "./notificationControl";
 import { SearchBar } from "amazeui-dingtalk";
 import { TabBarControl } from "./tabBarControl";
-import { Store } from "redux";
-import { BaseAction } from "../model/baseReducer";
+import { Unsubscribe } from "redux";
 import { SetBookDomainAction_Request } from "../model/settingsReducer";
-import ReduxStore, { IStoreState } from "../model/dataContainer";
+import ReduxStore from "../model/dataContainer";
+import { requestGetBooksAction } from "../model/bookMarkReducer";
 
 interface HomePageState {
     SearchValue: string;
@@ -28,31 +28,36 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.onReduxBookListChange = this.onReduxBookListChange.bind(this);
     }
 
-    private store: Store<IStoreState, BaseAction>;
+    private unsbuscribe: Unsubscribe[]=[];
 
     public componentWillMount() {
-        this.store = ReduxStore();
     }
 
     public componentDidMount() {
-        this.store.subscribe(this.onReduxBookListChange);
+        let getBookAction: requestGetBooksAction = {
+            type: CONST.GetBooks_Request,
+        };
+        ReduxStore().dispatch(getBookAction);
+
+        this.unsbuscribe.push(ReduxStore().subscribe(this.onReduxBookListChange));
     }
 
     public componentWillUnmount() {
+        if(this.unsbuscribe){
+            this.unsbuscribe.forEach(t=>t());
+        }
     }
 
     public render() {
+        let content = this.state.bookList && this.state.bookList.length > 0 ?
+            this.createBookList() :
+            this.createSearchBar();
 
         return (
             <div className="home-page-container">
                 <NotificationControl />
                 <div className="home-page-content">
-                    <SearchBar
-                        placeholder="https://www.book.com"
-                        cancelText="Search"
-                        onChange={this.onSearchValueChange}
-                        onReset={this.onSearchSubmit} />
-                    {this.createBookList()}
+                    {content}
                 </div>
                 <div className="home-page-footer">
                     <TabBarControl />
@@ -61,9 +66,17 @@ export class HomePage extends React.Component<any, HomePageState>{
         );
     }
 
+    private createSearchBar() {
+        return <SearchBar
+            placeholder="https://www.book.com"
+            cancelText="Search"
+            onChange={this.onSearchValueChange}
+            onReset={this.onSearchSubmit} />;
+    }
+
     private createBookList() {
-        let booksElements = this.state.bookList.map(book => {
-            return (<div>
+        let booksElements = this.state.bookList.map((book,index) => {
+            return (<div key={index}>
                 <span>{book.BookId}</span>
                 <span>{book.Name}</span>
             </div>);
@@ -77,7 +90,7 @@ export class HomePage extends React.Component<any, HomePageState>{
 
 
     private onSearchSubmit() {
-        let action: SetBookDomainAction_Request= {
+        let action: SetBookDomainAction_Request = {
             type: CONST.SetBookDomain_Request,
             bookDomain: this.state.SearchValue,
         };
@@ -86,7 +99,7 @@ export class HomePage extends React.Component<any, HomePageState>{
     }
 
     private onReduxBookListChange() {
-        let { bookMark } = this.store.getState();
+        let { bookMark } =ReduxStore().getState();
         let books = bookMark && bookMark.books || [];
 
         if (this.state.bookList !== books)
