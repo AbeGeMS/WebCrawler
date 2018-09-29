@@ -15,6 +15,7 @@ export class RedisAgent {
 
     public SCAN(start: number, count: number): Promise<string[]> {
         return new Promise((resolve, reject) => {
+            try{
             this._client.scan(start.toString(), 'COUNT', count.toString(), (err, reply) => {
                 if (!!err) {
                     reject("scan resdis failed");
@@ -28,6 +29,9 @@ export class RedisAgent {
                 };
                 resolve(reply[1]);
             });
+        }catch(ex){
+            return reject(`RedisAgent.SCAN:Failed by ${ex}`);
+        }
         });
     }
 

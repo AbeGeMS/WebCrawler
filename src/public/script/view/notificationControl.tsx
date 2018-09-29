@@ -2,6 +2,8 @@ import * as React from "react";
 import { Notification } from "amazeui-dingtalk";
 import { DingamStyle } from "../model/common";
 import ReduxStore from "../model/dataContainer";
+import { ChangeNotification } from "../model/constants";
+import { NotifyAction } from "../model/notificationReducer";
 
 interface INotificationState {
     Message?: string;
@@ -46,8 +48,16 @@ export class NotificationControl extends React.Component<INotificationProp, INot
     }
 
     private unSubcribeMessageChangeHandler;
+
     private closeNotification() {
-        this.setState({ Visible: false });
+        let action: NotifyAction = {
+            type: ChangeNotification,
+            Message: null,
+            IsVissible: false,
+            Style: DingamStyle.Primary,
+        };
+
+        this.setState({ Visible: false }, () => { ReduxStore().dispatch(action) });
     }
 
     private onMessageChange() {
