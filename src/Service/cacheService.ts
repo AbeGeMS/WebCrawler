@@ -27,7 +27,17 @@ export class CacheService {
                 return Promise.filter(booksPromise, item => item.Name.trim() != null);
             });
         } catch (error) {
-            return reject(`Failed by ${error}`);
+            return reject(`CacheService.getBookList: Failed by ${error}`);
         }
+    }
+
+    public getLatestCharpter(bookId:string):Promise<number>{
+        try{
+            return this._redisAgent.get(bookId)
+                .then(charpter => parseInt(charpter),
+                err=> reject(`CacheService.getLatestCharpter: Faied by ${err}`));
+        }catch(ex){
+            return reject(`CacheService.getLatestCharpter: Failed by ${ex}`);
+        } 
     }
 }

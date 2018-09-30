@@ -1,5 +1,5 @@
 import * as express from "express";
-import { BookMarkData, TitleData } from "../lib/typings/dataModel";
+import { TitleData } from "../lib/typings/dataModel";
 import { CacheService } from "../Service/cacheService";
 import { BookService } from "../Service/bookService";
 import { HttpAgent } from "../Service/httpUtility";
@@ -10,7 +10,15 @@ const routerName = "bookRouter";
 let router = express.Router();
 
 router.get('/latestChapter', (req, res) => {
+    let baseUrl = decodingStr(req.cookies && req.cookies.BaseDomain);
     let bookId = req.query.id;
+    if (!baseUrl || !bookId) {
+        res.json(`cacheRouter.latestChapter: invailid parameter ${baseUrl}, ${bookId}`);
+        return;
+    }
+
+    let cacheService = new CacheService(new BookService(baseUrl, new HttpAgent()), new RedisAgent());
+    cacheService.getLatestCharpter(bookId).then(chapter => res.send(chapter), err => res.json(err));
 });
 
 router.get('/tableOfContent', (req, res) => {

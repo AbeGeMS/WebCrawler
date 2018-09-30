@@ -58,9 +58,12 @@ export function mockHttpSpyon() {
 // Redis Service 
 
 export let mockResdisBook = ["book001", "book002", "book003"];
-export let mockRedisAgent = new RedisAgent(); 
+export let mockRedisAgent = new RedisAgent();
+export let mockCharpter = "456";
 export function mockRedisSpyon() {
-    spyOn(mockRedisAgent,"SCAN").and.returnValue(mockRedisPromise);
+    spyOn(mockRedisAgent, "SCAN").and.returnValue(mockRedisSCANPromise);
+    spyOn(mockRedisAgent, "get").and.returnValue(mockRedisGetPromise);
 }
 
-let mockRedisPromise = new Promise<string[]>((resolve, reject) => resolve(mockResdisBook));
+let mockRedisSCANPromise = new Promise<string[]>((resolve, reject) => resolve(mockResdisBook));
+let mockRedisGetPromise = new Promise<string>((resolve, reject) => resolve(mockCharpter));

@@ -26,7 +26,11 @@ export class BookMark {
             });
     }
 
-    public getBooks():JQueryPromise<BookMarkData[]>{
+    public getBooks(): JQueryPromise<BookMarkData[]> {
         return this.provider.getBookMarks();
+    }
+
+    public getLatestChapter(bookId: string): JQueryPromise<number> {
+        return this.provider.getLatestChapterNumber(bookId);
     }
 }

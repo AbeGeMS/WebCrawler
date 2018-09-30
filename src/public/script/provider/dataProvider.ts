@@ -23,7 +23,7 @@ export class DataProvider {
                 },
             }
         );
-    }
+   }
 
     public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContantData> {
         return $.ajax(
@@ -39,7 +39,7 @@ export class DataProvider {
         );
     }
 
-    public getLatestChapertNumber(bookId: string): JQueryPromise<number> {
+    public getLatestChapterNumber(bookId: string): JQueryPromise<number> {
         return $.ajax(
             {
                 type: "GET",
