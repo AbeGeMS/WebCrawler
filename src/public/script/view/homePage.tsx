@@ -7,6 +7,7 @@ import { Unsubscribe } from "redux";
 import { SetBookDomainAction_Request } from "../model/settingsReducer";
 import ReduxStore from "../model/dataContainer";
 import { requestGetBooksAction } from "../model/bookMarkReducer";
+import { TableOfContents } from "./tableOfContents";
 
 interface HomePageState {
     SearchValue: string;
@@ -47,6 +48,7 @@ export class HomePage extends React.Component<any, HomePageState>{
             <div className="home-page-container">
                 <NotificationControl />
                 <div className="home-page-content">
+                    <TableOfContents/>
                 </div>
                 <div className="home-page-footer">
                     <TabBarControl />

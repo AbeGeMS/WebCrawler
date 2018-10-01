@@ -35,7 +35,7 @@ export class NotificationControl extends React.Component<INotificationProp, INot
     }
 
     public componentWillUpdate() {
-        if (this.props.autoDismiss === undefined || this.props.autoDismiss) {
+        if (this.state.Visible && this.props.autoDismiss === undefined || this.props.autoDismiss) {
             setTimeout(() => {
                 this.closeNotification();
             }, 3000);

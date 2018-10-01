@@ -1,14 +1,16 @@
 import React = require("react");
-import { List } from "amazeui-dingtalk";
-import ReduxStore from "../model/dataContainer";
+import { List, Button, Icon } from "amazeui-dingtalk";
 import { BookMarkData } from "../../../lib/typings/dataModel";
 import { Unsubscribe } from "redux";
+import ReduxStore from "../model/dataContainer";
+import CONST = require("../model/constants");
+import { requestGetBooksAction } from "../model/bookMarkReducer";
 
-export interface ITableOfContentsProp{
+export interface ITableOfContentsProp {
 
 }
 
-interface ITableOfContentsState{
+interface ITableOfContentsState {
     books: null | BookMarkData[];
 }
 
@@ -38,7 +40,20 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
                     href={book.BookId}
                     title={book.Name}
                 />);
-        return <List>{list}</List>
+        return <List>
+            {list}
+            <Button hollow noHb block onClick={this.refreshBookList}>
+                <Icon name="refresh" />
+                Refresh</Button>
+        </List>
+    }
+
+    private refreshBookList() {
+        let action: requestGetBooksAction = {
+            type: CONST.GetBooks_Request,
+        }
+
+        ReduxStore().dispatch(action);
     }
 
     private onBookListChange() {

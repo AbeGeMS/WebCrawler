@@ -51,11 +51,19 @@ declare interface IconProps {
 }
 
 declare interface ButtonProps extends baseProps {
-    onClick: () => void,
+    active?:boolean;
+    block?:boolean;
+    disabled?:boolean;
+    hollow?:boolean;
+    href?:string;
+    noHb?:boolean;
+    target?:string;
+    onClick?: () => void;
 }
 
 declare interface baseProps {
-    amStyle?: string,
+    amStyle?: string;
+    amSize?:string;
 }
 
 declare interface ListProps {
