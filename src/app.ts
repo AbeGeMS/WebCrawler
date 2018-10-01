@@ -11,6 +11,9 @@ export class Demo {
         app.use(express.static(path.join(__dirname, "public")));
         app.use("/", bookRouter);
         app.use("/", cacheRouter);
+        app.get("/", (req, res) => {
+            res.sendFile(path.join(__dirname, "./public/page/index.html"));
+        });
 
         let server = app.listen(3000, () => {
             console.log("[" + new Date().toUTCString() + "] Demo is listening port:%s", server.address().port);

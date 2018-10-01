@@ -14,6 +14,7 @@ interface INotificationState {
 export interface INotificationProp {
     Style?: string | DingamStyle,
     Message?: string;
+    autoDismiss?: boolean;
 }
 
 export class NotificationControl extends React.Component<INotificationProp, INotificationState>{
@@ -31,6 +32,14 @@ export class NotificationControl extends React.Component<INotificationProp, INot
 
     public componentDidMount() {
         this.unSubcribeMessageChangeHandler = ReduxStore().subscribe(this.onMessageChange);
+    }
+
+    public componentWillUpdate() {
+        if (this.props.autoDismiss === undefined || this.props.autoDismiss) {
+            setTimeout(() => {
+                this.closeNotification();
+            }, 3000);
+        }
     }
 
     public componentWillUnmount() {

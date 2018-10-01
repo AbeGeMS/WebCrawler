@@ -5,3 +5,8 @@ export enum DingamStyle {
     Success = "success",
     Warning = "warning",
 }
+
+export enum ListItemRole {
+    Header = "header",
+    Item = "item",
+}

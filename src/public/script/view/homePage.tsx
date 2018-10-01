@@ -1,6 +1,5 @@
 import * as CONST from "../model/constants";
 import * as React from "react";
-import { BookMarkData } from "../../../lib/typings/dataModel";
 import { NotificationControl } from "./notificationControl";
 import { SearchBar } from "amazeui-dingtalk";
 import { TabBarControl } from "./tabBarControl";
@@ -11,7 +10,6 @@ import { requestGetBooksAction } from "../model/bookMarkReducer";
 
 interface HomePageState {
     SearchValue: string;
-    bookList: BookMarkData[];
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
@@ -20,15 +18,13 @@ export class HomePage extends React.Component<any, HomePageState>{
 
         this.state = {
             SearchValue: "",
-            bookList: [],
         };
 
         this.onSearchValueChange = this.onSearchValueChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
-        this.onReduxBookListChange = this.onReduxBookListChange.bind(this);
     }
 
-    private unsbuscribe: Unsubscribe[]=[];
+    private unsbuscribe: Unsubscribe[] = [];
 
     public componentWillMount() {
     }
@@ -38,26 +34,19 @@ export class HomePage extends React.Component<any, HomePageState>{
             type: CONST.GetBooks_Request,
         };
         ReduxStore().dispatch(getBookAction);
-
-        this.unsbuscribe.push(ReduxStore().subscribe(this.onReduxBookListChange));
     }
 
     public componentWillUnmount() {
-        if(this.unsbuscribe){
-            this.unsbuscribe.forEach(t=>t());
+        if (this.unsbuscribe) {
+            this.unsbuscribe.forEach(t => t());
         }
     }
 
     public render() {
-        let content = this.state.bookList && this.state.bookList.length > 0 ?
-            this.createBookList() :
-            this.createSearchBar();
-
         return (
             <div className="home-page-container">
                 <NotificationControl />
                 <div className="home-page-content">
-                    {content}
                 </div>
                 <div className="home-page-footer">
                     <TabBarControl />
@@ -74,16 +63,6 @@ export class HomePage extends React.Component<any, HomePageState>{
             onReset={this.onSearchSubmit} />;
     }
 
-    private createBookList() {
-        let booksElements = this.state.bookList.map((book,index) => {
-            return (<div key={index}>
-                <span>{book.BookId}</span>
-                <span>{book.Name}</span>
-            </div>);
-        });
-        return (<div>{booksElements}</div>);
-    }
-
     private onSearchValueChange(e: any) {
         this.setState({ SearchValue: e.target.value.trim() });
     }
@@ -96,13 +75,5 @@ export class HomePage extends React.Component<any, HomePageState>{
         };
 
         ReduxStore().dispatch(action);
-    }
-
-    private onReduxBookListChange() {
-        let { bookMark } =ReduxStore().getState();
-        let books = bookMark && bookMark.books || [];
-
-        if (this.state.bookList !== books)
-            this.setState({ bookList: books });
     }
 }
