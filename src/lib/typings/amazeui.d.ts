@@ -81,6 +81,7 @@ declare interface ListItemProps {
     desc?: any;
     nested?: any;
     nestedProps?: any;
+    onClick?:()=>void;
 
 }
 

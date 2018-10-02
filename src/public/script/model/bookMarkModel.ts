@@ -27,7 +27,8 @@ export class BookMark {
     }
 
     public getBooks(): JQueryPromise<BookMarkData[]> {
-        return this.provider.getBookMarks();
+        return this.provider.getBookMarks()
+            .then(b => b.filter(v => v.BookId.trim() !== "" || v.Name.trim() !== ""));
     }
 
     public getLatestChapter(bookId: string): JQueryPromise<number> {

@@ -34,7 +34,7 @@ export class NavTitle extends React.Component<INavTitleProp, INavTitleState>{
     }
     private createSearchBar() {
         return <SearchBar
-            placeholder="https://www.book.com"
+            placeholder="https://www.book.com/"
             cancelText="Search"
             onChange={this.onSearchValueChange}
             onReset={this.onSearchSubmit} />;

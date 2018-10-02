@@ -33,7 +33,7 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
     public componentDidMount() {
     }
 
-    public componentWillUnmount(){
+    public componentWillUnmount() {
         this.unsubscribe.forEach(sub => sub());
     }
 
@@ -41,11 +41,12 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
         let list = this.state.books &&
             this.state.books.map(book =>
                 <List.Item key={book.BookId}
-                    href={book.BookId}
+                    href={"#/" + book.BookId}
                     title={book.Name}
+                    onClick={this.onItemClick.bind(this,book.BookId)}
                 />);
-        return <List>
-            <NavTitle/>
+        return <List >
+            <NavTitle />
             {list}
             <Button hollow noHb block onClick={this.refreshBookList}>
                 <Icon name="refresh" />
@@ -68,5 +69,9 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
         if (this.state.books !== newBooks) {
             this.setState({ books: newBooks });
         }
+    }
+
+    private onItemClick(id: string) {
+        alert(id);
     }
 }
