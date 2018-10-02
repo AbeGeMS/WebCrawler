@@ -4,6 +4,7 @@ export enum DingamStyle {
     Secondary = "secondary",
     Success = "success",
     Warning = "warning",
+    Dark = "dark",
 }
 
 export enum ListItemRole {

@@ -1,7 +1,7 @@
 declare module "amazeui-dingtalk/component" {
     import * as React from "react";
     export let Button: React.ComponentClass<ButtonProps>;
-    export let NavBar: React.ComponentClass<any>;
+    export let NavBar: React.ComponentClass<NavBarProps>;
     export let SearchBar: React.ComponentClass<SearchBarProps>;
     export let Notification: React.ComponentClass<NotificationProps>;
     export let Field: React.ComponentClass<FieldProps>;
@@ -51,19 +51,19 @@ declare interface IconProps {
 }
 
 declare interface ButtonProps extends baseProps {
-    active?:boolean;
-    block?:boolean;
-    disabled?:boolean;
-    hollow?:boolean;
-    href?:string;
-    noHb?:boolean;
-    target?:string;
+    active?: boolean;
+    block?: boolean;
+    disabled?: boolean;
+    hollow?: boolean;
+    href?: string;
+    noHb?: boolean;
+    target?: string;
     onClick?: () => void;
 }
 
 declare interface baseProps {
     amStyle?: string;
-    amSize?:string;
+    amSize?: string;
 }
 
 declare interface ListProps {
@@ -82,4 +82,21 @@ declare interface ListItemProps {
     nested?: any;
     nestedProps?: any;
 
+}
+
+declare interface NavBarProps {
+    title?: string;
+    titleOnLeft?: boolean;
+    leftNav?: NavBarItem[];
+    rightNav?: NavBarItem[];
+    onAction?: (item: any, e: any) => void;
+}
+
+declare interface NavBarItem{
+    component?:string;
+    title?:string;
+    href?:string;
+    customIcon?:string;
+    icon?:string;
+    isClone?:boolean;
 }

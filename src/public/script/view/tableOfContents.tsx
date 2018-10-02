@@ -5,6 +5,7 @@ import { Unsubscribe } from "redux";
 import ReduxStore from "../model/dataContainer";
 import CONST = require("../model/constants");
 import { requestGetBooksAction } from "../model/bookMarkReducer";
+import { NavTitle } from "./NavTitle";
 
 export interface ITableOfContentsProp {
 
@@ -30,6 +31,9 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
     }
 
     public componentDidMount() {
+    }
+
+    public componentWillUnmount(){
         this.unsubscribe.forEach(sub => sub());
     }
 
@@ -41,6 +45,7 @@ export class TableOfContents extends React.Component<ITableOfContentsProp, ITabl
                     title={book.Name}
                 />);
         return <List>
+            <NavTitle/>
             {list}
             <Button hollow noHb block onClick={this.refreshBookList}>
                 <Icon name="refresh" />

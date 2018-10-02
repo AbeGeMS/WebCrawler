@@ -1,27 +1,37 @@
-
 import * as React from "react";
 import { TabBar } from "amazeui-dingtalk";
-import { BookModel } from "../model/bookModel";
+import { DingamStyle } from "../model/common";
 
-interface TabBarControlState {
-    selected:string;
+export enum TabCategory {
+    Home = "home",
+    Gear = "gear",
+    Next = "next",
+}
+export interface ITabBarProps {
+    onClick?: (key: string) => void;
 }
 
-export class TabBarControl extends React.Component<any, TabBarControlState>{
+interface TabBarControlState {
+    selected: string;
+}
+
+export class TabBarControl extends React.Component<ITabBarProps, TabBarControlState>{
     public componentWillMount() {
     }
 
     public state = {
-        selected: "home",
+        selected: "",
     }
 
-    private model: BookModel;
-
-    private onClick = (key) => this.setState({ selected: key });
+    private onClick = (key) => {
+        this.setState({ selected: key }, () => {
+            this.props.onClick(key);
+        });
+    }
 
     public render() {
         return (
-            <TabBar amStyle="primary" onAction={this.onClick}>
+            <TabBar amStyle={DingamStyle.Dark} onAction={this.onClick}>
                 <TabBar.Item
                     eventKey="home"
                     selected={this.state.selected === "home"}
@@ -33,8 +43,8 @@ export class TabBarControl extends React.Component<any, TabBarControlState>{
                     icon="gear"
                     title="Settings" />
                 <TabBar.Item
-                    eventKey="info"
-                    selected={this.state.selected === "info"}
+                    eventKey="next"
+                    selected={this.state.selected === "next"}
                     icon="pages"
                     title="Next" />
             </TabBar>

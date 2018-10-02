@@ -1,16 +1,15 @@
 import * as CONST from "../model/constants";
 import * as React from "react";
 import { NotificationControl } from "./notificationControl";
-import { SearchBar } from "amazeui-dingtalk";
-import { TabBarControl } from "./tabBarControl";
+import { TabBarControl, TabCategory } from "./tabBarControl";
 import { Unsubscribe } from "redux";
-import { SetBookDomainAction_Request } from "../model/settingsReducer";
-import ReduxStore from "../model/dataContainer";
 import { requestGetBooksAction } from "../model/bookMarkReducer";
 import { TableOfContents } from "./tableOfContents";
+import ReduxStore from "../model/dataContainer";
 
 interface HomePageState {
     SearchValue: string;
+    Contents?: JSX.Element;
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
@@ -21,8 +20,7 @@ export class HomePage extends React.Component<any, HomePageState>{
             SearchValue: "",
         };
 
-        this.onSearchValueChange = this.onSearchValueChange.bind(this);
-        this.onSearchSubmit = this.onSearchSubmit.bind(this);
+        this.onTabBarClick = this.onTabBarClick.bind(this);
     }
 
     private unsbuscribe: Unsubscribe[] = [];
@@ -48,34 +46,24 @@ export class HomePage extends React.Component<any, HomePageState>{
             <div className="home-page-container">
                 <NotificationControl />
                 <div className="home-page-content">
-                    <TableOfContents/>
+                    {this.state.Contents}
                 </div>
                 <div className="home-page-footer">
-                    <TabBarControl />
+                    <TabBarControl onClick={this.onTabBarClick} />
                 </div>
             </div>
         );
     }
 
-    private createSearchBar() {
-        return <SearchBar
-            placeholder="https://www.book.com"
-            cancelText="Search"
-            onChange={this.onSearchValueChange}
-            onReset={this.onSearchSubmit} />;
-    }
-
-    private onSearchValueChange(e: any) {
-        this.setState({ SearchValue: e.target.value.trim() });
-    }
-
-
-    private onSearchSubmit() {
-        let action: SetBookDomainAction_Request = {
-            type: CONST.SetBookDomain_Request,
-            bookDomain: this.state.SearchValue,
-        };
-
-        ReduxStore().dispatch(action);
+    private onTabBarClick(key: string) {
+        switch (key) {
+            case TabCategory.Home:
+                this.setState({ Contents: <TableOfContents /> });
+                break;
+            case TabCategory.Gear:
+            case TabCategory.Next:
+                this.setState({ Contents: undefined });
+                break;
+        }
     }
 }

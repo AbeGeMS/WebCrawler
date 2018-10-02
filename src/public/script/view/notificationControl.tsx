@@ -38,7 +38,7 @@ export class NotificationControl extends React.Component<INotificationProp, INot
         if (this.state.Visible && this.props.autoDismiss === undefined || this.props.autoDismiss) {
             setTimeout(() => {
                 this.closeNotification();
-            }, 3000);
+            }, 1000);
         }
     }
 
@@ -72,6 +72,7 @@ export class NotificationControl extends React.Component<INotificationProp, INot
     private onMessageChange() {
         let { notification } = ReduxStore().getState();
         let { NotifyMessage, NotifyStyle, IsVissible } = notification;
+
         if (IsVissible) {
             this.setState({ Message: NotifyMessage || "", Style: NotifyStyle, Visible: !!NotifyMessage && IsVissible })
         }
