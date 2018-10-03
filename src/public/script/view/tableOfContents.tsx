@@ -42,9 +42,12 @@ export class TableOfContents extends
                     title={chapter.Title}
                     onClick={this.onTitleClick.bind(this, chapter.Href)}
                 />);
-        return <List >
-            {list}
-        </List>
+        return (
+            <div className="table-of-contents-container">
+                <List >
+                    {list}
+                </List>
+            </div>);
     }
 
     private onTitleClick(id: string) {
