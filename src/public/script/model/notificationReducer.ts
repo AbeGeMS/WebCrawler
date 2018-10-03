@@ -16,6 +16,12 @@ export function Notify(message: string, style: DingamStyle, vissible: boolean = 
     ReduxStore().dispatch(newNotify);
 }
 
+export function NotifyAsync(message: string, style: DingamStyle, vissible: boolean = true) {
+    setTimeout(() => {
+        Notify(message, style, vissible);
+    }, 0);
+}
+
 export interface INotifyState {
     NotifyMessage?: string;
     NotifyStyle: string | DingamStyle;

@@ -11,11 +11,11 @@ export class DataProvider {
         });
     }
 
-    public getbookTableOfContent(bookUrl: string): JQueryPromise<TitleData[]> {
+    public getbookTableOfContent(bookId: string): JQueryPromise<TitleData[]> {
         return $.ajax(
             {
                 type: "POST",
-                data: JSON.stringify({ "url": bookUrl }),
+                data: JSON.stringify({ "id": bookId }),
                 contentType: "application/json",
                 url: "tableOfContent",
                 success: data => {
@@ -23,7 +23,7 @@ export class DataProvider {
                 },
             }
         );
-   }
+    }
 
     public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContentData> {
         return $.ajax(

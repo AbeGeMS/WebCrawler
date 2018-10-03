@@ -12,9 +12,15 @@ router.use(bodyParser());
 router.unsubscribe(cookieParser());
 
 router.post('/book', (req, res) => {
-    let bookDomain = req.body.url;
+    let bookDomain = req.cookies && req.cookies.BaseDomain;
     let bookId = req.body.bookId;
     let chapterId = req.body.chapterId;
+    if (!bookDomain || !bookId || !chapterId) {
+        res.status(500).json({
+            error: `invalid parameter Domain:${bookDomain} book:${bookId} chapter:${chapterId}`
+        });
+    }
+
     let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getContent(bookId, chapterId)
         .then(content => res.json(content));
@@ -24,8 +30,14 @@ router.post('/book', (req, res) => {
 });
 
 router.post('/tableOfContent', (req, res) => {
-    let bookId = req.query.id;
-    let bookService = new BookService("", new HttpAgent());
+    let bookId = req.body.id;
+    let bookDomain = req.cookies && req.cookies.BaseDomain;
+    if (!bookId || !bookDomain) {
+        res.status(500).json({
+            error: `invalid parameter domain:${bookDomain} bookId:${bookId}`,
+        });
+    }
+    let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getTableOfContent(bookId)
         .then(tableOfContent => res.json(tableOfContent));
 

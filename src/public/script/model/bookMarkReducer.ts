@@ -5,7 +5,7 @@ import { Reducer } from "redux";
 import Constants = require("./constants");
 import reduxStore from "./dataContainer";
 import { DingamStyle } from "./common";
-import { Notify } from "./notificationReducer";
+import { Notify, NotifyAsync } from "./notificationReducer";
 
 // State
 export interface IBookMarkState {
@@ -40,9 +40,7 @@ function requestGetBooks(state: IBookMarkState, action: requestGetBooksAction): 
         Notify(`Failed to get books ${error.message}`, DingamStyle.Alert, true);
     });
 
-    setTimeout(() => {
-        Notify(`Start to get books`, DingamStyle.Secondary, true);
-    }, 0);
+    NotifyAsync(`Start to get books`, DingamStyle.Secondary, true);
 
     return state;
 }

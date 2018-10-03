@@ -23,6 +23,8 @@ export class HomePage extends React.Component<any, HomePageState>{
         };
 
         this.onTabBarClick = this.onTabBarClick.bind(this);
+        this.createContents = this.createContents.bind(this);
+        this.createTableOfContents = this.createTableOfContents.bind(this);
     }
 
     private unsbuscribe: Unsubscribe[] = [];

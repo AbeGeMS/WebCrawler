@@ -4,7 +4,7 @@ import { Reducer } from "redux";
 import CONST = require("./constants");
 import { BookModel } from "./bookModel";
 import reduxStore from "./dataContainer";
-import { Notify } from "./notificationReducer";
+import { Notify, NotifyAsync } from "./notificationReducer";
 import { DingamStyle } from "./common";
 
 export interface IBookState {
@@ -51,7 +51,7 @@ function getTableOfContent_Request_Handler(state: IBookState, action: Action.Get
             }, 0);
         }, err => Notify(`Failed to get book by ${err}`, DingamStyle.Alert));
 
-        Notify(`Start to get book ${action.bookId}...`, DingamStyle.Secondary, true);
+        NotifyAsync(`Start to get book ${action.bookId}...`, DingamStyle.Secondary, true);
     }
 
     return state;
@@ -78,7 +78,7 @@ function getContent_Request_Handler(state:IBookState,action:Action.GetContents_R
             }, 0),
             err=>Notify(`Failed to get content by ${err}`,DingamStyle.Alert)
         );
-        Notify(`Start to loading content of chapter ${action.chapterId}`,DingamStyle.Secondary);
+        NotifyAsync(`Start to loading content of chapter ${action.chapterId}`, DingamStyle.Secondary);
     }
     return state;
 }

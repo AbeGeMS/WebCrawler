@@ -16,15 +16,23 @@ interface ITableOfContentState {
 
 export class TableOfContents extends
     React.Component<ITableOfContentProp, ITableOfContentState>{
+    public constructor(prop) {
+        super(prop);
+        this.state = {
+            list: [],
+        }
 
-    private unsubscribe: Unsubscribe[];
+        this.onListChange = this.onListChange.bind(this);
+    }
 
-    public componentDidMount(){
+    private unsubscribe: Unsubscribe[] = [];
+
+    public componentDidMount() {
         this.unsubscribe.push(ReduxStore().subscribe(this.onListChange))
     }
 
-    public componentWillUnmount(){
-        this.unsubscribe.forEach(sub=>sub());
+    public componentWillUnmount() {
+        this.unsubscribe.forEach(sub => sub());
     }
     public render() {
         let list = this.state.list &&

@@ -1,7 +1,7 @@
 import { HandlerMap, BaseAction, reducerTemplate } from "./baseReducer";
 import { Reducer } from "redux";
 import { ICorrection } from "../../../lib/typings/dataModel";
-import { Notify } from "./notificationReducer";
+import { Notify, NotifyAsync } from "./notificationReducer";
 import { DingamStyle } from "./common";
 import { SettingsModel } from "./settingsModel";
 import Constants = require("./constants");
@@ -35,9 +35,7 @@ function setBookDomain_Request(state: ISettingsState, action: SetBookDomainActio
         settings.setBookDomain(action.bookDomain).then(message => {
             ReduxStore().dispatch({ type: Constants.SetBookDomain_Response, message: message })
         });
-        setTimeout(() => {
-            Notify(`Load ${action.bookDomain} starting...`, DingamStyle.Secondary, true);
-        }, 0);
+        NotifyAsync(`Load ${action.bookDomain} starting...`, DingamStyle.Secondary, true);
     }
 
     return state;
@@ -45,9 +43,7 @@ function setBookDomain_Request(state: ISettingsState, action: SetBookDomainActio
 
 function setBookDomain_Response(state: ISettingsState, action: SetBookDomainAction_Response): ISettingsState {
     if (action.type == Constants.SetBookDomain_Response) {
-        setTimeout(() => {
-            Notify(`BookDomain: ${action.message} was set into cookie.`, DingamStyle.Success, true);
-        }, 0);
+        NotifyAsync(`BookDomain: ${action.message} was set into cookie.`, DingamStyle.Success, true);
     }
 
     return state;
