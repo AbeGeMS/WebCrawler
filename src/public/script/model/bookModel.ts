@@ -1,5 +1,5 @@
 import { DataProvider } from "../provider/dataProvider";
-import { ContantData } from "../../../lib/typings/dataModel";
+import { ContentData, TitleData } from "../../../lib/typings/dataModel";
 
 export class BookModel {
     constructor() {
@@ -24,11 +24,11 @@ export class BookModel {
         this.bookId = bookId;
     }
 
-    public getBookContent(domain: string, bookId: string, latestBook: number): JQueryPromise<ContantData> {
-        return this.provider.getbookContent(this.bookId, latestBook)
-            .then(
-                value => value
-            );
+    public getBookContent(bookId: string,chapter: number): JQueryPromise<ContentData> {
+        return this.provider.getbookContent(bookId,chapter);
     }
 
+    public getTableOfContents(bookId: string): JQueryPromise<TitleData[]> {
+        return this.provider.getbookTableOfContent(bookId);
     }
+}

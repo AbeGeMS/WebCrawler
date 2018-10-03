@@ -1,4 +1,4 @@
-export interface ContantData {
+export interface ContentData {
     Title: string;
     Content: string[];
 }

@@ -4,7 +4,7 @@ export let GetBooks_Request = "GetBooks_Request";
 export type GetBooks_Request = typeof GetBooks_Request;
 
 export let GetBooks_Response = "GetBooks_Response";
-export type GetBooks_Response = typeof GetBooks_Response; 
+export type GetBooks_Response = typeof GetBooks_Response;
 
 export let SetBookDomain_Request = "SetBookDomain_Request";
 export type SetBookDomain_Request = typeof SetBookDomain_Request;
@@ -15,8 +15,19 @@ export type SetBookDomain_Response = typeof SetBookDomain_Response;
 export let ChangeNotification = "ChangeNotification";
 export type changeNotification = typeof ChangeNotification;
 
+export let GetTableOfContents_Request = "GetTableOfContents_Request";
+export type GetTableOfContents_Request = typeof GetTableOfContents_Request;
 
-export let CorrectionList:ICorrection[] = [
+export let GetTableOfContents_Response = "GetTableOfContetns_Response";
+export type GetTableOfContents_Response = typeof GetTableOfContents_Response;
+
+export let GetContent_Request = "GetContent_Request";
+export type GetContent_Request = typeof GetContent_Request;
+
+export let GetContent_Response = "GetContent_Response";
+export type GetContent_Response = typeof GetContent_Response;
+
+export let CorrectionList: ICorrection[] = [
     { pattern: "sè", value: "色" },
     { pattern: "rì", value: "日" },
     { pattern: "jīng", value: "精" },

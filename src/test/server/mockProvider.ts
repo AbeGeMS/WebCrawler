@@ -1,5 +1,5 @@
 import * as promise from "bluebird";
-import { TitleData, ContantData } from "../../lib/typings/dataModel";
+import { TitleData, ContentData } from "../../lib/typings/dataModel";
 import { HttpAgent } from "../../Service/httpUtility";
 import { BookService } from "../../Service/bookService";
 import { RedisAgent } from "../../Service/redisUtility";
@@ -28,7 +28,7 @@ export const fakeHtml =
         </div>
     </div>`;
 
-export let expectedContent: ContantData = {
+export let expectedContent: ContentData = {
     Title: "001 FakeBook",
     Content: ["Book Title", "Subtitle", "first", "second"],
 };

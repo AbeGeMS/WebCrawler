@@ -4,8 +4,10 @@ import { NotificationControl } from "./notificationControl";
 import { TabBarControl, TabCategory } from "./tabBarControl";
 import { Unsubscribe } from "redux";
 import { requestGetBooksAction } from "../model/bookMarkReducer";
-import { TableOfContents } from "./tableOfContents";
+import { BookList } from "./bookList";
+import { TableOfContents } from "./TableOfContents";
 import ReduxStore from "../model/dataContainer";
+import { Contents } from "./contents";
 
 interface HomePageState {
     SearchValue: string;
@@ -58,12 +60,21 @@ export class HomePage extends React.Component<any, HomePageState>{
     private onTabBarClick(key: string) {
         switch (key) {
             case TabCategory.Home:
-                this.setState({ Contents: <TableOfContents /> });
+                this.setState({ Contents: <BookList
+                     onItemClick={this.createTableOfContents} /> });
                 break;
             case TabCategory.Gear:
             case TabCategory.Next:
                 this.setState({ Contents: undefined });
                 break;
         }
+    }
+
+    private createTableOfContents(){
+        this.setState({ Contents: <TableOfContents onTitleClick={this.createContents} /> });
+    }
+
+    private createContents(){
+        this.setState({ Contents: <Contents/> });
     }
 }

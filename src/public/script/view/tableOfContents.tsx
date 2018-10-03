@@ -1,77 +1,58 @@
 import React = require("react");
-import { List, Button, Icon } from "amazeui-dingtalk";
-import { BookMarkData } from "../../../lib/typings/dataModel";
-import { Unsubscribe } from "redux";
+import { List } from "amazeui-dingtalk";
+import { TitleData } from "../../../lib/typings/dataModel";
 import ReduxStore from "../model/dataContainer";
+import { Unsubscribe } from "redux";
+import { Action } from "../model/bookReducer";
 import CONST = require("../model/constants");
-import { requestGetBooksAction } from "../model/bookMarkReducer";
-import { NavTitle } from "./NavTitle";
 
-export interface ITableOfContentsProp {
-
+export interface ITableOfContentProp {
+    onTitleClick: () => void;
 }
 
-interface ITableOfContentsState {
-    books: null | BookMarkData[];
+interface ITableOfContentState {
+    list: TitleData[];
 }
 
-export class TableOfContents extends React.Component<ITableOfContentsProp, ITableOfContentsState>{
-    public constructor(prop) {
-        super(prop);
+export class TableOfContents extends
+    React.Component<ITableOfContentProp, ITableOfContentState>{
 
-        let bookmark = ReduxStore().getState().bookMark;
-        this.state = { books: bookmark && bookmark.books };
-        this.onBookListChange = this.onBookListChange.bind(this);
+    private unsubscribe: Unsubscribe[];
+
+    public componentDidMount(){
+        this.unsubscribe.push(ReduxStore().subscribe(this.onListChange))
     }
 
-    private unsubscribe: Unsubscribe[] = [];
-
-    public componentWillMount() {
-        this.unsubscribe.push(ReduxStore().subscribe(this.onBookListChange));
+    public componentWillUnmount(){
+        this.unsubscribe.forEach(sub=>sub());
     }
-
-    public componentDidMount() {
-    }
-
-    public componentWillUnmount() {
-        this.unsubscribe.forEach(sub => sub());
-    }
-
     public render() {
-        let list = this.state.books &&
-            this.state.books.map(book =>
-                <List.Item key={book.BookId}
-                    href={"#/" + book.BookId}
-                    title={book.Name}
-                    onClick={this.onItemClick.bind(this,book.BookId)}
+        let list = this.state.list &&
+            this.state.list.map(chapter =>
+                <List.Item key={chapter.Href}
+                    href={"#/" + chapter.Title}
+                    title={chapter.Title}
+                    onClick={this.onTitleClick.bind(this, chapter.Href)}
                 />);
         return <List >
-            <NavTitle />
             {list}
-            <Button hollow noHb block onClick={this.refreshBookList}>
-                <Icon name="refresh" />
-                Refresh</Button>
         </List>
     }
 
-    private refreshBookList() {
-        let action: requestGetBooksAction = {
+    private onTitleClick(id: string) {
+        let action: Action.GetContents_Request = {
             type: CONST.GetBooks_Request,
-        }
-
+            chapterId: id,
+            bookId: ReduxStore().getState().book.bookId,
+        };
         ReduxStore().dispatch(action);
     }
 
-    private onBookListChange() {
-        let { bookMark } = ReduxStore().getState();
-        let newBooks = bookMark && bookMark.books;
-
-        if (this.state.books !== newBooks) {
-            this.setState({ books: newBooks });
+    private onListChange() {
+        let { book } = ReduxStore().getState();
+        let { table } = book;
+        if (this.state.list !== table) {
+            this.setState({ list: table });
         }
-    }
-
-    private onItemClick(id: string) {
-        alert(id);
     }
 }

@@ -4,7 +4,7 @@ import { Reducer } from "redux";
 import Constants = require("./constants");
 import ReduxStore from "./dataContainer";
 
-export function Notify(message: string, style: DingamStyle, vissible: boolean) {
+export function Notify(message: string, style: DingamStyle, vissible: boolean = true) {
     let newNotify: NotifyAction = {
         Message: message,
         Style: style,

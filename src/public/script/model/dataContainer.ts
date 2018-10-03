@@ -29,7 +29,7 @@ export interface IStoreState {
 
 let defaultState: IStoreState = {
     bookMark: { books: [] },
-    book: { table: [], content: [] },
+    book: { table: [], content: null },
     notification: { NotifyMessage: null, NotifyStyle: DingamStyle.Primary, IsVissible: false },
     setting: { bookDomain: "", corrections: Constants.CorrectionList },
 };

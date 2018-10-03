@@ -1,4 +1,4 @@
-import { ContantData, TitleData, BookMarkData } from "../../../lib/typings/dataModel";
+import { ContentData, TitleData, BookMarkData } from "../../../lib/typings/dataModel";
 import { encodingStr } from "../../../lib/utility";
 
 export class DataProvider {
@@ -25,7 +25,7 @@ export class DataProvider {
         );
    }
 
-    public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContantData> {
+    public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContentData> {
         return $.ajax(
             {
                 type: "POST",
