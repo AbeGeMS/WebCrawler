@@ -43,7 +43,7 @@ export class TableOfContents extends
                     onClick={this.onTitleClick.bind(this, chapter.Href)}
                 />);
         return (
-            <div className="table-of-contents-container">
+            <div className="show-scroll-y">
                 <List >
                     {list}
                 </List>
@@ -52,11 +52,12 @@ export class TableOfContents extends
 
     private onTitleClick(id: string) {
         let action: Action.GetContents_Request = {
-            type: CONST.GetBooks_Request,
+            type: CONST.GetContent_Request,
             chapterId: id,
             bookId: ReduxStore().getState().book.bookId,
         };
         ReduxStore().dispatch(action);
+        this.props.onTitleClick && this.props.onTitleClick();
     }
 
     private onListChange() {

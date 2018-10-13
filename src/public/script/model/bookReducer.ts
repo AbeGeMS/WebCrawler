@@ -6,10 +6,11 @@ import { BookModel } from "./bookModel";
 import reduxStore from "./dataContainer";
 import { Notify, NotifyAsync } from "./notificationReducer";
 import { DingamStyle } from "./common";
+import { reduce } from "bluebird";
 
 export interface IBookState {
     bookId?: string;
-    content?: ContentData;
+    contents?: ContentData[];
     latestCharpter?: number;
     table?: TitleData[];
 }
@@ -29,7 +30,7 @@ export namespace Action {
     }
 
     export interface GetContents_Response extends BaseAction {
-        content: ContentData;
+        contents: ContentData[];
     }
 }
 
@@ -65,33 +66,35 @@ function getTableOfContent_Response_Handler(state: IBookState, action: Action.Ge
     return state;
 }
 
-function getContent_Request_Handler(state:IBookState,action:Action.GetContents_Request):IBookState{
-    if(action.type === CONST.GetContent_Request){
+function getContent_Request_Handler(state: IBookState, action: Action.GetContents_Request): IBookState {
+    if (action.type === CONST.GetContent_Request) {
         let book = new BookModel();
-        book.getBookContent(action.bookId,parseInt(action.chapterId)).then(
-            content=> setTimeout(() => {
-                let newAction:Action.GetContents_Response={
-                    type:CONST.GetContent_Response,
-                    content:content,
+        let startIndex = state.table.findIndex(v => v.Href === action.chapterId);
+        let list = state.table.slice(startIndex, startIndex + 5).map(v =>v.Href);
+        book.getBookContent(action.bookId, list).then(
+            contents => setTimeout(() => {
+                let newAction: Action.GetContents_Response = {
+                    type: CONST.GetContent_Response,
+                    contents: contents,
                 };
-               reduxStore().dispatch(newAction); 
+                reduxStore().dispatch(newAction);
             }, 0),
-            err=>Notify(`Failed to get content by ${err}`,DingamStyle.Alert)
+            err => Notify(`Failed to get content by ${err}`, DingamStyle.Alert)
         );
         NotifyAsync(`Start to loading content of chapter ${action.chapterId}`, DingamStyle.Secondary);
     }
     return state;
 }
 
-function getContent_Response_Handler(state:IBookState,action:Action.GetContents_Response):IBookState{
-    if(action.type === CONST.GetContent_Response)
-        return { ...state, content: action.content };
+function getContent_Response_Handler(state: IBookState, action: Action.GetContents_Response): IBookState {
+    if (action.type === CONST.GetContent_Response)
+        return { ...state, contents: action.contents };
 }
 
 let Book_HandlerMap: HandlerMap<IBookState> = {
     [CONST.GetTableOfContents_Request]: getTableOfContent_Request_Handler,
     [CONST.GetTableOfContents_Response]: getTableOfContent_Response_Handler,
-    [CONST.GetContent_Request]:getContent_Request_Handler,
-    [CONST.GetContent_Response]:getContent_Response_Handler,
+    [CONST.GetContent_Request]: getContent_Request_Handler,
+    [CONST.GetContent_Response]: getContent_Response_Handler,
 };
 

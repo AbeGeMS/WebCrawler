@@ -1,5 +1,4 @@
 import {
-    mockHttpAgent, fakeHtml,
     mockBookService, expectedContent,
     expectedTableOfContent, mockHttpSpyon,
     mockbookTitle
@@ -10,7 +9,7 @@ describe('book service test suite', () => {
     beforeAll(() => mockHttpSpyon(), 10000);
 
     it(`getContent_Test`, (done) => {
-        let actualResult = mockBookService.getContent("123_456", "20");
+        let actualResult = mockBookService.getContent("123_456", "20", 100);
         actualResult.then(
             value => {
                 expect(value).toEqual(expectedContent);

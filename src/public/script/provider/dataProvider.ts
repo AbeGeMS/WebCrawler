@@ -25,11 +25,11 @@ export class DataProvider {
         );
     }
 
-    public getbookContent(bookId: string, chapterId: number): JQueryPromise<ContentData> {
+    public getbookContent(bookId: string, chapterId: string, index: number): JQueryPromise<ContentData> {
         return $.ajax(
             {
                 type: "POST",
-                data: JSON.stringify({ "bookId": bookId, "chapterId": chapterId }),
+                data: JSON.stringify({ "bookId": bookId, "chapterId": chapterId, "index": index }),
                 contentType: "application/json",
                 url: "book",
                 success: data => {

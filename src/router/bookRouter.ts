@@ -14,6 +14,7 @@ router.unsubscribe(cookieParser());
 router.post('/book', (req, res) => {
     let bookDomain = req.cookies && req.cookies.BaseDomain;
     let bookId = req.body.bookId;
+    let index = req.body.index;
     let chapterId = req.body.chapterId;
     if (!bookDomain || !bookId || !chapterId) {
         res.status(500).json({
@@ -22,7 +23,7 @@ router.post('/book', (req, res) => {
     }
 
     let bookService = new BookService(bookDomain, new HttpAgent());
-    bookService.getContent(bookId, chapterId)
+    bookService.getContent(bookId, chapterId, index)
         .then(content => res.json(content));
     console.info(
         `${routerName}.book:

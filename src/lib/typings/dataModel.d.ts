@@ -1,4 +1,5 @@
 export interface ContentData {
+    Index: number;
     Title: string;
     Content: string[];
 }

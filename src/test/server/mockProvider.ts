@@ -29,6 +29,7 @@ export const fakeHtml =
     </div>`;
 
 export let expectedContent: ContentData = {
+    Index: 100,
     Title: "001 FakeBook",
     Content: ["Book Title", "Subtitle", "first", "second"],
 };

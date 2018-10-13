@@ -24,8 +24,15 @@ export class BookModel {
         this.bookId = bookId;
     }
 
-    public getBookContent(bookId: string,chapter: number): JQueryPromise<ContentData> {
-        return this.provider.getbookContent(bookId,chapter);
+    public getBookContent(bookId: string, chapter:string[]): JQueryPromise<ContentData[]> {
+        return $.when(
+            ...chapter.map(
+                (value, index) => this.provider.getbookContent(bookId, value, index)
+            )
+        ).then(
+            (...contents) => contents.map(v=>v[0]),
+            err => err
+        );
     }
 
     public getTableOfContents(bookId: string): JQueryPromise<TitleData[]> {

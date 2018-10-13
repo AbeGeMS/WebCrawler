@@ -12,14 +12,20 @@ export class BookService {
     private readonly _http: HttpAgent;
     private readonly bookDomain: string;
 
-    public getContent(bookId: string, chapterId: string)
+    public getContent(bookId: string, chapterId: string, index:number)
         : Promise<ContentData> {
         try {
-            let url = `${this.bookDomain}${bookId}/${chapterId}/`;
+            let url = `${this.bookDomain}${chapterId}`;
 
             return this._http.get(url).then(
-                html => this.parseContent(html));
+                html => {
+                    let result = this.parseContent(html);
+                    result.Index = index;
+                    return result;
+                }
+            );
         } catch (ex) {
+
             return new Promise((resolve, reject) => {
                 reject(JSON.stringify(ex));
             });
@@ -59,15 +65,14 @@ export class BookService {
     private parseContent(html: string): ContentData {
         let _$ = cheerio.load(html);
         let contentList = _$("#content");
-        let title = this.parsTile(html);
+        let title = _$(".bookname h1").text().trim().replace(/\n/g,"");
         let content = contentList.contents().toArray()
             .filter((elem) => !_$(elem).is('br') && _$(elem).text().trim() !== "")
             .map((element) => {
                 return _$(element).text().trim();
             });
-        console.log(`title:${title} content:${content.length}`);
 
-        return { Title: title, Content: content };
+        return { Index: -1, Title: title, Content: content };
     }
 
     private parsTile(html: string): string {

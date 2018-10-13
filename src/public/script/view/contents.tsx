@@ -5,13 +5,14 @@ import reduxStore from "../model/dataContainer";
 
 export interface IContentsProp { }
 interface IContentsState {
-    content: ContentData;
+    contents: ContentData[];
 }
 
 export class Contents extends React.Component<IContentsProp, IContentsState>{
 
     public constructor(prop) {
         super(prop);
+        this.state = { contents: [] };
         this.onContentChange = this.onContentChange.bind(this);
     }
 
@@ -26,14 +27,16 @@ export class Contents extends React.Component<IContentsProp, IContentsState>{
     }
 
     public render() {
-        let content = !this.state.content ?
-            "loading..."
-            : <dl>
-                <dt>{this.state.content.Title}</dt>
-                {this.state.content.Content.map(c => <dd>{c}</dd>)}
-            </dl>;
+        let content = !this.state.contents
+            && this.state.contents.length > 0 ?
+            <dt>loading...</dt>
+            : this.state.contents.map((c,index) =>
+                <dl key={index}>
+                    <dt>{c.Title}</dt>
+                    {c.Content && c.Content.map((p,sub) => <dd key={sub}>{p}</dd>)}
+                </dl>);
 
-        return <div className="test-24">
+        return <div className="test-24 show-scroll-y">
             <dl>
                 {content}
             </dl>
@@ -43,7 +46,7 @@ export class Contents extends React.Component<IContentsProp, IContentsState>{
 
     private onContentChange() {
         let { book } = reduxStore().getState();
-        let { content } = book;
-        this.setState({ content: content })
+        let { contents } = book;
+        this.setState({ contents: contents })
     }
 }
