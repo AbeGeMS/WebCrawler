@@ -18,9 +18,12 @@ export class TableOfContents extends
     React.Component<ITableOfContentProp, ITableOfContentState>{
     public constructor(prop) {
         super(prop);
+        let {book} = ReduxStore().getState();
+        let { table } = book;
+
         this.state = {
-            list: [],
-        }
+            list: table,
+        };
 
         this.onListChange = this.onListChange.bind(this);
     }
