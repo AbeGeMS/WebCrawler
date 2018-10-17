@@ -3,7 +3,6 @@ import { createClient, RedisClient } from "redis";
 
 const redisPort: number = 6380;
 const redisAddress: string = "myBookmark.redis.cache.windows.net";
-const redisPassword = "";
 
 export class RedisAgent {
     private _client = this.createRedisClient();
@@ -56,12 +55,17 @@ export class RedisAgent {
                 return this._client;
             }
 
-            return createClient(redisPort, redisAddress, {
+            let redisClient = createClient(redisPort, redisAddress, {
                 auth_pass: redisPassword,
                 tls: {
                     servername: redisAddress,
                 },
             });
+            redisClient.on("error",
+            err=>console.log(`RedisAgent.createRedisClient unexpected exception by ${err}`)
+            );
+
+            return redisClient;
         } catch (ex) {
             console.log(`RedisAgent.createRedisClient unexpected exception by ${ex}`);
             return null;

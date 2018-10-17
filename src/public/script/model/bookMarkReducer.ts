@@ -36,6 +36,7 @@ function requestGetBooks(state: IBookMarkState, action: requestGetBooksAction): 
             type:Constants.GetBooks_Response,
             books:books,
         });
+        Notify(`get books success`,DingamStyle.Success,true);
     }, error => {
         Notify(`Failed to get books ${error.message}`, DingamStyle.Alert, true);
     });

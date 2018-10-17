@@ -18,3 +18,7 @@ export interface ICorrection{
     pattern:string,
     value: string,
 }
+
+export interface ILatestChapter{
+    latestChapter:number;
+}

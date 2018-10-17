@@ -12,6 +12,7 @@ export interface ITableOfContentProp {
 
 interface ITableOfContentState {
     list: TitleData[];
+    bookId?: string;
 }
 
 export class TableOfContents extends
@@ -19,12 +20,12 @@ export class TableOfContents extends
     public constructor(prop) {
         super(prop);
         let {book} = ReduxStore().getState();
-        let { table } = book;
-
+        let {bookId, table} = book;
         this.state = {
             list: table,
+            bookId: bookId,
         };
-
+        console.log("thie table list is null");
         this.onListChange = this.onListChange.bind(this);
     }
 
@@ -39,8 +40,8 @@ export class TableOfContents extends
     }
     public render() {
         let list = this.state.list &&
-            this.state.list.map(chapter =>
-                <List.Item key={chapter.Href}
+            this.state.list.map((chapter,index) =>
+                <List.Item key={index}
                     href={"#/" + chapter.Title}
                     title={chapter.Title}
                     onClick={this.onTitleClick.bind(this, chapter.Href)}
@@ -65,9 +66,14 @@ export class TableOfContents extends
 
     private onListChange() {
         let { book } = ReduxStore().getState();
-        let { table } = book;
-        if (this.state.list !== table) {
-            this.setState({ list: table });
+        let { table, latestCharpter, bookId } = book;
+        if (this.state.bookId !== bookId) {
+            let latest: TitleData = table[latestCharpter];
+            console.log(`this lates chapter is ${latest && latest.Title}`);
+            this.setState({
+                list: latest ? [latest, ...table] : table,
+                bookId: bookId
+            });
         }
     }
 }

@@ -34,7 +34,8 @@ export class CacheService {
     public getLatestCharpter(bookId:string):Promise<number>{
         try{
             return this._redisAgent.get(bookId)
-                .then(charpter => parseInt(charpter),
+                .then(charpter => {
+                    return parseInt(charpter)},
                 err=> reject(`CacheService.getLatestCharpter: Faied by ${err}`));
         }catch(ex){
             return reject(`CacheService.getLatestCharpter: Failed by ${ex}`);

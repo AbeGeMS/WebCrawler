@@ -18,7 +18,7 @@ router.get('/latestChapter', (req, res) => {
     }
 
     let cacheService = new CacheService(new BookService(baseUrl, new HttpAgent()), new RedisAgent());
-    cacheService.getLatestCharpter(bookId).then(chapter => res.send(chapter), err => res.json(err));
+    cacheService.getLatestCharpter(bookId).then(chapter => res.json({latestChapter:chapter}), err => res.json(err));
 });
 
 router.get('/tableOfContent', (req, res) => {

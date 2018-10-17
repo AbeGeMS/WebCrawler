@@ -1,5 +1,5 @@
-import { DataProvider } from "../provider/dataProvider";
 import { ContentData, TitleData } from "../../../lib/typings/dataModel";
+import { DataProvider } from "../provider/dataProvider";
 
 export class BookModel {
     constructor() {

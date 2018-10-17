@@ -44,7 +44,7 @@ export class DataProvider {
             {
                 type: "GET",
                 url: "latestChapter?id=" + bookId,
-                success: chapterNumber => chapterNumber,
+                success: chapterNumber => chapterNumber.latestChapter,
             }
         );
     }
