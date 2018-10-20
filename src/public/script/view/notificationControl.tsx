@@ -4,6 +4,7 @@ import { DingamStyle } from "../model/common";
 import ReduxStore from "../model/dataContainer";
 import { ChangeNotification } from "../model/constants";
 import { NotifyAction } from "../model/notificationReducer";
+import { BaseComponent } from "./baseComponent";
 
 interface INotificationState {
     Message?: string;
@@ -17,7 +18,7 @@ export interface INotificationProp {
     autoDismiss?: boolean;
 }
 
-export class NotificationControl extends React.Component<INotificationProp, INotificationState>{
+export class NotificationControl extends BaseComponent<INotificationProp, INotificationState>{
     public constructor(prop) {
         super(prop);
 
@@ -31,7 +32,7 @@ export class NotificationControl extends React.Component<INotificationProp, INot
     }
 
     public componentDidMount() {
-        this.unSubcribeMessageChangeHandler = ReduxStore().subscribe(this.onMessageChange);
+        this.unSubscribe.push(ReduxStore().subscribe(this.onMessageChange));
     }
 
     public componentWillUpdate() {
@@ -40,10 +41,6 @@ export class NotificationControl extends React.Component<INotificationProp, INot
                 this.closeNotification();
             }, 3000);
         }
-    }
-
-    public componentWillUnmount() {
-        this.unSubcribeMessageChangeHandler();
     }
 
     public render() {
@@ -55,8 +52,6 @@ export class NotificationControl extends React.Component<INotificationProp, INot
             onDismiss={this.closeNotification}
         />
     }
-
-    private unSubcribeMessageChangeHandler;
 
     private closeNotification() {
         let action: NotifyAction = {

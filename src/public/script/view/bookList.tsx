@@ -7,6 +7,7 @@ import CONST = require("../model/constants");
 import { requestGetBooksAction } from "../model/bookMarkReducer";
 import { NavTitle } from "./NavTitle";
 import { Action } from "../model/bookReducer";
+import { BaseComponent } from "./baseComponent";
 
 export interface IBookListProp {
     onItemClick: () => void;
@@ -16,7 +17,7 @@ interface IBookListState {
     books: null | BookMarkData[];
 }
 
-export class BookList extends React.Component<IBookListProp, IBookListState>{
+export class BookList extends BaseComponent<IBookListProp, IBookListState>{
     public constructor(prop) {
         super(prop);
 
@@ -25,17 +26,11 @@ export class BookList extends React.Component<IBookListProp, IBookListState>{
         this.onBookListChange = this.onBookListChange.bind(this);
     }
 
-    private unsubscribe: Unsubscribe[] = [];
-
     public componentWillMount() {
-        this.unsubscribe.push(ReduxStore().subscribe(this.onBookListChange));
+        this.unSubscribe.push(ReduxStore().subscribe(this.onBookListChange));
     }
 
     public componentDidMount() {
-    }
-
-    public componentWillUnmount() {
-        this.unsubscribe.forEach(sub => sub());
     }
 
     public render() {

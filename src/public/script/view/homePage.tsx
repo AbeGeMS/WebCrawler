@@ -2,19 +2,19 @@ import * as CONST from "../model/constants";
 import * as React from "react";
 import { NotificationControl } from "./notificationControl";
 import { TabBarControl, TabCategory } from "./tabBarControl";
-import { Unsubscribe } from "redux";
 import { requestGetBooksAction } from "../model/bookMarkReducer";
 import { BookList } from "./bookList";
 import { TableOfContents } from "./TableOfContents";
 import ReduxStore from "../model/dataContainer";
 import { Contents } from "./contents";
+import { BaseComponent } from "./baseComponent";
 
 interface HomePageState {
     SearchValue: string;
     Contents?: JSX.Element;
 }
 
-export class HomePage extends React.Component<any, HomePageState>{
+export class HomePage extends BaseComponent<any, HomePageState>{
     public constructor(prop) {
         super(prop);
 
@@ -27,22 +27,11 @@ export class HomePage extends React.Component<any, HomePageState>{
         this.createTableOfContents = this.createTableOfContents.bind(this);
     }
 
-    private unsbuscribe: Unsubscribe[] = [];
-
-    public componentWillMount() {
-    }
-
     public componentDidMount() {
         let getBookAction: requestGetBooksAction = {
             type: CONST.GetBooks_Request,
         };
         ReduxStore().dispatch(getBookAction);
-    }
-
-    public componentWillUnmount() {
-        if (this.unsbuscribe) {
-            this.unsbuscribe.forEach(t => t());
-        }
     }
 
     public render() {

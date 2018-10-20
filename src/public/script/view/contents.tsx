@@ -2,13 +2,14 @@ import React = require("react");
 import { ContentData } from "../../../lib/typings/dataModel";
 import { Unsubscribe } from "redux";
 import reduxStore from "../model/dataContainer";
+import { BaseComponent } from "./baseComponent";
 
 export interface IContentsProp { }
 interface IContentsState {
     contents: ContentData[];
 }
 
-export class Contents extends React.Component<IContentsProp, IContentsState>{
+export class Contents extends BaseComponent<IContentsProp, IContentsState>{
 
     public constructor(prop) {
         super(prop);
@@ -16,14 +17,8 @@ export class Contents extends React.Component<IContentsProp, IContentsState>{
         this.onContentChange = this.onContentChange.bind(this);
     }
 
-    private unSubscribe: Unsubscribe[] = [];
-
     public componentWillMount() {
         this.unSubscribe.push(reduxStore().subscribe(this.onContentChange));
-    }
-
-    public componentWillUnmount() {
-        this.unSubscribe.forEach(sub => sub());
     }
 
     public render() {

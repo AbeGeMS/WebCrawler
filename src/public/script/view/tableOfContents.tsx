@@ -5,6 +5,7 @@ import ReduxStore from "../model/dataContainer";
 import { Unsubscribe } from "redux";
 import { Action } from "../model/bookReducer";
 import CONST = require("../model/constants");
+import { BaseComponent } from "./baseComponent";
 
 export interface ITableOfContentProp {
     onTitleClick: () => void;
@@ -16,7 +17,7 @@ interface ITableOfContentState {
 }
 
 export class TableOfContents extends
-    React.Component<ITableOfContentProp, ITableOfContentState>{
+    BaseComponent<ITableOfContentProp, ITableOfContentState>{
     public constructor(prop) {
         super(prop);
         let {book} = ReduxStore().getState();
@@ -29,15 +30,10 @@ export class TableOfContents extends
         this.onListChange = this.onListChange.bind(this);
     }
 
-    private unsubscribe: Unsubscribe[] = [];
-
     public componentDidMount() {
-        this.unsubscribe.push(ReduxStore().subscribe(this.onListChange))
+        this.unSubscribe.push(ReduxStore().subscribe(this.onListChange))
     }
 
-    public componentWillUnmount() {
-        this.unsubscribe.forEach(sub => sub());
-    }
     public render() {
         let list = this.state.list &&
             this.state.list.map((chapter,index) =>
