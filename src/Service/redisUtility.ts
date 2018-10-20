@@ -3,6 +3,7 @@ import { createClient, RedisClient } from "redis";
 
 const redisPort: number = 6380;
 const redisAddress: string = "myBookmark.redis.cache.windows.net";
+const redisPassword: string = "";
 
 export class RedisAgent {
     private _client = this.createRedisClient();
