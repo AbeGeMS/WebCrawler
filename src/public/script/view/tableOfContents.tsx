@@ -6,6 +6,7 @@ import { Unsubscribe } from "redux";
 import { Action } from "../model/bookReducer";
 import CONST = require("../model/constants");
 import { BaseComponent } from "./baseComponent";
+import { RequestStatus } from "../model/baseReducer";
 
 export interface ITableOfContentProp {
     onTitleClick: () => void;
@@ -21,12 +22,12 @@ export class TableOfContents extends
     public constructor(prop) {
         super(prop);
         let {book} = ReduxStore().getState();
-        let {bookId, table} = book;
+        let { bookId, table, status } = book;
         this.state = {
-            list: table,
+            list: status == RequestStatus.Success ? table : [],
             bookId: bookId,
         };
-        console.log("thie table list is null");
+
         this.onListChange = this.onListChange.bind(this);
     }
 
@@ -62,8 +63,9 @@ export class TableOfContents extends
 
     private onListChange() {
         let { book } = ReduxStore().getState();
-        let { table, latestCharpter, bookId } = book;
-        if (this.state.bookId !== bookId) {
+        let { table, latestCharpter, bookId, status } = book;
+
+        if (this.state.bookId !== bookId && status == RequestStatus.Success) {
             let latest: TitleData = table[latestCharpter];
             console.log(`this lates chapter is ${latest && latest.Title}`);
             this.setState({
