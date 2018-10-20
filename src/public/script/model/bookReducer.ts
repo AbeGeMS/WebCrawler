@@ -1,5 +1,5 @@
 import { TitleData, ContentData } from "../../../lib/typings/dataModel";
-import { HandlerMap, BaseAction, reducerTemplate } from "./baseReducer";
+import { HandlerMap, BaseAction, reducerTemplate, RequestStatus, IBaseState } from "./baseReducer";
 import { Reducer } from "redux";
 import CONST = require("./constants");
 import { BookModel } from "./bookModel";
@@ -9,7 +9,7 @@ import { DingamStyle } from "./common";
 import { BookMark } from "./bookMarkModel";
 import { stat } from "fs";
 
-export interface IBookState {
+export interface IBookState extends IBaseState {
     bookId?: string;
     contents?: ContentData[];
     latestCharpter?: number;
@@ -51,6 +51,7 @@ function getTableOfContent_Request_Handler(state: IBookState, action: Action.Get
                     setTimeout(() => {
                         let newaction: Action.GetTableOfContents_Response = {
                             type: CONST.GetTableOfContents_Response,
+                            status: RequestStatus.Success,
                             table: table[0],
                             bookId: action.bookId,
                             latestCharpter: chapterIndex[0].latestChapter,
@@ -63,15 +64,21 @@ function getTableOfContent_Request_Handler(state: IBookState, action: Action.Get
         NotifyAsync(`Start to get book ${action.bookId}...`, DingamStyle.Secondary, true);
     }
 
-    return { ...state };
+    return { ...state, status: RequestStatus.Start };
 }
 
 function getTableOfContent_Response_Handler(state: IBookState, action: Action.GetTableOfContents_Response): IBookState {
     if (action.type === CONST.GetTableOfContents_Response) {
-        return { ...state, bookId: action.bookId, table: action.table, latestCharpter: action.latestCharpter }
+        return {
+            ...state,
+            bookId: action.bookId,
+            table: action.table,
+            latestCharpter: action.latestCharpter,
+            status: action.status,
+        }
     }
 
-    return state;
+    return { ...state };
 }
 
 function getContent_Request_Handler(state: IBookState, action: Action.GetContents_Request): IBookState {
@@ -85,6 +92,7 @@ function getContent_Request_Handler(state: IBookState, action: Action.GetContent
                 setTimeout(() => {
                     let newAction: Action.GetContents_Response = {
                         type: CONST.GetContent_Response,
+                        status: RequestStatus.Success,
                         contents: contents,
                     };
                     reduxStore().dispatch(newAction);
@@ -94,12 +102,13 @@ function getContent_Request_Handler(state: IBookState, action: Action.GetContent
         );
         NotifyAsync(`Start to loading content of chapter ${action.chapterId}`, DingamStyle.Secondary);
     }
-    return { ...state };
+    return { ...state, status: RequestStatus.Start };
 }
 
 function getContent_Response_Handler(state: IBookState, action: Action.GetContents_Response): IBookState {
     if (action.type === CONST.GetContent_Response)
-        return { ...state, contents: action.contents };
+        return { ...state, contents: action.contents, status: action.status };
+    return { ...state };
 }
 
 let Book_HandlerMap: HandlerMap<IBookState> = {

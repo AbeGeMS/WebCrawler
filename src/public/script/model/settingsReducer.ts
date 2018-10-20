@@ -1,4 +1,4 @@
-import { HandlerMap, BaseAction, reducerTemplate } from "./baseReducer";
+import { HandlerMap, BaseAction, reducerTemplate, IBaseState, RequestStatus } from "./baseReducer";
 import { Reducer } from "redux";
 import { ICorrection } from "../../../lib/typings/dataModel";
 import { Notify, NotifyAsync } from "./notificationReducer";
@@ -12,7 +12,7 @@ let Settings_HandlerMap: HandlerMap<ISettingsState> = {
     [Constants.SetBookDomain_Response]: setBookDomain_Response,
 };
 
-export interface ISettingsState {
+export interface ISettingsState extends IBaseState {
     corrections?: ICorrection[];
     bookDomain?: string;
 }
@@ -33,19 +33,24 @@ function setBookDomain_Request(state: ISettingsState, action: SetBookDomainActio
     if (action.type == Constants.SetBookDomain_Request) {
         let settings = new SettingsModel();
         settings.setBookDomain(action.bookDomain).then(message => {
-            ReduxStore().dispatch({ type: Constants.SetBookDomain_Response, message: message })
+            ReduxStore().dispatch({
+                type: Constants.SetBookDomain_Response,
+                message: message,
+                status: RequestStatus.Success
+            })
         });
         NotifyAsync(`Load ${action.bookDomain} starting...`, DingamStyle.Secondary, true);
     }
 
-    return state;
+    return { ...state, status: RequestStatus.Start };
 }
 
 function setBookDomain_Response(state: ISettingsState, action: SetBookDomainAction_Response): ISettingsState {
     if (action.type == Constants.SetBookDomain_Response) {
         NotifyAsync(`BookDomain: ${action.message} was set into cookie.`, DingamStyle.Success, true);
+        return { ...state, status: action.status };
     }
 
-    return state;
+    return { ...state };
 }
 

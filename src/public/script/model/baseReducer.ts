@@ -1,8 +1,20 @@
 import { Reducer } from "redux";
 
+// State
+export interface IBaseState {
+    status?:RequestStatus;
+}
+
 // Action
 export interface BaseAction {
     type: string;
+    status?: RequestStatus; 
+}
+
+export enum RequestStatus{
+    Start,
+    Success,
+    Failed,
 }
 
 
