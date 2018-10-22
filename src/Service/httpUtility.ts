@@ -7,13 +7,19 @@ export class HttpAgent {
     public get(url: any): Promise<string> {
         return new Promise(
             (resolve, reject) => {
-                https.get(
-                    url,
-                    res => {
-                        res.setEncoding("utf-8");
-                        this.getContent(res).then(html => resolve(html), error => reject(error));
-                    }
-                );
+                try {
+                    https.get(
+                        url,
+                        res => {
+                            res.setEncoding("utf-8");
+                            this.getContent(res).then(html => resolve(html), error => reject(error));
+                        }
+                    ).on("error", err => {
+                        reject(err);
+                    });
+                } catch (ex) {
+                    reject(`HttpAgent.get throw exception ${ex}`);
+                }
             });
     }
 
