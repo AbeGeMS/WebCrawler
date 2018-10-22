@@ -15,7 +15,7 @@ export class Demo {
             res.sendFile(path.join(__dirname, "./public/page/index.html"));
         });
 
-        let server = app.listen(3000, () => {
+        let server = app.listen(process.env.PORT || 3000, () => {
             console.log("[" + new Date().toUTCString() + "] Demo is listening port:%s", server.address().port);
         });
     }

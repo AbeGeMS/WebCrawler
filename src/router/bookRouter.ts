@@ -22,6 +22,7 @@ router.post('/book', (req, res) => {
         });
     }
 
+    bookDomain =`https://${bookDomain}.com/`;
     let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getContent(bookId, chapterId, index)
         .then(content => res.json(content));
@@ -38,6 +39,7 @@ router.post('/tableOfContent', (req, res) => {
             error: `invalid parameter domain:${bookDomain} bookId:${bookId}`,
         });
     }
+    bookDomain = `https://${bookDomain}.com/`
     let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getTableOfContent(bookId)
         .then(tableOfContent => res.json(tableOfContent));
