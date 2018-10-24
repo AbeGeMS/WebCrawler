@@ -28,7 +28,7 @@ export class Contents extends BaseComponent<IContentsProp, IContentsState>{
             : this.state.contents.map((c,index) =>
                 <dl key={index}>
                     <dt>{c.Title}</dt>
-                    {c.Content && c.Content.map((p,sub) => <dd key={sub}>{p}</dd>)}
+                    <dd>{c.Content && c.Content.reduce((p, c) => `${p}${c}`)}</dd>
                 </dl>);
 
         return <div className="test-24 show-scroll-y">

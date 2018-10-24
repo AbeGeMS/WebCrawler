@@ -5,6 +5,7 @@ import ReduxStore from "../model/dataContainer";
 import { ChangeNotification } from "../model/constants";
 import { NotifyAction } from "../model/notificationReducer";
 import { BaseComponent } from "./baseComponent";
+import reduxStore from "../model/dataContainer";
 
 interface INotificationState {
     Message?: string;
@@ -68,7 +69,7 @@ export class NotificationControl extends BaseComponent<INotificationProp, INotif
         let { notification } = ReduxStore().getState();
         let { NotifyMessage, NotifyStyle, IsVissible } = notification;
 
-        if (IsVissible) {
+        if (IsVissible && this.state.Message !== NotifyMessage) {
             this.setState({ Message: NotifyMessage || "", Style: NotifyStyle, Visible: !!NotifyMessage && IsVissible })
         }
     }

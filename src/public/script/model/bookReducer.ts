@@ -44,10 +44,11 @@ function getTableOfContent_Request_Handler(state: IBookState, action: Action.Get
     if (action.type === CONST.GetTableOfContents_Request) {
         let book = new BookModel();
         let bookMark = new BookMark();
+        NotifyAsync(`Start to get book ${action.bookId}...`, DingamStyle.Secondary, true);
         $.when<any>(book.getTableOfContents(action.bookId), bookMark.getLatestChapter(action.bookId))
             .then(
                 (table, chapterIndex) => {
-                    Notify(`succes get the table of content for book ${action.bookId}`, DingamStyle.Success);
+                    NotifyAsync(`succes get the table of content for book ${action.bookId}`, DingamStyle.Success);
                     setTimeout(() => {
                         let newaction: Action.GetTableOfContents_Response = {
                             type: CONST.GetTableOfContents_Response,
@@ -59,9 +60,8 @@ function getTableOfContent_Request_Handler(state: IBookState, action: Action.Get
                         reduxStore().dispatch(newaction);
                     }, 0);
                 },
-                err => Notify(`Failed to get the table of content casue: ${JSON.stringify(err)}`, DingamStyle.Alert)
+                err => NotifyAsync(`Failed to get the table of content casue: ${JSON.stringify(err)}`, DingamStyle.Alert)
             );
-        NotifyAsync(`Start to get book ${action.bookId}...`, DingamStyle.Secondary, true);
     }
 
     return { ...state, status: RequestStatus.Start };
@@ -86,9 +86,10 @@ function getContent_Request_Handler(state: IBookState, action: Action.GetContent
         let book = new BookModel();
         let startIndex = state.table.findIndex(v => v.Href === action.chapterId);
         let list = state.table.slice(startIndex, startIndex + 5).map(v => v.Href);
+        NotifyAsync(`Start to loading content of chapter ${action.chapterId}`, DingamStyle.Secondary);
         book.getBookContent(action.bookId, list).then(
             contents => {
-                Notify(`Success get the book content of chapter ${action.type}`, DingamStyle.Success);
+                NotifyAsync(`Success get the book content of chapter ${action.type}`, DingamStyle.Success);
                 setTimeout(() => {
                     let newAction: Action.GetContents_Response = {
                         type: CONST.GetContent_Response,
@@ -98,9 +99,8 @@ function getContent_Request_Handler(state: IBookState, action: Action.GetContent
                     reduxStore().dispatch(newAction);
                 }, 0);
             },
-            err => Notify(`Failed to get content by ${err}`, DingamStyle.Alert)
+            err => NotifyAsync(`Failed to get content by ${err}`, DingamStyle.Alert)
         );
-        NotifyAsync(`Start to loading content of chapter ${action.chapterId}`, DingamStyle.Secondary);
     }
     return { ...state, status: RequestStatus.Start };
 }

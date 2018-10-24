@@ -65,7 +65,7 @@ export class TableOfContents extends
         let { book } = ReduxStore().getState();
         let { table, latestCharpter, bookId, status } = book;
 
-        if (this.state.bookId !== bookId && status == RequestStatus.Success) {
+        if (status == RequestStatus.Success) {
             let latest: TitleData = table[latestCharpter];
             console.log(`this lates chapter is ${latest && latest.Title}`);
             this.setState({

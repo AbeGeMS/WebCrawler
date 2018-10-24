@@ -31,18 +31,17 @@ function requestGetBooks(state: IBookMarkState, action: requestGetBooksAction): 
     }
 
     let bookMark = new BookMark();
+    NotifyAsync(`Start to get books`, DingamStyle.Secondary, true);
     bookMark.getBooks().then(books => {
         reduxStore().dispatch({
             type:Constants.GetBooks_Response,
             status:RequestStatus.Success,
             books:books,
         });
-        Notify(`get books success`,DingamStyle.Success,true);
+        NotifyAsync(`get books success`,DingamStyle.Success,true);
     }, error => {
-        Notify(`Failed to get books ${error.message}`, DingamStyle.Alert, true);
+        NotifyAsync(`Failed to get books ${error.message}`, DingamStyle.Alert, true);
     });
-
-    NotifyAsync(`Start to get books`, DingamStyle.Secondary, true);
 
     return { ...state, status: RequestStatus.Start };
 }

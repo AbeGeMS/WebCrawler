@@ -39,15 +39,17 @@ export class BookList extends BaseComponent<IBookListProp, IBookListState>{
                 <List.Item key={book.BookId}
                     href={"#/" + book.BookId}
                     title={book.Name}
-                    onClick={this.onItemClick.bind(this,book.BookId)}
+                    onClick={this.onItemClick.bind(this, book.BookId)}
                 />);
-        return <List >
-            <NavTitle />
-            {list}
-            <Button hollow noHb block onClick={this.refreshBookList}>
-                <Icon name="refresh" />
-                Refresh</Button>
-        </List>
+        return <div className="show-scroll-y">
+            <List >
+                <NavTitle />
+                {list}
+                <Button hollow noHb block onClick={this.refreshBookList}>
+                    <Icon name="refresh" />
+                    Refresh</Button>
+            </List>
+        </div>;
     }
 
     private refreshBookList() {
