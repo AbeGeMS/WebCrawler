@@ -24,9 +24,7 @@ export class TabBarControl extends React.Component<ITabBarProps, TabBarControlSt
     }
 
     private onClick = (key) => {
-        this.setState({ selected: key }, () => {
-            this.props.onClick(key);
-        });
+        this.props.onClick(key);
     }
 
     public render() {

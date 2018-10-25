@@ -10,6 +10,7 @@ import ReduxStore from "./dataContainer";
 let Settings_HandlerMap: HandlerMap<ISettingsState> = {
     [Constants.SetBookDomain_Request]: setBookDomain_Request,
     [Constants.SetBookDomain_Response]: setBookDomain_Response,
+    [Constants.SetCorrectionList]: setCorrectionList,
 };
 
 export interface ISettingsState extends IBaseState {
@@ -27,6 +28,11 @@ export interface SetBookDomainAction_Request extends BaseAction {
 
 export interface SetBookDomainAction_Response extends BaseAction {
     message: string;
+}
+
+export interface SetCorrectionListAction extends BaseAction {
+    addRule?: ICorrection[];
+    deleteRuleIndex?: number;
 }
 
 function setBookDomain_Request(state: ISettingsState, action: SetBookDomainAction_Request): ISettingsState {
@@ -49,6 +55,24 @@ function setBookDomain_Response(state: ISettingsState, action: SetBookDomainActi
     if (action.type == Constants.SetBookDomain_Response) {
         NotifyAsync(`BookDomain: ${action.message} was set into cookie.`, DingamStyle.Success, true);
         return { ...state, status: action.status };
+    }
+
+    return { ...state };
+}
+
+function setCorrectionList(state: ISettingsState, action: SetCorrectionListAction): ISettingsState {
+    if (action.type !== Constants.SetCorrectionList) {
+        return { ...state };
+    }
+
+    if (action.addRule && action.addRule.length > 0) {
+        state.corrections.push(...action.addRule);
+        return { ...state };
+    }
+
+    if (!!action.deleteRuleIndex && action.deleteRuleIndex > -1) {
+        state.corrections.splice(action.deleteRuleIndex, 1);
+        return {...state};
     }
 
     return { ...state };

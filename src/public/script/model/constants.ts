@@ -27,6 +27,9 @@ export type GetContent_Request = typeof GetContent_Request;
 export let GetContent_Response = "GetContent_Response";
 export type GetContent_Response = typeof GetContent_Response;
 
+export let SetCorrectionList = "SetCorrectionList";
+export type SetCorrectionList = typeof SetCorrectionList;  
+
 export let CorrectionList: ICorrection[] = [
     { pattern: "sè", value: "色" },
     { pattern: "rì", value: "日" },

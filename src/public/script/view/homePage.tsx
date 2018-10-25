@@ -55,6 +55,7 @@ export class HomePage extends BaseComponent<any, HomePageState>{
                      onItemClick={this.createTableOfContents} /> });
                 break;
             case TabCategory.Gear:
+                
             case TabCategory.Next:
                 this.setState({ Contents: undefined });
                 break;
