@@ -67,9 +67,9 @@ export class TableOfContents extends
 
         if (status == RequestStatus.Success) {
             let latest: TitleData = table[latestCharpter];
-            console.log(`this lates chapter is ${latest && latest.Title}`);
+            let reverseTable = [...table].reverse();
             this.setState({
-                list: latest ? [latest, ...table] : table,
+                list: latest ? [latest, ...reverseTable] : reverseTable,
                 bookId: bookId
             });
         }

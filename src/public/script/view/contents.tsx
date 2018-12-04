@@ -26,16 +26,15 @@ export class Contents extends BaseComponent<IContentsProp, IContentsState>{
         let content = !this.state.contents
             && this.state.contents.length > 0 ?
             <dt>loading...</dt>
-            : this.state.contents.map((c,index) =>
-                <dl key={index}>
-                    <dt>{c.Title}</dt>
-                    {c.Content && c.Content.map((p,pIndex) => <p key={pIndex}>{p}</p>)}>
-                </dl>);
+            : this.state.contents.map((c, index) =>
+                <div key={index}>
+                    <h4>{c.Title}</h4>
+                    {c.Content && c.Content.map((p, pIndex) => <p key={pIndex}>{p}</p>)}
+                </div>
+                );
 
         return <div className="test-24 show-scroll-y">
-            <dl>
-                {content}
-            </dl>
+            {content}
         </div>;
     }
 
@@ -53,12 +52,12 @@ export class Contents extends BaseComponent<IContentsProp, IContentsState>{
         // relace words which in the rule list
         let result = contents.map(
             book => {
-                return {
-                    ...book, Content: book.Content.map(
+                let adjustContent = book.Content &&
+                    book.Content.map(
                         p => corrections.reduce(
                             (pre, curr) => pre.replace(new RegExp(curr.pattern, "gm"), curr.value), p)
-                    )
-                };
+                    );
+                return { ...book, Content: adjustContent || [] };
             }
         );
         this.setState({ contents: result })
