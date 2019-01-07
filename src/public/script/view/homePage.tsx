@@ -8,6 +8,7 @@ import { TableOfContents } from "./TableOfContents";
 import ReduxStore from "../model/dataContainer";
 import { Contents } from "./contents";
 import { BaseComponent } from "./baseComponent";
+import { SettingPage } from "./SettingPage";
 
 interface HomePageState {
     SearchValue: string;
@@ -55,7 +56,10 @@ export class HomePage extends BaseComponent<any, HomePageState>{
                      onItemClick={this.createTableOfContents} /> });
                 break;
             case TabCategory.Gear:
-                
+                this.setState({
+                    Contents:<SettingPage/>
+                });
+                break; 
             case TabCategory.Next:
                 this.setState({ Contents: undefined });
                 break;
