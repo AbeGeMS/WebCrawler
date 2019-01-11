@@ -1,5 +1,6 @@
 import * as CONST from "../model/constants";
 import * as React from "react";
+import { Footer } from "./footer";
 
 interface HomePageState {
     Contents?: JSX.Element;
@@ -17,6 +18,14 @@ export class HomePage extends React.Component<any, HomePageState>{
     }
 
     public render() {
-        return <div>Hello World</div>;
+        return (
+            <div className="home-page-container">
+                <div className="home-page-content">
+                </div>
+                <div className="home-page-footer bg-dark">
+                    <Footer />
+                </div>
+            </div>
+        );
     }
 }

@@ -1,7 +1,44 @@
-@rootColor : #666666;
+@infoColor:#17a2b8;
+@primaryColor: #007bff;
+@secondColor: #6c757d;
+@warningColor: #ffc107;
+@alertColor: #dc3545;
+@successColor:#28a745;
+@darkColor:#343a40;
+@lightColor:#fff;
 
-.basis-color {
-    color: @rootColor;
+.bg-info {
+    background-color: @infoColor;
+}
+
+.bg-primary{
+    background-color: @primaryColor;
+}
+
+.bg-second{
+    background-color: @secondColor;
+}
+
+
+.bg-warning{
+    background-color: @warningColor;
+}
+
+.bg-alert{
+    background-color: @alertColor;
+}
+
+.bg-success{
+    background-color: @successColor;
+}
+
+.bg-dark{
+    background-color: @darkColor;
+}
+
+.show-scroll-y{
+    max-height: 94%;
+    overflow-y:auto;
 }
 
 .home-page-container{
@@ -12,10 +49,31 @@
 
 .home-page-content{
     font-size: 25px;
-    flex:1;
+    flex: 1 1 auto;
 }
 
-.show-scroll-y{
-    max-height: 94%;
-    overflow-y:auto;
+.home-page-footer{
+    flex: 0 0 auto;
+    height: 40px;
+}
+
+.footer-root{
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    font-size: 18px;
+    color:@lightColor;
+    text-align: center;
+}
+
+.footer-left{
+    flex:0 0 auto;
+    width: 50%;
+    padding-top: 10px
+}
+
+.footer-right{
+    flex: 0 0 auto;
+    width: 50%;
+    padding-top: 10px
 }
