@@ -1,7 +1,7 @@
 {
-  "name": "nodejsproject",
+  "name": "mysite",
   "version": "1.0.0",
-  "description": "a scanfolder for a website usig typeScript as language; expressjs as server side framework;React as client side framework; Jasmine as UT engine; nodemon is debug tool; VsCode as IDE.",
+  "description": "A Web book site",
   "main": "gulpfile.js",
   "scripts": {
     "build": "node_modules/.bin/gulp",
