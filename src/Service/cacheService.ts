@@ -41,4 +41,8 @@ export class CacheService {
             return reject(`CacheService.getLatestCharpter: Failed by ${ex}`);
         } 
     }
+
+    public setBookMark(bookId:string,charpter:string): Promise<void> {
+        return this._redisAgent.set(bookId,charpter);
+    }
 }

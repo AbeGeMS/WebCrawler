@@ -43,4 +43,17 @@ router.delete("/bookMark/:id", (req, res) => {
     console.log(`Delete book ${bookId}`);
 });
 
+router.put("/bookMark",(req,res)=>{
+    let bookId = req.body.id;
+    let chapter = req.body.chapter;
+    let baseurl = decodingStr(req.cookies && req.cookies.BaseDomain);
+    baseurl=`https://${baseurl.trim()}.com/`;
+    if (baseurl) {
+        let cacheService = new CacheService(new BookService(baseurl, new HttpAgent()), new RedisAgent());
+        cacheService.setBookMark(bookId,chapter);
+    } else{
+        res.json(`Set book ${bookId} chapter ${chapter} Failed.`);
+    }
+});
+
 export = router

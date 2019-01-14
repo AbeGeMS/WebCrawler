@@ -44,12 +44,30 @@ export class RedisAgent {
                     resolve(value);
                 });
             } catch (ex) {
-                console.log(`RedisAgent.get unexpected exeption by ${ex}`);
-                reject(`redisAgent.get:Failed by ${ex}`);
+                console.log(`RedisAgent.get unexpected exception by ${ex}`);
+                reject(`RedisAgent.get:Failed by ${ex}`);
             }
         });
     }
 
+    public set(key:string, value:string):Promise<void>{
+        
+        return new Promise((resolve,reject)=>{
+            try{
+                this._client.set(key,value,(err,reply)=>{
+                    if(!!err){
+                        reject(err);
+                        return;
+                    }
+                    resolve();
+                })
+            } catch(ex){
+               console.log(`RedisAgent.set unexpected exception by ${ex}`);
+               reject(`RedisAgent.set: Failed by ${ex}`); 
+            }
+        });
+    }
+    
     private createRedisClient(): RedisClient {
         try {
             if (this._client) {
