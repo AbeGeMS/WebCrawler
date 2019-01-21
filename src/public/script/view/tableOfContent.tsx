@@ -57,5 +57,5 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
 
     private onCharpterButtonClick(){
         this.props.onCharpterSelected();
-    }
+    } 
 }
