@@ -19,6 +19,7 @@ export class BookLib extends React.Component<IBookLibProp, IbookLibState>{
     private clickedButton: React.RefObject<HTMLButtonElement>;
     public constructor(prop) {
         super(prop);
+        this.onBookClick = this.onBookClick.bind(this);
         this.clickedButton = React.createRef<HTMLButtonElement>();
     }
 
