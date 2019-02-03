@@ -8,7 +8,7 @@ interface ISearchState {
 export interface ISearchProp {
     settingModel: SettingsModel;
     onSearchDone: () => void;
-    onGoLibDone:()=>void;
+    onGoLibDone: () => void;
 }
 
 export class Search extends React.Component<ISearchProp, ISearchState>{
@@ -23,7 +23,7 @@ export class Search extends React.Component<ISearchProp, ISearchState>{
     public render() {
         return (
             <div>
-                <input className="search-bar"></input>
+                <input className="search-bar" ref={this.searchElement}></input>
                 <button className="search-btn bg-info" onClick={this.onSearchClick}>Search</button>
                 <button className="get-lib-btn bg-primary" onClick={this.onGoLibClick}>Go Book Lib</button>
             </div>
@@ -34,8 +34,11 @@ export class Search extends React.Component<ISearchProp, ISearchState>{
         let bookLib: string[];
     }
 
-    private onGoLibClick(){
-        this.props.settingModel.setBookDomain(this.searchElement.current.value)
-            .then(v => this.props.onGoLibDone());
+    private onGoLibClick() {
+
+        if (this.searchElement.current) {
+            this.props.settingModel.setBookDomain(this.searchElement.current.value)
+                .then(v => this.props.onGoLibDone());
+        }
     }
 }
