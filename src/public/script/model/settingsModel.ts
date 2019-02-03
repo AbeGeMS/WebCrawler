@@ -8,7 +8,7 @@ export class SettingsModel {
 
     public parseDomainUrl(input: string) {
         let domainParser = input.split('.');
-        return `https://www.${domainParser.length > 1 ? domainParser[1] : domainParser}.com`;
+        return `www.${domainParser.length > 1 ? domainParser[1] : domainParser}`;
     }
 
     public getBookId(input: string) {
