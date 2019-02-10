@@ -3,6 +3,7 @@ import * as path from "path";
 import * as bookRouter from "./router/bookRouter";
 import * as cacheRouter from "./router/cacheRouter";
 import * as cookieParser from "cookie-parser";
+import fakeRouter = require("./router/fakeRouter");
 
 export class Demo {
     public static start() {
@@ -11,6 +12,7 @@ export class Demo {
         app.use(express.static(path.join(__dirname, "public")));
         app.use("/", bookRouter);
         app.use("/", cacheRouter);
+        app.use("/debug",fakeRouter);
         app.get("/", (req, res) => {
             res.sendFile(path.join(__dirname, "./public/page/index.html"));
         });
