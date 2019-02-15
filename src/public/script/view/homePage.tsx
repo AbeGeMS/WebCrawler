@@ -1,10 +1,10 @@
-import * as CONST from "../model/constants";
 import * as React from "react";
 import { Footer, IFooterProp } from "./footer";
 import { Search, ISearchProp } from "./search";
 import { ModelFactory } from "../model/model";
 import { BookLib, IBookLibProp } from "./bookLib";
 import { ITableOfContentProp, TableOfContent } from "./tableOfContent";
+import { Content, IContentProp } from "./content";
 
 enum ContentComponent {
     BookLib = 1,
@@ -63,7 +63,13 @@ private readonly modelFac:ModelFactory;
         let tableOfContent: ITableOfContentProp = {
             book: this.modelFac.Book,
             bookMark: this.modelFac.BookMark,
+            state:this.modelFac.State,
             onCharpterSelected: () => this.setComponentState(ContentComponent.Content),
+        }
+
+        let contentProp: IContentProp = {
+            book: this.modelFac.Book,
+            charpter:this.modelFac.State.SelectedCharpter,
         }
         let result: JSX.Element;
         switch (this.state.currentContent) {
@@ -79,6 +85,7 @@ private readonly modelFac:ModelFactory;
                 result = <BookLib {...bookLibProp} />;
                 break;
             case ContentComponent.Content:
+                result = <Content {...contentProp}/>;
                 break;
             case ContentComponent.TableOfContent:
                 result = <TableOfContent {...tableOfContent}/>;

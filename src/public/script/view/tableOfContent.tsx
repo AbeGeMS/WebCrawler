@@ -3,6 +3,7 @@ import { BookMark } from "../model/bookMarkModel";
 import { BookModel } from "../model/bookModel";
 import { TitleData } from "../../../lib/typings/dataModel";
 import { guid } from "../../../lib/utility";
+import { StateModel } from "../model/stateModel";
 
 interface ITableOfContentState {
     lists: TitleData[];
@@ -12,13 +13,12 @@ interface ITableOfContentState {
 export interface ITableOfContentProp {
     book: BookModel;
     bookMark: BookMark;
+    state:StateModel;
     onCharpterSelected:()=>void;
 }
 export class TableOfContent extends React.Component<ITableOfContentProp, ITableOfContentState>{
-    private charpterref: React.RefObject<HTMLButtonElement>;
     public constructor(prop) {
         super(prop);
-        this.charpterref = React.createRef<HTMLButtonElement>();
     }
 
     public componentWillMount() {
@@ -38,14 +38,12 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
                 key={guid()}
                 className="primary-btn bg-dak text-white"
                 name={charpter.Href}
-                ref={this.charpterref}
                 onClick={this.onCharpterButtonClick}>
                 {charpter.Title}</button>);
             return (<div>
                 <button
                     className="primary-btn bg-dak text-white"
                     name={lastCharpter.Href}
-                    ref={this.charpterref}
                     onClick={this.onCharpterButtonClick}>
                     >{lastCharpter.Title}</button>
                 {tableOfContent}
@@ -55,7 +53,8 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
         return <div className="spinner text-secondary">Loading...</div>
     }
 
-    private onCharpterButtonClick(){
+    private onCharpterButtonClick(e:React.MouseEvent<HTMLButtonElement,MouseEvent>){
+        this.props.state.SelectedCharpter = (e.target as any).name;
         this.props.onCharpterSelected();
     } 
 }
