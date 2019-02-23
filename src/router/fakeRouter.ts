@@ -8,7 +8,7 @@ import { TitleData, BookMarkData, ContentData } from "../lib/typings/dataModel";
 let router = express.Router();
 
 router.get('/latestChapter', (req,res) => {
-    res.json(2);
+    res.json(1);
 });
 
 router.get('/tableOfContent', (req,res) => {
@@ -48,6 +48,11 @@ router.post('/book', (req, res) => {
 });
 
 router.post('/tableOfContent', (req, res) => {
+    let result: TitleData[] = [
+        { Href: "fakeHref", Title: "Fake" },
+        { Href: "MockHref", Title: "Mock" }
+    ];
+    res.json(result);
 });
 
 router.put("/BookDomain/:id", (req, res) => {

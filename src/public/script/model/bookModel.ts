@@ -1,5 +1,6 @@
 import { ContentData, TitleData } from "../../../lib/typings/dataModel";
 import { DataProvider } from "../provider/dataProvider";
+import { TableOfContent } from "../view/tableOfContent";
 
 export class BookModel {
     constructor() {
@@ -16,6 +17,12 @@ export class BookModel {
 
     private bookId: string | null = null;
 
+    private tableOfContent:string[]=[];
+
+    public set TableOfContent(tableOfContent:string[]){this.tableOfContent = tableOfContent};
+
+    public get TableOfContent():string[]{return this.tableOfContent};
+
     public get BookId(): string | null {
         return this.bookId;
     }
@@ -24,9 +31,10 @@ export class BookModel {
         this.bookId = bookId;
     }
 
-    public getBookContent(bookId: string, chapter: string[]): JQueryPromise<ContentData[]> {
+    public getBookContent(bookId: string, chapter: string): JQueryPromise<ContentData[]> {
+        let charpters = this.downloadCharpters(chapter);
         return $.when(
-            ...chapter.map(
+            ...charpters.map(
                 (value, index) => this.provider.getbookContent(bookId, value, index)
             )
         ).then(
@@ -44,5 +52,10 @@ export class BookModel {
 
     public getTableOfContents(bookId: string): JQueryPromise<TitleData[]> {
         return this.provider.getbookTableOfContent(bookId);
+    }
+
+    private downloadCharpters(startChapter: string): string[] {
+        let index = this.tableOfContent.indexOf(startChapter);
+        return this.tableOfContent.slice(index,5);
     }
 }

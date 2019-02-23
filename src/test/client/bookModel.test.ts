@@ -12,7 +12,7 @@ describe("BookModel test suit", () => {
         });
         model.Provider = mockProvider;
         model.getBookContent("fake_book",
-            ["book_id/chapter01.html", "book_id/chapter02.html", "book_id/chapter03.html"]).then(value => {
+            "book_id/chapter01.html").then(value => {
                 expect(value.length).toBe(3, "The result book content count should be 3");
                 expect(value[0]).toEqual({ Index: 0, Title: "fake Title", Content: ["fake 01", "fake 02"] },
                     "the content should same");

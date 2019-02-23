@@ -19,6 +19,7 @@ export interface ITableOfContentProp {
 export class TableOfContent extends React.Component<ITableOfContentProp, ITableOfContentState>{
     public constructor(prop) {
         super(prop);
+        this.onCharpterButtonClick = this.onCharpterButtonClick.bind(this);
     }
 
     public componentWillMount() {
@@ -45,7 +46,7 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
                     className="primary-btn bg-dak text-white"
                     name={lastCharpter.Href}
                     onClick={this.onCharpterButtonClick}>
-                    >{lastCharpter.Title}</button>
+                    {lastCharpter.Title}</button>
                 {tableOfContent}
             </div>);
         }
@@ -54,6 +55,7 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
     }
 
     private onCharpterButtonClick(e:React.MouseEvent<HTMLButtonElement,MouseEvent>){
+        this.props.book.TableOfContent = this.state.lists.map(t=>t.Href);
         this.props.state.SelectedCharpter = (e.target as any).name;
         this.props.onCharpterSelected();
     } 

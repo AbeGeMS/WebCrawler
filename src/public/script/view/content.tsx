@@ -9,7 +9,7 @@ interface IContentState {
 
 export interface IContentProp {
     book: BookModel;
-    charpter: string[];
+    charpter: string;
 }
 
 export class Content extends React.Component<IContentProp, IContentState>{
