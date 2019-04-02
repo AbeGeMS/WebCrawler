@@ -4,9 +4,9 @@
   "description": "get content from book sites",
   "main": "index.js",
   "scripts": {
-    "nodemon": "node_modules/.bin/nodemon.cmd build/debug/web/app.js",
+    "nodemon": "node_modules/.bin/nodemon.cmd build/debug/app.js",
     "build": "node_modules/.bin/grunt.cmd",
-    "forever": "node_modules/.bin/forever start -a -l forever.log -e err.log -o out.log build/ship/web/app.js"
+    "forever": "node_modules/.bin/forever start -a -l forever.log -e err.log -o out.log build/ship/app.js"
   },
   "author": "Abe",
   "license": "MIT",
