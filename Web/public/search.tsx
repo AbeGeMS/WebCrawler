@@ -28,7 +28,7 @@ namespace Abe.Client {
             chapterIndex: 0,
             isTable: true,
             tableOfContent: [],
-            bookMark:[],
+            bookMark: [],
         };
         public render() {
             let inputProp: React.HTMLProps<HTMLElement> = {
@@ -49,7 +49,7 @@ namespace Abe.Client {
                 onClick: () => {
                     let provider = new Abe.Client.dataProvider();
                     provider.getBookMark(this.state.bookHost)
-                        .then(books => this.setState({ bookMark: books, bookId:"", tableOfContent:[] }));
+                        .then(books => this.setState({ bookMark: books, bookId: "", tableOfContent: [] }));
                 },
             };
 
@@ -89,11 +89,11 @@ namespace Abe.Client {
                                 );
                             });
                     } else {
-                        let chapterMark =this.currentChapter; 
+                        let chapterMark = this.currentChapter;
                         this.setState(
                             { bookContent: this.currentContent, isTable: false, chapterIndex: this.currentChapter },
-                            () =>this.putChapterMark(chapterMark) 
-                            .then(()=>this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false))
+                            () => this.putChapterMark(chapterMark)
+                                .then(() => this.getBookContent([], this.state.tableOfContent[this.state.chapterIndex + 1].href, false))
                         );
                     }
                 }
@@ -158,9 +158,9 @@ namespace Abe.Client {
             let content = bookMark.map(value => {
                 let btnProp: React.HTMLProps<HTMLElement> = {
                     onClick: () => {
-                        this.setState({bookId:value.id},()=>{
-                        this.getChapterList(this.state.bookHost + "/" + value.id + "/")
-                            .then(() => this.setState({ bookMark: [] }));
+                        this.setState({ bookId: value.id }, () => {
+                            this.getChapterList(this.state.bookHost + "/" + value.id + "/")
+                                .then(() => this.setState({ bookMark: [] }));
                         });
                     }
                 };
@@ -176,8 +176,7 @@ namespace Abe.Client {
 
         private bookBuffer = 0;
 
-        private getChapterList(bookUrl:string):JQueryPromise<void>
-        {
+        private getChapterList(bookUrl: string): JQueryPromise<void> {
             let provider = new Abe.Client.dataProvider();
             return provider.getbookTableOfContent(bookUrl)
                 .then(c => this.setState({ tableOfContent: c },
@@ -227,7 +226,7 @@ namespace Abe.Client {
                     let index = this.state.tableOfContent.findIndex(v => v.href === url);
                     if (++index < this.state.tableOfContent.length
                         && this.bookBuffer++ < 6) {
-                        this.getBookContent(content, this.state.tableOfContent[index].href,setToCache);
+                        this.getBookContent(content, this.state.tableOfContent[index].href, setToCache);
                     } else {
                         this.bookBuffer = 0;
                         content.forEach(v => this.replaceGroup().forEach(r => {
@@ -246,7 +245,7 @@ namespace Abe.Client {
             return this.getContentDeferred.promise();
         }
 
-        private putChapterMark(chapter:number):JQueryPromise<void>{
+        private putChapterMark(chapter: number): JQueryPromise<void> {
             let provider = new Abe.Client.dataProvider();
             return provider.putLastestChapterNumber(this.state.bookId, chapter);
         }
@@ -320,7 +319,7 @@ namespace Abe.Client {
                 { s: "[a-z]", t: "" },
                 { s: "[A-Z]", t: "" },
                 { s: "？", t: "." },
-                {s:"\\\?", t:"."},
+                { s: "\\\?", t: "." },
             ];
         }
     }

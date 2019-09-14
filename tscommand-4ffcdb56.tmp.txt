@@ -1,0 +1,1 @@
+Service\WebCrawler.ts Web\public\DataProvider.ts web\public\search.tsx app.ts --sourcemap --removeComments --jsx react --lib es5,es6,dom --target ES5
