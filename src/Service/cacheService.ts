@@ -20,7 +20,7 @@ export class CacheService {
                 let booksPromise = values.map<Promise<BookMarkData>>(
                     v => this._bookService.getTitle(v).then(title => {
                         return { BookId: v, Name: title };
-                    },err=>{
+                    }, err => {
                         return { BookId: v, Name: err };
                     })
                 );
@@ -31,18 +31,30 @@ export class CacheService {
         }
     }
 
-    public getLatestCharpter(bookId:string):Promise<number>{
-        try{
+    public getLatestCharpter(bookId: string): Promise<number> {
+        try {
             return this._redisAgent.get(bookId)
                 .then(charpter => {
-                    return parseInt(charpter)},
-                err=> reject(`CacheService.getLatestCharpter: Faied by ${err}`));
-        }catch(ex){
+                    return parseInt(charpter)
+                },
+                    err => reject(`CacheService.getLatestCharpter: Faied by ${err}`));
+        } catch (ex) {
             return reject(`CacheService.getLatestCharpter: Failed by ${ex}`);
-        } 
+        }
     }
 
-    public setBookMark(bookId:string,charpter:string): Promise<void> {
-        return this._redisAgent.set(bookId,charpter);
+    public setBookMark(bookId: string, charpter: string): Promise<void> {
+        return this._redisAgent.set(bookId, charpter);
+    }
+
+    public extendExpiry(bookId: string): Promise<boolean> {
+        try {
+
+            return this._redisAgent.expiry(bookId)
+                .then(() => true,
+                    err => reject(`CacheService.extendExpiry: Failed to extend expiry time by ${err}`));
+        } catch (ex) {
+            return reject(`CacheService.extendExpiry: Failed by ${ex}`);
+        }
     }
 }

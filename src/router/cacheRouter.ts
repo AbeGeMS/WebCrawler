@@ -50,7 +50,8 @@ router.put("/bookMark",(req,res)=>{
     baseurl=`https://${baseurl.trim()}.com/`;
     if (baseurl) {
         let cacheService = new CacheService(new BookService(baseurl, new HttpAgent()), new RedisAgent());
-        cacheService.setBookMark(bookId,chapter);
+        cacheService.setBookMark(bookId,chapter)
+            .then(() => cacheService.extendExpiry(bookId));
     } else{
         res.json(`Set book ${bookId} chapter ${chapter} Failed.`);
     }

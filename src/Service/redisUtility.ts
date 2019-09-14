@@ -4,6 +4,7 @@ import { createClient, RedisClient } from "redis";
 const redisPort: number = 6380;
 const redisAddress: string = "myBookmark.redis.cache.windows.net";
 const redisPassword: string = "";
+const expiryTimeSpan = 1296000;
 
 export class RedisAgent {
     private _client = this.createRedisClient();
@@ -66,6 +67,26 @@ export class RedisAgent {
                reject(`RedisAgent.set: Failed by ${ex}`); 
             }
         });
+    }
+
+    public expiry(key: string): Promise<void> {
+
+        return new Promise((resolve, reject) => {
+            try {
+                this._client.expire(key, expiryTimeSpan, (err, reply) => {
+                    if(!!err){
+                        reject(err);
+                        return;
+                    }
+                    resolve();
+                 });
+            } catch (ex) {
+                console.log(`RedisAgent.expiry unexpected exception by ${ex}`);
+                reject(`RedisAgent.expiry: Faied by ${ex}`);
+            }
+        }
+
+        );
     }
     
     private createRedisClient(): RedisClient {
