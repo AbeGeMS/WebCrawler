@@ -9,6 +9,8 @@ import * as cheerio from "cheerio";
 import * as b from "bluebird";
 import * as redis from "redis";
 
+const expirySecond = 1296000; //one month 
+
 export module Abe.Service {
     export class WebCrawler {
         public downloadPage(url: any) {
@@ -55,6 +57,10 @@ export module Abe.Service {
                         console.log('[info] set initial chapter 0, status is' + value);
                     });
                     defer.resolve("0");
+
+                    this.redisClient.expire(bookId,expirySecond,()=>{
+                        console.log("extend expiry time to 1 month");
+                    });
                 } else {
                     console.log("[log] bookId " + bookId + " last charpter " + value);
                     defer.resolve(value);
@@ -62,7 +68,7 @@ export module Abe.Service {
             });
             return defer.promise;
         }
-
+        
         public putLatestChapterNumber(bookId: string, chapter: string) {
             let defer = b.defer<string>();
             this.redisClient.get(bookId,(err,value)=>{
@@ -70,6 +76,9 @@ export module Abe.Service {
                     this.redisClient.set(bookId, chapter.toString(),(err,value)=>{
                         defer.resolve(value);
                         console.log("[log] set chapter success");
+                    });
+                    this.redisClient.expire(bookId,expirySecond,()=>{
+                        console.log("extend expiry time to 1 month");
                     });
                 } else {
                     defer.reject("small chapter,input "+ chapter + "latest " + value);
