@@ -6,6 +6,8 @@ This is a book website. It can fetch books table of contents and render content.
 # Initial Project
 * Develop environment: 
     > \> yarn install
+
+    > **Note:** As to the @types/react and @types/react-dom conflict with yarn, it should use npm install intead of yarn
 * Production enviroment:
     > \> yarn install --prod
 # Command
