@@ -1,5 +1,6 @@
 import * as React from "react";
 import { SettingsModel } from "../model/settingsModel";
+import { BookModel } from "../model/bookModel";
 
 interface ISearchState {
 
@@ -7,6 +8,7 @@ interface ISearchState {
 
 export interface ISearchProp {
     settingModel: SettingsModel;
+    searchedBook: BookModel;
     onSearchDone: () => void;
     onGoLibDone: () => void;
 }
@@ -32,10 +34,18 @@ export class Search extends React.Component<ISearchProp, ISearchState>{
 
     private onSearchClick() {
         let bookLib: string[];
+
+        if (this.searchElement.current) {
+            this.props.settingModel.setBookDomain(this.searchElement.current.value)
+                .then(v => {
+                    this.props.searchedBook.BookId =
+                        this.props.settingModel.getBookId(this.searchElement.current.value);
+                    this.props.onSearchDone();
+                });
+        }
     }
 
     private onGoLibClick() {
-
         if (this.searchElement.current) {
             this.props.settingModel.setBookDomain(this.searchElement.current.value)
                 .then(v => this.props.onGoLibDone());

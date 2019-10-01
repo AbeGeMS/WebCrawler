@@ -76,7 +76,8 @@ private readonly modelFac:ModelFactory;
             case ContentComponent.Search:
                 let searchProp: ISearchProp = {
                     settingModel: this.modelFac.Setting,
-                    onSearchDone: () => { this.setComponentState(ContentComponent.Search) },
+                    searchedBook: this.modelFac.Book,
+                    onSearchDone: () => { this.setComponentState(ContentComponent.TableOfContent) },
                     onGoLibDone: () => { this.setComponentState(ContentComponent.BookLib) },
                 }
                 result = <Search {...searchProp} />;
