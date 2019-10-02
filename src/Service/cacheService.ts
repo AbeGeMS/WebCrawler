@@ -44,7 +44,12 @@ export class CacheService {
     }
 
     public setBookMark(bookId: string, charpter: string): Promise<void> {
-        return this._redisAgent.set(bookId, charpter);
+        let charpterNumber = parseInt(charpter, 10);
+        if (charpterNumber >= 0) {
+            return this._redisAgent.set(bookId, charpterNumber.toString());
+        } else {
+            return Promise.reject(`invalid parameter. the @charpter:${charpter} must be a number`);
+        }
     }
 
     public extendExpiry(bookId: string): Promise<boolean> {

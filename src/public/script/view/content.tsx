@@ -26,7 +26,7 @@ export class Content extends React.Component<IContentProp, IContentState>{
         if (this.state && this.state.contents) {
             return this.state.contents.map(v => {
                 return (
-                    [<h3 key={guid()}>{v.Title}</h3>,
+                    [<p className="title" key={guid()}>{v.Title}</p>,
                     ...this.oneCharter(v.Content)]
                 );
             });

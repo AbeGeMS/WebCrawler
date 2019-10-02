@@ -26,8 +26,10 @@ export class Search extends React.Component<ISearchProp, ISearchState>{
         return (
             <div>
                 <input className="search-bar" ref={this.searchElement}></input>
-                <button className="search-btn bg-info" onClick={this.onSearchClick}>Search</button>
-                <button className="get-lib-btn bg-primary" onClick={this.onGoLibClick}>Go Book Lib</button>
+                <div className="search-flex-container">
+                    <button className="search-btn bg-info" onClick={this.onSearchClick}>Search</button>
+                    <button className="get-lib-btn bg-primary" onClick={this.onGoLibClick}>Go Book Lib</button>
+                </div>
             </div>
         );
     }

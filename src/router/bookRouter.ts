@@ -27,7 +27,7 @@ router.post('/book', (req, res) => {
     bookService.getContent(bookId, chapterId, index)
         .then(content => res.json(content));
     console.info(
-        `${routerName}.book:
+        `POST ${routerName}.book:
         Search book ${bookId} chapter ${chapterId}`);
 });
 
@@ -44,7 +44,7 @@ router.post('/tableOfContent', (req, res) => {
     bookService.getTableOfContent(bookId)
         .then(tableOfContent => res.json(tableOfContent));
 
-    console.info(`${routerName}.tableOfContent:
+    console.info(`POST ${routerName}.tableOfContent:
     get list of book ${bookId}.`);
 });
 

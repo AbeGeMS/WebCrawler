@@ -27,6 +27,9 @@ private readonly modelFac:ModelFactory;
         this.setComponentState = this.setComponentState.bind(this);
         this.renderContent = this.renderContent.bind(this);
         this.modelFac = new ModelFactory();
+        this.state = {
+            currentContent: ContentComponent.Search,
+        };
     }
 
     public componentDidMount() {
