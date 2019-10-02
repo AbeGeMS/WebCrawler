@@ -1,6 +1,5 @@
 import { ContentData, TitleData } from "../../../lib/typings/dataModel";
 import { DataProvider } from "../provider/dataProvider";
-import { TableOfContent } from "../view/tableOfContent";
 
 export class BookModel {
     constructor() {
@@ -56,6 +55,6 @@ export class BookModel {
 
     private downloadCharpters(startChapter: string): string[] {
         let index = this.tableOfContent.indexOf(startChapter);
-        return this.tableOfContent.slice(index,5);
+        return this.tableOfContent.slice(index, index + 5);
     }
 }

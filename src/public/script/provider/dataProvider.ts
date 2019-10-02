@@ -38,7 +38,7 @@ export class DataProvider {
                 url: `${root}latestChapter?id=${bookId}`,
                 success: chapterNumber => chapterNumber.latestChapter,
             }
-        );
+        ).then(data => data.latestChapter);
     }
 
     public putLastestChapterNumber(bookId: string, chapterId: number): JQueryPromise<void> {
@@ -54,7 +54,7 @@ export class DataProvider {
             url: `${root}BookDomain/${encodingStr(bookDomain)}`,
             success: () => true,
             error: err => false,
-        });
+        }).then(data => true, (jqr, status, error) => false);
     }
 
     public getBookMarks(): JQueryPromise<BookMarkData[]> {
