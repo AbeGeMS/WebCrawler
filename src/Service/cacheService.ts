@@ -48,7 +48,9 @@ export class CacheService {
         if (charpterNumber >= 0) {
             return this._redisAgent.set(bookId, charpterNumber.toString());
         } else {
-            return Promise.reject(`invalid parameter. the @charpter:${charpter} must be a number`);
+            return new Promise((resolve, reject) => {
+                reject(`invalid parameter. the @charpter:${charpter} must be a number`)
+            });
         }
     }
 

@@ -1,6 +1,6 @@
 import { ContentData, TitleData, BookMarkData } from "../../../lib/typings/dataModel";
 import { encodingStr } from "../../../lib/utility";
-const root:string = "debug/";
+const root: string = "debug/";
 
 export class DataProvider {
     public getbookTableOfContent(bookId: string): JQueryPromise<TitleData[]> {
@@ -43,8 +43,9 @@ export class DataProvider {
 
     public putLastestChapterNumber(bookId: string, chapterId: number): JQueryPromise<void> {
         return $.ajax({
-            type: "GET",
-            url: `${root}putChapter?id=${bookId}&chapter=${chapterId}`,
+            type: "PUT",
+            url: `${root}bookMark?id=${bookId}&chapter=${chapterId}`,
+            data: { id: bookId, chapter: chapterId },
         });
     }
 
