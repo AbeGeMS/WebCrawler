@@ -13,8 +13,8 @@ interface ITableOfContentState {
 export interface ITableOfContentProp {
     book: BookModel;
     bookMark: BookMark;
-    state:StateModel;
-    onCharpterSelected:()=>void;
+    state: StateModel;
+    onCharpterSelected: () => void;
 }
 export class TableOfContent extends React.Component<ITableOfContentProp, ITableOfContentState>{
     public constructor(prop) {
@@ -28,19 +28,27 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
             .then(list => this.setState({ lists: list }))
             .then(
                 () => this.props.bookMark.getLatestChapter(bookId).then(l =>
-                    this.setState({ latestCharpter: l }))
+                    this.setState({
+                        latestCharpter: this.state.lists.length > l
+                            ? l
+                            : this.state.lists.length - 1
+                    })
+                )
             );
     }
 
     public render() {
         if (this.state && this.state.lists) {
-            let lastCharpter = this.state.latestCharpter ? this.state.lists[this.state.latestCharpter] : this.state.lists[0];
+            let lastCharpter = this.state.latestCharpter
+                ? this.state.lists[this.state.latestCharpter]
+                : this.state.lists[0];
             let tableOfContent = this.state.lists.map(charpter => <button
                 key={guid()}
                 className="primary-btn bg-dak text-white"
                 name={charpter.Href}
                 onClick={this.onCharpterButtonClick}>
                 {charpter.Title}</button>);
+
             return (<div>
                 <button
                     className="primary-btn bg-dak text-white"
@@ -54,9 +62,9 @@ export class TableOfContent extends React.Component<ITableOfContentProp, ITableO
         return <div className="spinner text-secondary">Loading...</div>
     }
 
-    private onCharpterButtonClick(e:React.MouseEvent<HTMLButtonElement,MouseEvent>){
-        this.props.book.TableOfContent = this.state.lists.map(t=>t.Href);
+    private onCharpterButtonClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        this.props.book.TableOfContent = this.state.lists.map(t => t.Href);
         this.props.state.SelectedCharpter = (e.target as any).name;
         this.props.onCharpterSelected();
-    } 
+    }
 }

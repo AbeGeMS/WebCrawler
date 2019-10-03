@@ -5,15 +5,15 @@ const redisPort: number = 6380;
 const redisAddress: string = "myBookmark.redis.cache.windows.net";
 const redisPassword: string = "";
 const expiryTimeSpan = 1296000;
+var Redis_Client: RedisClient;
 
 export class RedisAgent {
-    private _client = this.createRedisClient();
 
     public SCAN(start: number, count: number): Promise<string[]> {
 
         return new Promise((resolve, reject) => {
             try {
-                this._client.scan(start.toString(), 'COUNT', count.toString(), (err, reply) => {
+                this.Client.scan(start.toString(), 'COUNT', count.toString(), (err, reply) => {
                     if (!!err) {
                         reject("scan resdis failed");
                         console.log("WebCrawler.getBookList: scan redis Error is " + err);
@@ -37,7 +37,7 @@ export class RedisAgent {
 
         return new Promise((resolve, reject) => {
             try {
-                this._client.get(key, (err, value) => {
+                this.Client.get(key, (err, value) => {
                     if (!!err) {
                         reject(err);
                         return;
@@ -51,20 +51,20 @@ export class RedisAgent {
         });
     }
 
-    public set(key:string, value:string):Promise<void>{
-        
-        return new Promise((resolve,reject)=>{
-            try{
-                this._client.set(key,value,(err,reply)=>{
-                    if(!!err){
+    public set(key: string, value: string): Promise<void> {
+
+        return new Promise((resolve, reject) => {
+            try {
+                this.Client.set(key, value, (err, reply) => {
+                    if (!!err) {
                         reject(err);
                         return;
                     }
                     resolve();
                 })
-            } catch(ex){
-               console.log(`RedisAgent.set unexpected exception by ${ex}`);
-               reject(`RedisAgent.set: Failed by ${ex}`); 
+            } catch (ex) {
+                console.log(`RedisAgent.set unexpected exception by ${ex}`);
+                reject(`RedisAgent.set: Failed by ${ex}`);
             }
         });
     }
@@ -73,13 +73,13 @@ export class RedisAgent {
 
         return new Promise((resolve, reject) => {
             try {
-                this._client.expire(key, expiryTimeSpan, (err, reply) => {
-                    if(!!err){
+                this.Client.expire(key, expiryTimeSpan, (err, reply) => {
+                    if (!!err) {
                         reject(err);
                         return;
                     }
                     resolve();
-                 });
+                });
             } catch (ex) {
                 console.log(`RedisAgent.expiry unexpected exception by ${ex}`);
                 reject(`RedisAgent.expiry: Faied by ${ex}`);
@@ -88,11 +88,11 @@ export class RedisAgent {
 
         );
     }
-    
-    private createRedisClient(): RedisClient {
+
+    private get Client(): RedisClient {
         try {
-            if (this._client) {
-                return this._client;
+            if(Redis_Client){
+                return Redis_Client;
             }
 
             let redisClient = createClient(redisPort, redisAddress, {
@@ -102,9 +102,11 @@ export class RedisAgent {
                 },
             });
             redisClient.on("error",
-            err=>console.log(`RedisAgent.createRedisClient unexpected exception by ${err}`)
+                err => console.log(`RedisAgent.createRedisClient unexpected exception by ${err}`)
             );
 
+            Redis_Client = redisClient;
+            console.error(`new redis client`);
             return redisClient;
         } catch (ex) {
             console.log(`RedisAgent.createRedisClient unexpected exception by ${ex}`);
