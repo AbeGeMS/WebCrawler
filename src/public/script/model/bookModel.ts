@@ -1,6 +1,7 @@
 import { ContentData, TitleData } from "../../../lib/typings/dataModel";
 import { DataProvider } from "../provider/dataProvider";
 import { BookMark } from "./bookMarkModel";
+import { CorrectionList } from "./constants";
 
 export class BookModel {
     constructor() {
@@ -35,18 +36,19 @@ export class BookModel {
 
     public getBookContent(bookId: string, chapter: string): JQueryPromise<ContentData[]> {
         let charpters = this.downloadCharpters(chapter);
+
         return $.when(
-            ...charpters.map(
+            ...charpters.map<JQueryPromise<ContentData>>(
                 (value, index) => this.provider.getbookContent(bookId, value, index)
+                    .then(v => v as ContentData)
             )
         ).then(
             (...contents) => {
-                if (contents.length === 3 && !contents[1].Title) {
-                    let result = [];
-                    result.push(contents[0]);
-                    return result;
-                }
-                return contents.map(c => c[0]);
+
+                return contents.map<ContentData>(c => {
+                    c.Content = c.Content.map(paragraph => this.revise(paragraph));
+                    return c as ContentData;
+                });
             },
             err => err
         ).then(Content => {
@@ -63,5 +65,13 @@ export class BookModel {
     private downloadCharpters(startChapter: string): string[] {
         let index = this.tableOfContent.indexOf(startChapter);
         return this.tableOfContent.slice(index, index + 5);
+    }
+
+    private revise(inputStr: string): string {
+        CorrectionList.forEach(template =>
+            inputStr = inputStr.replace(template.pattern, template.value)
+        );
+
+        return inputStr;
     }
 }
