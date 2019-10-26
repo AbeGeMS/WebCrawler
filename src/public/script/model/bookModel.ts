@@ -69,7 +69,7 @@ export class BookModel {
 
     private revise(inputStr: string): string {
         CorrectionList.forEach(template =>
-            inputStr = inputStr.replace(template.pattern, template.value)
+            inputStr = inputStr.replace(new RegExp(template.pattern,"gm"), template.value)
         );
 
         return inputStr;
