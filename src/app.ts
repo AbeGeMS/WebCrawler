@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import * as express from "express";
 import * as path from "path";
 import * as bookRouter from "./router/bookRouter";
