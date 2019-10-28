@@ -72,5 +72,10 @@ export let CorrectionList: ICorrection[] = [
     { pattern: "[j-z]", value: "" },
     { pattern: "[J-Z]", value: "" },
     { pattern: "？", value: "." },
+    { pattern: "“", value: "" },
+    { pattern: "”", value: "" },
+    { pattern: "%", value: "" },
+    { pattern: "&", value: "" },
+    { pattern: "\*", value: "" },
     { pattern: "\\\?", value: "." },
 ];
