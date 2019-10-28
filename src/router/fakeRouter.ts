@@ -4,6 +4,9 @@ import bodyParser = require("body-parser");
 import { decodingStr } from "../lib/utility";
 import * as cookieParser from "cookie-parser";
 import { TitleData, BookMarkData, ContentData } from "../lib/typings/dataModel";
+import { reject, resolve, any } from "bluebird";
+import { BookLib } from "../public/script/view/bookLib";
+import { number } from "prop-types";
 
 let router = express.Router();
 
@@ -34,7 +37,9 @@ router.get("/books", (req, res) => {
 router.delete("/bookMark/:id", () => {
 });
 
-router.put("/bookMark",()=>{
+router.put("/bookMark",(req,res)=>{
+    res.status(200);
+    res.send();
 });
 
 router.use(bodyParser());
@@ -66,5 +71,28 @@ router.put("/BookDomain/:id", (req, res) => {
         res.status(500);
     }
 });
+
+router.put("/backup", (req, res) => {
+    let cacheService = {
+        getBookList: ()=>new Promise<BookMarkData[]>((resolve,reject)=>{
+            let books: BookMarkData[] = [{ BookId: "1", Name: "001" }, { BookId: "2", Name: "002" }];
+            resolve(books);
+        }),
+        getLatestCharpter: v => new Promise<number>((resolve, reject) => {
+            resolve(v+1);
+        }),
+    };
+
+    cacheService.getBookList().then(book => {
+        let pp = book.map(
+            v => cacheService.getLatestCharpter(v.BookId).then(id => {
+                console.log(`{"bookId": "${v.BookId}","charpterIndex": ${id}}`);
+            })
+        );
+
+        Promise.all(pp).then(()=>{res.status(200);res.send();});
+    });
+});
+
 
 export = router

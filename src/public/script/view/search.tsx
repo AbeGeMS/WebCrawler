@@ -35,8 +35,6 @@ export class Search extends React.Component<ISearchProp, ISearchState>{
     }
 
     private onSearchClick() {
-        let bookLib: string[];
-
         if (this.searchElement.current) {
             this.props.settingModel.setBookDomain(this.searchElement.current.value)
                 .then(v => {

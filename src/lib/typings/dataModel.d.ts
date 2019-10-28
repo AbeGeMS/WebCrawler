@@ -14,11 +14,16 @@ export interface BookMarkData {
     Name: string;
 }
 
-export interface ICorrection{
-    pattern:string,
+export interface ICorrection {
+    pattern: string,
     value: string,
 }
 
-export interface ILatestChapter{
-    latestChapter:number;
+export interface ILatestChapter {
+    latestChapter: number;
+}
+
+export interface BookLibModel {
+    bookId: string;
+    charpterIndex: number;
 }

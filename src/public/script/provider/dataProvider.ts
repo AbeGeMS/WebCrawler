@@ -71,4 +71,13 @@ export class DataProvider {
             url: `${root}bookMark/${bookId}`,
         });
     }
+
+    public backUp():JQueryPromise<boolean>{
+        return $.ajax({
+            type:"PUT",
+            url:`${root}backup`,
+            success: () => true,
+            error: err => false,
+        }).then(data => true, (jqr, status, error) => false);
+    }
 }

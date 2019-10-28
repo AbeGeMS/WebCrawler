@@ -5,6 +5,7 @@ import { ModelFactory } from "../model/model";
 import { BookLib, IBookLibProp } from "./bookLib";
 import { ITableOfContentProp, TableOfContent } from "./tableOfContent";
 import { Content, IContentProp } from "./content";
+import { Settings, ISettingsProp } from "./settings";
 
 enum ContentComponent {
     BookLib = 1,
@@ -20,7 +21,7 @@ interface HomePageState {
 }
 
 export class HomePage extends React.Component<any, HomePageState>{
-private readonly modelFac:ModelFactory;
+    private readonly modelFac: ModelFactory;
     public constructor(prop) {
         super(prop);
 
@@ -66,14 +67,21 @@ private readonly modelFac:ModelFactory;
         let tableOfContent: ITableOfContentProp = {
             book: this.modelFac.Book,
             bookMark: this.modelFac.BookMark,
-            state:this.modelFac.State,
+            state: this.modelFac.State,
             onCharpterSelected: () => this.setComponentState(ContentComponent.Content),
-        }
+        };
 
         let contentProp: IContentProp = {
             book: this.modelFac.Book,
-            charpter:this.modelFac.State.SelectedCharpter,
-        }
+            charpter: this.modelFac.State.SelectedCharpter,
+        };
+
+        let settingProp: ISettingsProp = {
+            settingModel: this.modelFac.Setting,
+            onBackupDone: () => this.setComponentState(ContentComponent.Search),
+            onRestoreDone: () => this.setComponentState(ContentComponent.BookLib),
+        };
+
         let result: JSX.Element;
         switch (this.state.currentContent) {
             case ContentComponent.Search:
@@ -89,12 +97,13 @@ private readonly modelFac:ModelFactory;
                 result = <BookLib {...bookLibProp} />;
                 break;
             case ContentComponent.Content:
-                result = <Content {...contentProp}/>;
+                result = <Content {...contentProp} />;
                 break;
             case ContentComponent.TableOfContent:
-                result = <TableOfContent {...tableOfContent}/>;
+                result = <TableOfContent {...tableOfContent} />;
                 break;
             case ContentComponent.Settings:
+                result = <Settings {...settingProp} />;
                 break;
             default:
                 break;
