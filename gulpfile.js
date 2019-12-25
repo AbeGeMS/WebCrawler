@@ -1,62 +1,57 @@
-var gulp = require("gulp");
-var ts = require("gulp-typescript");
+const { series, src, dest } = require("gulp");
 var clean = require("gulp-rimraf");
-var concat = require("gulp-concat");
-var uglify = require("gulp-uglify");
-var less = require("gulp-less");
+var ts = require("gulp-typescript");
 var exec = require("child_process").exec;
+var less = require("gulp-less");
 
-gulp.task("clean", function () {
+function clearProject() {
     console.log("Clean all files in debug folder");
-    return gulp.src("debug/*", {
+
+    return src("debug/*", {
         read: false
     }).pipe(clean());
-});
+};
 
-gulp.task("build-server", ["clean"], function () {
+function buildServer () {
     console.log("build typscript");
-    return gulp.src(["src/**/*.{ts,tsx}", "!src/public", "!src/public/**", "!src/test/client/**"]) // Build all ts/tsx file under src folder then exclude public and client test
+
+    return src(["src/**/*.{ts,tsx}", "!src/public", "!src/public/**", "!src/test/client/**"]) // Build all ts/tsx file under src folder then exclude public and client test
         .pipe(ts.createProject("tsconfig.json")())
-        .pipe(gulp.dest("debug"));
-});
+        .pipe(dest("debug"));
+};
 
-gulp.task("build-staticResource", ["clean"], function () {
+function buildResource() {
     console.log("build staticResource");
-    gulp.src('src/public/!(less|script)/*').pipe(gulp.dest("debug/public"));
-});
 
-gulp.task("webpack", ["clean"], function () {
-    exec("webpack --colors --progress --config webpack.config.js", function (err, stdout, stderr) {
+    return src('src/public/!(less|script)/*')
+        .pipe(dest("debug/public"));
+};
+
+function webpack() {
+
+    return exec("webpack --colors --progress --config webpack.config.js", function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
-});
+};
 
-gulp.task("build-less", ["clean"], function () {
-    return gulp.src("src/public/less/*.less")
+function buildLess() {
+
+    return src("src/public/less/*.less")
         .pipe(less())
-        .pipe(gulp.dest("debug/public/css/"));
-});
+        .pipe(dest("debug/public/css/"));
+};
 
-gulp.task('move-test-config', ['clean'], function () {
+function MoveTestFiles() {
     console.log('run move jasmine config');
-    return gulp.src('src/test/**/jasmine.json')
-        .pipe(gulp.dest('debug/test'));
-});
 
-gulp.task('default', [
-        "build-server",
-        "build-staticResource",
-        "build-less",
-        "webpack",
-        "move-test-config"
-    ],
-    function () {
-        console.info("\x1b[32m%s\x1b[0m", ">>>>>>>>>>Done>>>>>>>>");
-    });
+    return src('src/test/**/jasmine.json')
+        .pipe(dest('debug/test'));
+};
 
-gulp.task("watch", function () {
-            gulp.watch("src/**/*.{ts,tsx,less,html}", ['default'], function () {
-                console.log("detect code change,start building...");
-            });
-});
+exports.default = series(
+    clearProject,
+    buildLess,
+    buildResource,
+    buildServer,
+    webpack);

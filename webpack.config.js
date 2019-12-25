@@ -66,4 +66,4 @@ var testConfig = {
   },
   externals: externalRef,
 }
-module.exports = [debugConfig, testConfig];
+module.exports = [debugConfig];
