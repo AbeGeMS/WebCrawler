@@ -11,7 +11,7 @@ let router = express.Router();
 
 router.get('/latestChapter', (req, res) => {
     let baseUrl = decodingStr(req.cookies && req.cookies.BaseDomain);
-    baseUrl = `https://${baseUrl.trim()}.com/`;
+    baseUrl =getBookUrl(baseUrl.trim()); 
     let bookId = req.query.id;
     if (!baseUrl || !bookId) {
         res.json(`cacheRouter.latestChapter: invailid parameter ${baseUrl}, ${bookId}`);
@@ -29,7 +29,7 @@ router.get('/tableOfContent', (req, res) => {
 
 router.get("/books", (req, res) => {
     let baseurl = decodingStr(req.cookies && req.cookies.BaseDomain);
-    baseurl = `https://${baseurl.trim()}.com/`;
+    baseurl =getBookUrl(baseurl.trim()); 
     if (baseurl) {
         let cacheService = new CacheService(new BookService(baseurl, new HttpAgent()), new RedisAgent());
         cacheService.getBookList().then(books => res.json(books), error => res.json(error));
@@ -47,7 +47,7 @@ router.put("/bookMark", (req, res) => {
     let bookId = req.body.id;
     let chapter = req.body.chapter;
     let baseurl = decodingStr(req.cookies && req.cookies.BaseDomain);
-    baseurl = `https://${baseurl.trim()}.com/`;
+    baseurl =getBookUrl(baseurl.trim()); 
     if (baseurl) {
         let cacheService = new CacheService(new BookService(baseurl, new HttpAgent()), new RedisAgent());
         cacheService.setBookMark(bookId, chapter)
@@ -71,5 +71,10 @@ router.put("/backup", (req, res) => {
         ).then(() => {res.status(200); res.send();}, err => res.json(err));
     });
 });
+
+function getBookUrl(bookDomain: string): string{
+
+    return `https://www.${bookDomain}.info`;
+}
 
 export = router

@@ -62,6 +62,10 @@ export class BookService {
         }
     }
 
+    public getSource(url:string):Promise<string>{
+        return this._http.get(url).then(html=>html);
+    }
+
     private parseContent(html: string): ContentData {
         let _$ = cheerio.load(html);
         let contentList = _$("#content");

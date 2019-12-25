@@ -22,7 +22,7 @@ router.post('/book', (req, res) => {
         });
     }
 
-    bookDomain =`https://${bookDomain}.com/`;
+    bookDomain = getBookUrl(bookDomain);
     let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getContent(bookId, chapterId, index)
         .then(content => res.json(content));
@@ -39,7 +39,7 @@ router.post('/tableOfContent', (req, res) => {
             error: `invalid parameter domain:${bookDomain} bookId:${bookId}`,
         });
     }
-    bookDomain = `https://${bookDomain}.com/`
+    bookDomain = getBookUrl(bookDomain);
     let bookService = new BookService(bookDomain, new HttpAgent());
     bookService.getTableOfContent(bookId)
         .then(tableOfContent => res.json(tableOfContent));
@@ -59,5 +59,32 @@ router.put("/BookDomain/:id", (req, res) => {
         res.status(500);
     }
 });
+
+router.get("/source/:id",(req,res)=>{
+    console.error(req.params["id"]);
+    let paramId= decodingStr(req.params["id"]);
+    paramId = paramId.replace(/-/g,"/");
+    let url:string = "";
+    if (!paramId) {
+        url =getBookUrl(req.cookies && req.cookies.BaseDomain);
+    } else {
+        url = `https://${paramId}`;
+        console.error(url);
+    }
+
+    let bookService = new BookService(url, new HttpAgent());
+
+    bookService.getSource(url).then(
+        source=>res.send(source),
+        err=>{
+            res.status(500); 
+            res.send();
+        });
+});
+
+function getBookUrl(bookDomain: string): string{
+
+    return `https://www.${bookDomain}.info`;
+}
 
 export = router;

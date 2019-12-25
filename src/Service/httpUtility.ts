@@ -12,7 +12,11 @@ export class HttpAgent {
                         url,
                         res => {
                             res.setEncoding("utf-8");
-                            this.getContent(res).then(html => resolve(html), error => reject(error));
+                            this.getContent(res).then(html => {
+                                console.error(html);
+                                resolve(html);
+                            }, 
+                            error => reject(error));
                         }
                     ).on("error", err => {
                         reject(err);
