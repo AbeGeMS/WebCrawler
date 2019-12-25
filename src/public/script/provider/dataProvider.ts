@@ -14,7 +14,7 @@ export class DataProvider {
                     return data;
                 },
             }
-        );
+        ).then(data=>data);
     }
 
     public getbookContent(bookId: string, chapterId: string, index: number): JQueryPromise<ContentData> {
@@ -28,7 +28,7 @@ export class DataProvider {
                     return data;
                 },
             }
-        );
+        ).then(data=>data);
     }
 
     public getLatestChapterNumber(bookId: string): JQueryPromise<number> {
@@ -46,7 +46,7 @@ export class DataProvider {
             type: "PUT",
             url: `${root}bookMark?id=${bookId}&chapter=${chapterId}`,
             data: { id: bookId, chapter: chapterId },
-        });
+        }).then(data=>data);
     }
 
     public putBookDomain(bookDomain: string): JQueryPromise<boolean> {
@@ -62,14 +62,14 @@ export class DataProvider {
         return $.ajax({
             type: "GET",
             url: `${root}books`,
-        });
+        }).then(data=>data);
     }
 
     public deleteBookMark(bookId: string): JQueryPromise<boolean> {
         return $.ajax({
             type: "DELETE",
             url: `${root}bookMark/${bookId}`,
-        });
+        }).then(data=>data);
     }
 
     public backUp():JQueryPromise<boolean>{

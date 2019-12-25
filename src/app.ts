@@ -20,7 +20,7 @@ export class Demo {
         });
 
         let server = app.listen(process.env.PORT || 3000, () => {
-            console.log("[" + new Date().toUTCString() + "] Demo is listening port:%s", server.address().port);
+            console.log("[" + new Date().toUTCString() + "] Demo is listening port:%s", server.address());
         });
     }
 }
