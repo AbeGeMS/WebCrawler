@@ -1,6 +1,7 @@
 import * as https from "https";
 import * as Promise from "bluebird";
 import { IncomingMessage } from "http";
+import { gunzip } from "zlib";
 
 export class HttpAgent {
 
@@ -13,10 +14,15 @@ export class HttpAgent {
                         res => {
                             res.setEncoding("utf-8");
                             this.getContent(res).then(html => {
-                                console.error(html);
-                                resolve(html);
-                            }, 
-                            error => reject(error));
+                                if (res.headers["content-encoding"] == "gzip") {
+                                    gunzip(html, (err, data) => {
+                                        resolve(data.toString("utf-8", 0, data.length));
+                                    });
+                                } else {
+                                    resolve(html);
+                                }
+                            },
+                                error => reject(error));
                         }
                     ).on("error", err => {
                         reject(err);
